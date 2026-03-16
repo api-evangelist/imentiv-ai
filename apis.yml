@@ -1,31 +1,39 @@
 aid: imentiv-ai
 name: Imentiv AI
 description: >-
-  Discover the emotional makeup of your videos with advanced AIMake your videos
-  emotionally smart 
+  Imentiv AI is an AI-powered platform for analyzing the emotional makeup of
+  videos. The platform uses advanced artificial intelligence to make videos
+  emotionally smart by detecting and analyzing emotions in video content.
 type: Index
-position: Consumer
-access: 3rd-Party
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-  - API
+  - Artificial Intelligence
+  - Video Analysis
+  - Emotion Detection
+  - Machine Learning
 created: '2025-02-09'
-modified: '2025-02-09'
+modified: '2026-03-16'
 url: >-
   https://raw.githubusercontent.com/api-evangelist/imentiv-ai/refs/heads/main/apis.yml
 specificationVersion: '0.19'
 apis:
-  - aid: imentiv-ai:imentiv-ai
-    name: Imentiv AI
+  - aid: imentiv-ai:imentiv-ai-api
+    name: Imentiv AI API
     description: >-
-      Discover the emotional makeup of your videos with advanced AIMake your
-      videos emotionally smart 
-    humanURL: ' https://imentiv.ai/'
+      The Imentiv AI API enables developers to discover the emotional makeup of
+      videos using advanced AI, making videos emotionally smart through
+      automated emotion detection and analysis.
+    humanURL: https://imentiv.ai/
     tags:
-      - API
+      - Video Analysis
+      - Emotion Detection
+      - AI
     properties:
       - type: Documentation
-        url: ' https://imentiv.ai/'
+        url: https://imentiv.ai/
+common:
+  - type: Website
+    url: https://imentiv.ai/
 maintainers:
   - FN: Kin Lane
-    email: info@apievangelist.com
+    email: kin@apievangelist.com
