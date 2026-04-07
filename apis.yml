@@ -8,9 +8,9 @@ type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
   - Artificial Intelligence
-  - Video Analysis
   - Emotion Detection
   - Machine Learning
+  - Video Analysis
 created: '2025-02-09'
 modified: '2026-03-16'
 url: >-
@@ -25,9 +25,9 @@ apis:
       automated emotion detection and analysis.
     humanURL: https://imentiv.ai/
     tags:
-      - Video Analysis
-      - Emotion Detection
       - AI
+      - Emotion Detection
+      - Video Analysis
     properties:
       - type: Documentation
         url: https://imentiv.ai/
