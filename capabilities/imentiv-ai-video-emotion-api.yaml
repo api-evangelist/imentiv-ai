@@ -1,0 +1,1455 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Welcome to Imentiv AI — Video Emotion API
+  description: 'Welcome to Imentiv AI — Video Emotion API. 30 operations. Lead operation: List Videos. Self-contained Naftiko
+    capability covering one Imentiv Ai business surface.'
+  tags:
+  - Imentiv Ai
+  - Video Emotion API
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    IMENTIV_AI_API_KEY: IMENTIV_AI_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: imentiv-ai-video-emotion-api
+    baseUri: ''
+    description: Welcome to Imentiv AI — Video Emotion API business capability. Self-contained, no shared references.
+    resources:
+    - name: v1-videos
+      path: /v1/videos
+      operations:
+      - name: listvideosv1videosget
+        method: GET
+        description: List Videos
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: offset_video_id
+          in: query
+          type: string
+          description: The ID of the reference video from which to paginate forward/backward
+        - name: page_size
+          in: query
+          type: integer
+          description: 'Number of results to return (default: 10)'
+        - name: direction
+          in: query
+          type: string
+          description: 'Pagination direction: forward (default) or backward'
+    - name: v1-videos-highlights
+      path: /v1/videos/highlights
+      operations:
+      - name: processhighlightv1videoshighlightspost
+        method: POST
+        description: Process Highlight
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v1-videos-video_id
+      path: /v1/videos/{video_id}
+      operations:
+      - name: getvideoemotioninsightsv1videosvideoidget
+        method: GET
+        description: Get Video Emotion Insights
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique ID of the video to be fetched
+          required: true
+      - name: deletevideov1videosvideoiddelete
+        method: DELETE
+        description: Delete Video
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique ID of the video to be deleted.
+          required: true
+      - name: reprocessvideov1videosvideoidput
+        method: PUT
+        description: Reprocess Video
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: Unique identifier of the video to reprocess
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: v1-videos-video_id-faces
+      path: /v1/videos/{video_id}/faces
+      operations:
+      - name: mergefacev1videosvideoidfacesput
+        method: PUT
+        description: Merge Face
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletefacesv1videosvideoidfacesdelete
+        method: DELETE
+        description: Delete Faces
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique identifier of the video from which faces will be deleted.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v1-videos-video_id-faces-names
+      path: /v1/videos/{video_id}/faces/names
+      operations:
+      - name: updatefacesnamesv1videosvideoidfacesnamesput
+        method: PUT
+        description: Update Faces Names
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v1-videos-video_id-frames
+      path: /v1/videos/{video_id}/frames
+      operations:
+      - name: getmultipleframev1videosvideoidframesget
+        method: GET
+        description: Get Multiple Frame
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video for which the frames to be fetched
+          required: true
+        - name: start_frame
+          in: query
+          type: string
+          description: The frame number from which retrieval should begin. Defaults to the start of the video if not provided.
+        - name: length
+          in: query
+          type: string
+          description: The number of frames to retrieve, starting from 'start_frame'. If omitted, all available frames will
+            be returned.
+        - name: face_ids
+          in: query
+          type: string
+          description: Optional comma-separated list of face IDs (e.g., '1,2,3')
+    - name: v1-videos-video_id-frames-faces
+      path: /v1/videos/{video_id}/frames/faces
+      operations:
+      - name: updatemultiplefacesv1videosvideoidframesfacesput
+        method: PUT
+        description: Update Multiple Faces
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video in which face ID to be changed
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v1-videos-video_id-frames-frame_id
+      path: /v1/videos/{video_id}/frames/{frame_id}
+      operations:
+      - name: getsingleframev1videosvideoidframesframeidget
+        method: GET
+        description: Get Single Frame
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video for which the frame to be fetched.
+          required: true
+        - name: frame_id
+          in: path
+          type: string
+          description: The unique frame ID of the frame to be fetched.
+          required: true
+    - name: v1-videos-video_id-frames-frame_id-dominant_emotion
+      path: /v1/videos/{video_id}/frames/{frame_id}/dominant_emotion
+      operations:
+      - name: retrievedominationemotionforaspecificframev1videosvideoidframesframeiddominantemotionget
+        method: GET
+        description: Retrieve Domination Emotion For A Specific Frame
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: Unique identifier of the video from which the frame’s dominant emotion is to be fetched.
+          required: true
+        - name: frame_id
+          in: path
+          type: string
+          description: The unique id of the frame from which the dominant emotion is to be fetched.
+          required: true
+        - name: face_id
+          in: query
+          type: string
+          description: The id of the face whose dominant emotion is to be retrieved. If not provided, the dominant emotion
+            for the entire frame will be returned.
+    - name: v1-videos-video_id-frames-frame_id-faces-face_id-emotions
+      path: /v1/videos/{video_id}/frames/{frame_id}/faces/{face_id}/emotions
+      operations:
+      - name: updateemotionperframev1videosvideoidframesframeidfacesfaceidemotionsput
+        method: PUT
+        description: Update Emotion Per Frame
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video.
+          required: true
+        - name: frame_id
+          in: path
+          type: string
+          description: The unique frame ID of the frame.
+          required: true
+        - name: face_id
+          in: path
+          type: string
+          description: The unique face ID of the face in the frame.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: v1-videos-video_id-frames-frame_id-faces-face_id-note
+      path: /v1/videos/{video_id}/frames/{frame_id}/faces/{face_id}/note
+      operations:
+      - name: editfacenotev1videosvideoidframesframeidfacesfaceidnoteput
+        method: PUT
+        description: Edit Face Note
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video id of the video.
+          required: true
+        - name: frame_id
+          in: path
+          type: string
+          description: The unique id of the frame inside the video.
+          required: true
+        - name: face_id
+          in: path
+          type: string
+          description: The unique id of the face inside the frame. Use '0' to add a note to the entire frame instead of a
+            specific face.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v1-videos-video_id-frames-frame_id-valence_arousal
+      path: /v1/videos/{video_id}/frames/{frame_id}/valence_arousal
+      operations:
+      - name: retrieveemotionintensityv1videosvideoidframesframeidvalencearousalget
+        method: GET
+        description: Retrieve Emotion Intensity
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video for which the frame's valence, arousal, and intensity are to be fetched.
+          required: true
+        - name: frame_id
+          in: path
+          type: string
+          description: The unique frame ID of the frame from which to fetch the valence, arousal, and intensity.
+          required: true
+        - name: face_id
+          in: query
+          type: string
+          description: The ID of the face whose valence, arousal, and intensity are to be retrieved. If not provided, these
+            values for the entire frame will be returned.
+    - name: v1-videos-video_id-highlight_video
+      path: /v1/videos/{video_id}/highlight_video
+      operations:
+      - name: downloadhighlightvideov1videosvideoidhighlightvideoget
+        method: GET
+        description: Download Highlight Video
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The video id to download the highlight video.
+          required: true
+    - name: v1-videos-video_id-highlights
+      path: /v1/videos/{video_id}/highlights
+      operations:
+      - name: fetchhighlightvideov1videosvideoidhighlightsget
+        method: GET
+        description: Fetch Highlight Video
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The video id to get the highlight video url
+          required: true
+      - name: updatehighlightvideov1videosvideoidhighlightsput
+        method: PUT
+        description: Update Highlight Video
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video id of the video for which the update highlight video to be edited.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v1-videos-video_id-metadata
+      path: /v1/videos/{video_id}/metadata
+      operations:
+      - name: edittitleordescriptionbyidv1videosvideoidmetadataput
+        method: PUT
+        description: Edit Title Or Description By Id
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: Provide the video ID to edit or title and description of the audio
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: v1-videos-video_id-report
+      path: /v1/videos/{video_id}/report
+      operations:
+      - name: generatevideoemotionanalysisreportv1videosvideoidreportpost
+        method: POST
+        description: Generate Video Emotion Analysis Report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video whose analysis report is to be generated.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: downloadvideoemotionanalysisreportv1videosvideoidreportget
+        method: GET
+        description: Download Video Emotion Analysis Report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: Provide the video ID to download analysis
+          required: true
+    - name: v1-videos-video_id-valence_arousal
+      path: /v1/videos/{video_id}/valence_arousal
+      operations:
+      - name: getvalencearousalv1videosvideoidvalencearousalget
+        method: GET
+        description: Get Valence Arousal
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video whose emotion intensity is to be fetched
+          required: true
+    - name: v2-videos
+      path: /v2/videos
+      operations:
+      - name: uploadvideov2videospost
+        method: POST
+        description: Upload Video
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v2-videos-video_id-annotated_video
+      path: /v2/videos/{video_id}/annotated_video
+      operations:
+      - name: getannotatedvideov2videosvideoidannotatedvideoget
+        method: GET
+        description: Get Annotated Video
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video
+          required: true
+        - name: callback_url
+          in: query
+          type: string
+          description: Optional callback URL to notify when annotated video generation is complete
+    - name: v2-videos-video_id-emotions-average
+      path: /v2/videos/{video_id}/emotions/average
+      operations:
+      - name: getaverageemotionsv2videosvideoidemotionsaverageget
+        method: GET
+        description: Get Average Emotions
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique video ID of the video for which average emotions are to be calculated
+          required: true
+        - name: face_id
+          in: query
+          type: integer
+          description: Optional face ID to calculate average emotions for a specific face
+    - name: v2-videos-video_id-faces-face_id-personality-analysis
+      path: /v2/videos/{video_id}/faces/{face_id}/personality-analysis
+      operations:
+      - name: getpersonalityanalysisv2videosvideoidfacesfaceidpersonalityanalysisget
+        method: GET
+        description: Get Personality Analysis
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: Unique identifier of the video containing the face.
+          required: true
+        - name: face_id
+          in: path
+          type: integer
+          description: Face identifier for which to retrieve personality analysis.
+          required: true
+    - name: v2-videos-video_id-multimodal-analytics
+      path: /v2/videos/{video_id}/multimodal-analytics
+      operations:
+      - name: getvideomultimodalinsightsv2videosvideoidmultimodalanalyticsget
+        method: GET
+        description: Get Video Multimodal Insights
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: The unique ID of the video
+          required: true
+    - name: v2-videos-video_id-personality-analyze
+      path: /v2/videos/{video_id}/personality/analyze
+      operations:
+      - name: triggerpersonalityanalysisv2videosvideoidpersonalityanalyzepost
+        method: POST
+        description: Trigger Personality Analysis
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: Unique identifier of the video. Video must be in 'completed' status with detected faces.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v2-videos-video_id-speaker-face-match
+      path: /v2/videos/{video_id}/speaker-face-match
+      operations:
+      - name: updatespeakerfacematchv2videosvideoidspeakerfacematchput
+        method: PUT
+        description: Update Speaker Face Match
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: Unique identifier of the video. Video must be in 'completed' status with associated audio analysis.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: triggerspeakerfacematchv2videosvideoidspeakerfacematchpost
+        method: POST
+        description: Trigger Speaker Face Match
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: video_id
+          in: path
+          type: string
+          description: Unique identifier of the video. Video must be in 'completed' status with associated audio.
+          required: true
+    authentication:
+      type: apikey
+      key: X-API-Key
+      value: '{{env.IMENTIV_AI_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: imentiv-ai-video-emotion-api-rest
+    port: 8080
+    description: REST adapter for Welcome to Imentiv AI — Video Emotion API. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/v1/videos
+      name: v1-videos
+      description: REST surface for v1-videos.
+      operations:
+      - method: GET
+        name: listvideosv1videosget
+        description: List Videos
+        call: imentiv-ai-video-emotion-api.listvideosv1videosget
+        with:
+          offset_video_id: rest.offset_video_id
+          page_size: rest.page_size
+          direction: rest.direction
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/highlights
+      name: v1-videos-highlights
+      description: REST surface for v1-videos-highlights.
+      operations:
+      - method: POST
+        name: processhighlightv1videoshighlightspost
+        description: Process Highlight
+        call: imentiv-ai-video-emotion-api.processhighlightv1videoshighlightspost
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}
+      name: v1-videos-video-id
+      description: REST surface for v1-videos-video_id.
+      operations:
+      - method: GET
+        name: getvideoemotioninsightsv1videosvideoidget
+        description: Get Video Emotion Insights
+        call: imentiv-ai-video-emotion-api.getvideoemotioninsightsv1videosvideoidget
+        with:
+          video_id: rest.video_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletevideov1videosvideoiddelete
+        description: Delete Video
+        call: imentiv-ai-video-emotion-api.deletevideov1videosvideoiddelete
+        with:
+          video_id: rest.video_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: reprocessvideov1videosvideoidput
+        description: Reprocess Video
+        call: imentiv-ai-video-emotion-api.reprocessvideov1videosvideoidput
+        with:
+          video_id: rest.video_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/faces
+      name: v1-videos-video-id-faces
+      description: REST surface for v1-videos-video_id-faces.
+      operations:
+      - method: PUT
+        name: mergefacev1videosvideoidfacesput
+        description: Merge Face
+        call: imentiv-ai-video-emotion-api.mergefacev1videosvideoidfacesput
+        with:
+          video_id: rest.video_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletefacesv1videosvideoidfacesdelete
+        description: Delete Faces
+        call: imentiv-ai-video-emotion-api.deletefacesv1videosvideoidfacesdelete
+        with:
+          video_id: rest.video_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/faces/names
+      name: v1-videos-video-id-faces-names
+      description: REST surface for v1-videos-video_id-faces-names.
+      operations:
+      - method: PUT
+        name: updatefacesnamesv1videosvideoidfacesnamesput
+        description: Update Faces Names
+        call: imentiv-ai-video-emotion-api.updatefacesnamesv1videosvideoidfacesnamesput
+        with:
+          video_id: rest.video_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/frames
+      name: v1-videos-video-id-frames
+      description: REST surface for v1-videos-video_id-frames.
+      operations:
+      - method: GET
+        name: getmultipleframev1videosvideoidframesget
+        description: Get Multiple Frame
+        call: imentiv-ai-video-emotion-api.getmultipleframev1videosvideoidframesget
+        with:
+          video_id: rest.video_id
+          start_frame: rest.start_frame
+          length: rest.length
+          face_ids: rest.face_ids
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/frames/faces
+      name: v1-videos-video-id-frames-faces
+      description: REST surface for v1-videos-video_id-frames-faces.
+      operations:
+      - method: PUT
+        name: updatemultiplefacesv1videosvideoidframesfacesput
+        description: Update Multiple Faces
+        call: imentiv-ai-video-emotion-api.updatemultiplefacesv1videosvideoidframesfacesput
+        with:
+          video_id: rest.video_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/frames/{frame-id}
+      name: v1-videos-video-id-frames-frame-id
+      description: REST surface for v1-videos-video_id-frames-frame_id.
+      operations:
+      - method: GET
+        name: getsingleframev1videosvideoidframesframeidget
+        description: Get Single Frame
+        call: imentiv-ai-video-emotion-api.getsingleframev1videosvideoidframesframeidget
+        with:
+          video_id: rest.video_id
+          frame_id: rest.frame_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/frames/{frame-id}/dominant-emotion
+      name: v1-videos-video-id-frames-frame-id-dominant-emotion
+      description: REST surface for v1-videos-video_id-frames-frame_id-dominant_emotion.
+      operations:
+      - method: GET
+        name: retrievedominationemotionforaspecificframev1videosvideoidframesframeiddominantemotionget
+        description: Retrieve Domination Emotion For A Specific Frame
+        call: imentiv-ai-video-emotion-api.retrievedominationemotionforaspecificframev1videosvideoidframesframeiddominantemotionget
+        with:
+          video_id: rest.video_id
+          frame_id: rest.frame_id
+          face_id: rest.face_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/frames/{frame-id}/faces/{face-id}/emotions
+      name: v1-videos-video-id-frames-frame-id-faces-face-id-emotions
+      description: REST surface for v1-videos-video_id-frames-frame_id-faces-face_id-emotions.
+      operations:
+      - method: PUT
+        name: updateemotionperframev1videosvideoidframesframeidfacesfaceidemotionsput
+        description: Update Emotion Per Frame
+        call: imentiv-ai-video-emotion-api.updateemotionperframev1videosvideoidframesframeidfacesfaceidemotionsput
+        with:
+          video_id: rest.video_id
+          frame_id: rest.frame_id
+          face_id: rest.face_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/frames/{frame-id}/faces/{face-id}/note
+      name: v1-videos-video-id-frames-frame-id-faces-face-id-note
+      description: REST surface for v1-videos-video_id-frames-frame_id-faces-face_id-note.
+      operations:
+      - method: PUT
+        name: editfacenotev1videosvideoidframesframeidfacesfaceidnoteput
+        description: Edit Face Note
+        call: imentiv-ai-video-emotion-api.editfacenotev1videosvideoidframesframeidfacesfaceidnoteput
+        with:
+          video_id: rest.video_id
+          frame_id: rest.frame_id
+          face_id: rest.face_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/frames/{frame-id}/valence-arousal
+      name: v1-videos-video-id-frames-frame-id-valence-arousal
+      description: REST surface for v1-videos-video_id-frames-frame_id-valence_arousal.
+      operations:
+      - method: GET
+        name: retrieveemotionintensityv1videosvideoidframesframeidvalencearousalget
+        description: Retrieve Emotion Intensity
+        call: imentiv-ai-video-emotion-api.retrieveemotionintensityv1videosvideoidframesframeidvalencearousalget
+        with:
+          video_id: rest.video_id
+          frame_id: rest.frame_id
+          face_id: rest.face_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/highlight-video
+      name: v1-videos-video-id-highlight-video
+      description: REST surface for v1-videos-video_id-highlight_video.
+      operations:
+      - method: GET
+        name: downloadhighlightvideov1videosvideoidhighlightvideoget
+        description: Download Highlight Video
+        call: imentiv-ai-video-emotion-api.downloadhighlightvideov1videosvideoidhighlightvideoget
+        with:
+          video_id: rest.video_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/highlights
+      name: v1-videos-video-id-highlights
+      description: REST surface for v1-videos-video_id-highlights.
+      operations:
+      - method: GET
+        name: fetchhighlightvideov1videosvideoidhighlightsget
+        description: Fetch Highlight Video
+        call: imentiv-ai-video-emotion-api.fetchhighlightvideov1videosvideoidhighlightsget
+        with:
+          video_id: rest.video_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: updatehighlightvideov1videosvideoidhighlightsput
+        description: Update Highlight Video
+        call: imentiv-ai-video-emotion-api.updatehighlightvideov1videosvideoidhighlightsput
+        with:
+          video_id: rest.video_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/metadata
+      name: v1-videos-video-id-metadata
+      description: REST surface for v1-videos-video_id-metadata.
+      operations:
+      - method: PUT
+        name: edittitleordescriptionbyidv1videosvideoidmetadataput
+        description: Edit Title Or Description By Id
+        call: imentiv-ai-video-emotion-api.edittitleordescriptionbyidv1videosvideoidmetadataput
+        with:
+          video_id: rest.video_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/report
+      name: v1-videos-video-id-report
+      description: REST surface for v1-videos-video_id-report.
+      operations:
+      - method: POST
+        name: generatevideoemotionanalysisreportv1videosvideoidreportpost
+        description: Generate Video Emotion Analysis Report
+        call: imentiv-ai-video-emotion-api.generatevideoemotionanalysisreportv1videosvideoidreportpost
+        with:
+          video_id: rest.video_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: downloadvideoemotionanalysisreportv1videosvideoidreportget
+        description: Download Video Emotion Analysis Report
+        call: imentiv-ai-video-emotion-api.downloadvideoemotionanalysisreportv1videosvideoidreportget
+        with:
+          video_id: rest.video_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/videos/{video-id}/valence-arousal
+      name: v1-videos-video-id-valence-arousal
+      description: REST surface for v1-videos-video_id-valence_arousal.
+      operations:
+      - method: GET
+        name: getvalencearousalv1videosvideoidvalencearousalget
+        description: Get Valence Arousal
+        call: imentiv-ai-video-emotion-api.getvalencearousalv1videosvideoidvalencearousalget
+        with:
+          video_id: rest.video_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/videos
+      name: v2-videos
+      description: REST surface for v2-videos.
+      operations:
+      - method: POST
+        name: uploadvideov2videospost
+        description: Upload Video
+        call: imentiv-ai-video-emotion-api.uploadvideov2videospost
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/videos/{video-id}/annotated-video
+      name: v2-videos-video-id-annotated-video
+      description: REST surface for v2-videos-video_id-annotated_video.
+      operations:
+      - method: GET
+        name: getannotatedvideov2videosvideoidannotatedvideoget
+        description: Get Annotated Video
+        call: imentiv-ai-video-emotion-api.getannotatedvideov2videosvideoidannotatedvideoget
+        with:
+          video_id: rest.video_id
+          callback_url: rest.callback_url
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/videos/{video-id}/emotions/average
+      name: v2-videos-video-id-emotions-average
+      description: REST surface for v2-videos-video_id-emotions-average.
+      operations:
+      - method: GET
+        name: getaverageemotionsv2videosvideoidemotionsaverageget
+        description: Get Average Emotions
+        call: imentiv-ai-video-emotion-api.getaverageemotionsv2videosvideoidemotionsaverageget
+        with:
+          video_id: rest.video_id
+          face_id: rest.face_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/videos/{video-id}/faces/{face-id}/personality-analysis
+      name: v2-videos-video-id-faces-face-id-personality-analysis
+      description: REST surface for v2-videos-video_id-faces-face_id-personality-analysis.
+      operations:
+      - method: GET
+        name: getpersonalityanalysisv2videosvideoidfacesfaceidpersonalityanalysisget
+        description: Get Personality Analysis
+        call: imentiv-ai-video-emotion-api.getpersonalityanalysisv2videosvideoidfacesfaceidpersonalityanalysisget
+        with:
+          video_id: rest.video_id
+          face_id: rest.face_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/videos/{video-id}/multimodal-analytics
+      name: v2-videos-video-id-multimodal-analytics
+      description: REST surface for v2-videos-video_id-multimodal-analytics.
+      operations:
+      - method: GET
+        name: getvideomultimodalinsightsv2videosvideoidmultimodalanalyticsget
+        description: Get Video Multimodal Insights
+        call: imentiv-ai-video-emotion-api.getvideomultimodalinsightsv2videosvideoidmultimodalanalyticsget
+        with:
+          video_id: rest.video_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/videos/{video-id}/personality/analyze
+      name: v2-videos-video-id-personality-analyze
+      description: REST surface for v2-videos-video_id-personality-analyze.
+      operations:
+      - method: POST
+        name: triggerpersonalityanalysisv2videosvideoidpersonalityanalyzepost
+        description: Trigger Personality Analysis
+        call: imentiv-ai-video-emotion-api.triggerpersonalityanalysisv2videosvideoidpersonalityanalyzepost
+        with:
+          video_id: rest.video_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/videos/{video-id}/speaker-face-match
+      name: v2-videos-video-id-speaker-face-match
+      description: REST surface for v2-videos-video_id-speaker-face-match.
+      operations:
+      - method: PUT
+        name: updatespeakerfacematchv2videosvideoidspeakerfacematchput
+        description: Update Speaker Face Match
+        call: imentiv-ai-video-emotion-api.updatespeakerfacematchv2videosvideoidspeakerfacematchput
+        with:
+          video_id: rest.video_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: triggerspeakerfacematchv2videosvideoidspeakerfacematchpost
+        description: Trigger Speaker Face Match
+        call: imentiv-ai-video-emotion-api.triggerspeakerfacematchv2videosvideoidspeakerfacematchpost
+        with:
+          video_id: rest.video_id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: imentiv-ai-video-emotion-api-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Welcome to Imentiv AI — Video Emotion API. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: list-videos
+      description: List Videos
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.listvideosv1videosget
+      with:
+        offset_video_id: tools.offset_video_id
+        page_size: tools.page_size
+        direction: tools.direction
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: process-highlight
+      description: Process Highlight
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: imentiv-ai-video-emotion-api.processhighlightv1videoshighlightspost
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-video-emotion-insights
+      description: Get Video Emotion Insights
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.getvideoemotioninsightsv1videosvideoidget
+      with:
+        video_id: tools.video_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-video
+      description: Delete Video
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.deletevideov1videosvideoiddelete
+      with:
+        video_id: tools.video_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: reprocess-video
+      description: Reprocess Video
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.reprocessvideov1videosvideoidput
+      with:
+        video_id: tools.video_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: merge-face
+      description: Merge Face
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.mergefacev1videosvideoidfacesput
+      with:
+        video_id: tools.video_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-faces
+      description: Delete Faces
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.deletefacesv1videosvideoidfacesdelete
+      with:
+        video_id: tools.video_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-faces-names
+      description: Update Faces Names
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.updatefacesnamesv1videosvideoidfacesnamesput
+      with:
+        video_id: tools.video_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-multiple-frame
+      description: Get Multiple Frame
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.getmultipleframev1videosvideoidframesget
+      with:
+        video_id: tools.video_id
+        start_frame: tools.start_frame
+        length: tools.length
+        face_ids: tools.face_ids
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-multiple-faces
+      description: Update Multiple Faces
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.updatemultiplefacesv1videosvideoidframesfacesput
+      with:
+        video_id: tools.video_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-single-frame
+      description: Get Single Frame
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.getsingleframev1videosvideoidframesframeidget
+      with:
+        video_id: tools.video_id
+        frame_id: tools.frame_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-domination-emotion-specific-frame
+      description: Retrieve Domination Emotion For A Specific Frame
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.retrievedominationemotionforaspecificframev1videosvideoidframesframeiddominantemotionget
+      with:
+        video_id: tools.video_id
+        frame_id: tools.frame_id
+        face_id: tools.face_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-emotion-per-frame
+      description: Update Emotion Per Frame
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.updateemotionperframev1videosvideoidframesframeidfacesfaceidemotionsput
+      with:
+        video_id: tools.video_id
+        frame_id: tools.frame_id
+        face_id: tools.face_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: edit-face-note
+      description: Edit Face Note
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.editfacenotev1videosvideoidframesframeidfacesfaceidnoteput
+      with:
+        video_id: tools.video_id
+        frame_id: tools.frame_id
+        face_id: tools.face_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: retrieve-emotion-intensity
+      description: Retrieve Emotion Intensity
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.retrieveemotionintensityv1videosvideoidframesframeidvalencearousalget
+      with:
+        video_id: tools.video_id
+        frame_id: tools.frame_id
+        face_id: tools.face_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: download-highlight-video
+      description: Download Highlight Video
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.downloadhighlightvideov1videosvideoidhighlightvideoget
+      with:
+        video_id: tools.video_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: fetch-highlight-video
+      description: Fetch Highlight Video
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.fetchhighlightvideov1videosvideoidhighlightsget
+      with:
+        video_id: tools.video_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-highlight-video
+      description: Update Highlight Video
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.updatehighlightvideov1videosvideoidhighlightsput
+      with:
+        video_id: tools.video_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: edit-title-description-id
+      description: Edit Title Or Description By Id
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.edittitleordescriptionbyidv1videosvideoidmetadataput
+      with:
+        video_id: tools.video_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: generate-video-emotion-analysis-report
+      description: Generate Video Emotion Analysis Report
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: imentiv-ai-video-emotion-api.generatevideoemotionanalysisreportv1videosvideoidreportpost
+      with:
+        video_id: tools.video_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: download-video-emotion-analysis-report
+      description: Download Video Emotion Analysis Report
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.downloadvideoemotionanalysisreportv1videosvideoidreportget
+      with:
+        video_id: tools.video_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-valence-arousal
+      description: Get Valence Arousal
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.getvalencearousalv1videosvideoidvalencearousalget
+      with:
+        video_id: tools.video_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: upload-video
+      description: Upload Video
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: imentiv-ai-video-emotion-api.uploadvideov2videospost
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-annotated-video
+      description: Get Annotated Video
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.getannotatedvideov2videosvideoidannotatedvideoget
+      with:
+        video_id: tools.video_id
+        callback_url: tools.callback_url
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-average-emotions
+      description: Get Average Emotions
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.getaverageemotionsv2videosvideoidemotionsaverageget
+      with:
+        video_id: tools.video_id
+        face_id: tools.face_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-personality-analysis
+      description: Get Personality Analysis
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.getpersonalityanalysisv2videosvideoidfacesfaceidpersonalityanalysisget
+      with:
+        video_id: tools.video_id
+        face_id: tools.face_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-video-multimodal-insights
+      description: Get Video Multimodal Insights
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.getvideomultimodalinsightsv2videosvideoidmultimodalanalyticsget
+      with:
+        video_id: tools.video_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: trigger-personality-analysis
+      description: Trigger Personality Analysis
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: imentiv-ai-video-emotion-api.triggerpersonalityanalysisv2videosvideoidpersonalityanalyzepost
+      with:
+        video_id: tools.video_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-speaker-face-match
+      description: Update Speaker Face Match
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-video-emotion-api.updatespeakerfacematchv2videosvideoidspeakerfacematchput
+      with:
+        video_id: tools.video_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: trigger-speaker-face-match
+      description: Trigger Speaker Face Match
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: imentiv-ai-video-emotion-api.triggerspeakerfacematchv2videosvideoidspeakerfacematchpost
+      with:
+        video_id: tools.video_id
+      outputParameters:
+      - type: object
+        mapping: $.

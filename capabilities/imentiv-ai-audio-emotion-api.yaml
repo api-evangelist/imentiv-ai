@@ -1,0 +1,583 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Welcome to Imentiv AI — Audio Emotion API
+  description: 'Welcome to Imentiv AI — Audio Emotion API. 12 operations. Lead operation: List Audios. Self-contained Naftiko
+    capability covering one Imentiv Ai business surface.'
+  tags:
+  - Imentiv Ai
+  - Audio Emotion API
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    IMENTIV_AI_API_KEY: IMENTIV_AI_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: imentiv-ai-audio-emotion-api
+    baseUri: ''
+    description: Welcome to Imentiv AI — Audio Emotion API business capability. Self-contained, no shared references.
+    resources:
+    - name: v1-audios
+      path: /v1/audios
+      operations:
+      - name: listaudiosv1audiosget
+        method: GET
+        description: List Audios
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: offset_audio_id
+          in: query
+          type: string
+          description: The ID of the reference audio from which to paginate forward/backward
+        - name: page_size
+          in: query
+          type: integer
+          description: 'Number of results to return (default: 20, max: 100)'
+        - name: direction
+          in: query
+          type: string
+          description: 'Pagination direction: forward (default) or backward'
+    - name: v1-audios-audio_id
+      path: /v1/audios/{audio_id}
+      operations:
+      - name: getaudioemotioninsightsv1audiosaudioidget
+        method: GET
+        description: Get Audio Emotion Insights
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audio_id
+          in: path
+          type: string
+          description: The unique ID of the uploaded audio
+          required: true
+      - name: reprocessaudiov1audiosaudioidput
+        method: PUT
+        description: Reprocess Audio
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audio_id
+          in: path
+          type: string
+          description: Unique identifier of the audio to reprocess
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+      - name: deleteanaudiov1audiosaudioiddelete
+        method: DELETE
+        description: Delete An Audio
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audio_id
+          in: path
+          type: string
+          description: Unique identifier of the audio to be deleted
+          required: true
+    - name: v1-audios-audio_id-metadata
+      path: /v1/audios/{audio_id}/metadata
+      operations:
+      - name: edittitleordescriptionv1audiosaudioidmetadataput
+        method: PUT
+        description: Edit Title Or Description
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audio_id
+          in: path
+          type: string
+          description: Provide the audio ID to edit the title or description of the audio
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: v1-audios-audio_id-report
+      path: /v1/audios/{audio_id}/report
+      operations:
+      - name: downloadaudioemotionreportv1audiosaudioidreportget
+        method: GET
+        description: Download Audio Emotion Report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audio_id
+          in: path
+          type: string
+          description: Unique identifier of the audio file
+          required: true
+    - name: v1-audios-audio_id-speakers-names
+      path: /v1/audios/{audio_id}/speakers/names
+      operations:
+      - name: updatespeakernamesv1audiosaudioidspeakersnamesput
+        method: PUT
+        description: Update Speaker Names
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audio_id
+          in: path
+          type: string
+          description: Unique identifier of the audio file
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v1-audios-audio_id-transcript
+      path: /v1/audios/{audio_id}/transcript
+      operations:
+      - name: updateaudiotranscriptssegmentsv1audiosaudioidtranscriptput
+        method: PUT
+        description: Update Audio Transcripts Segments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audio_id
+          in: path
+          type: string
+          description: Unique identifier of the audio file
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v1-audios-audio_id-transcript-replace
+      path: /v1/audios/{audio_id}/transcript/replace
+      operations:
+      - name: replaceaudiotranscriptv1audiosaudioidtranscriptreplaceput
+        method: PUT
+        description: Replace Audio Transcript
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audio_id
+          in: path
+          type: string
+          description: Unique identifier of the audio file
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v1-audios-audio_id-segment_index
+      path: /v1/audios/{audio_id}/{segment_index}
+      operations:
+      - name: deleteaudiosegmentv1audiosaudioidsegmentindexdelete
+        method: DELETE
+        description: Delete Audio Segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audio_id
+          in: path
+          type: string
+          description: Unique identifier of the audio file
+          required: true
+        - name: segment_index
+          in: path
+          type: integer
+          description: The index of the segment to delete (0-based indexing)
+          required: true
+    - name: v2-audios
+      path: /v2/audios
+      operations:
+      - name: uploadaudiov2audiospost
+        method: POST
+        description: Upload Audio
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: v2-audios-audio_id-multimodal-analytics
+      path: /v2/audios/{audio_id}/multimodal-analytics
+      operations:
+      - name: getaudiomultimodalinsightsv2audiosaudioidmultimodalanalyticsget
+        method: GET
+        description: Get Audio Multimodal Insights
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: audio_id
+          in: path
+          type: string
+          description: The unique ID of the audio
+          required: true
+    authentication:
+      type: apikey
+      key: X-API-Key
+      value: '{{env.IMENTIV_AI_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: imentiv-ai-audio-emotion-api-rest
+    port: 8080
+    description: REST adapter for Welcome to Imentiv AI — Audio Emotion API. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/v1/audios
+      name: v1-audios
+      description: REST surface for v1-audios.
+      operations:
+      - method: GET
+        name: listaudiosv1audiosget
+        description: List Audios
+        call: imentiv-ai-audio-emotion-api.listaudiosv1audiosget
+        with:
+          offset_audio_id: rest.offset_audio_id
+          page_size: rest.page_size
+          direction: rest.direction
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/audios/{audio-id}
+      name: v1-audios-audio-id
+      description: REST surface for v1-audios-audio_id.
+      operations:
+      - method: GET
+        name: getaudioemotioninsightsv1audiosaudioidget
+        description: Get Audio Emotion Insights
+        call: imentiv-ai-audio-emotion-api.getaudioemotioninsightsv1audiosaudioidget
+        with:
+          audio_id: rest.audio_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: reprocessaudiov1audiosaudioidput
+        description: Reprocess Audio
+        call: imentiv-ai-audio-emotion-api.reprocessaudiov1audiosaudioidput
+        with:
+          audio_id: rest.audio_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteanaudiov1audiosaudioiddelete
+        description: Delete An Audio
+        call: imentiv-ai-audio-emotion-api.deleteanaudiov1audiosaudioiddelete
+        with:
+          audio_id: rest.audio_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/audios/{audio-id}/metadata
+      name: v1-audios-audio-id-metadata
+      description: REST surface for v1-audios-audio_id-metadata.
+      operations:
+      - method: PUT
+        name: edittitleordescriptionv1audiosaudioidmetadataput
+        description: Edit Title Or Description
+        call: imentiv-ai-audio-emotion-api.edittitleordescriptionv1audiosaudioidmetadataput
+        with:
+          audio_id: rest.audio_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/audios/{audio-id}/report
+      name: v1-audios-audio-id-report
+      description: REST surface for v1-audios-audio_id-report.
+      operations:
+      - method: GET
+        name: downloadaudioemotionreportv1audiosaudioidreportget
+        description: Download Audio Emotion Report
+        call: imentiv-ai-audio-emotion-api.downloadaudioemotionreportv1audiosaudioidreportget
+        with:
+          audio_id: rest.audio_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/audios/{audio-id}/speakers/names
+      name: v1-audios-audio-id-speakers-names
+      description: REST surface for v1-audios-audio_id-speakers-names.
+      operations:
+      - method: PUT
+        name: updatespeakernamesv1audiosaudioidspeakersnamesput
+        description: Update Speaker Names
+        call: imentiv-ai-audio-emotion-api.updatespeakernamesv1audiosaudioidspeakersnamesput
+        with:
+          audio_id: rest.audio_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/audios/{audio-id}/transcript
+      name: v1-audios-audio-id-transcript
+      description: REST surface for v1-audios-audio_id-transcript.
+      operations:
+      - method: PUT
+        name: updateaudiotranscriptssegmentsv1audiosaudioidtranscriptput
+        description: Update Audio Transcripts Segments
+        call: imentiv-ai-audio-emotion-api.updateaudiotranscriptssegmentsv1audiosaudioidtranscriptput
+        with:
+          audio_id: rest.audio_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/audios/{audio-id}/transcript/replace
+      name: v1-audios-audio-id-transcript-replace
+      description: REST surface for v1-audios-audio_id-transcript-replace.
+      operations:
+      - method: PUT
+        name: replaceaudiotranscriptv1audiosaudioidtranscriptreplaceput
+        description: Replace Audio Transcript
+        call: imentiv-ai-audio-emotion-api.replaceaudiotranscriptv1audiosaudioidtranscriptreplaceput
+        with:
+          audio_id: rest.audio_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/audios/{audio-id}/{segment-index}
+      name: v1-audios-audio-id-segment-index
+      description: REST surface for v1-audios-audio_id-segment_index.
+      operations:
+      - method: DELETE
+        name: deleteaudiosegmentv1audiosaudioidsegmentindexdelete
+        description: Delete Audio Segment
+        call: imentiv-ai-audio-emotion-api.deleteaudiosegmentv1audiosaudioidsegmentindexdelete
+        with:
+          audio_id: rest.audio_id
+          segment_index: rest.segment_index
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/audios
+      name: v2-audios
+      description: REST surface for v2-audios.
+      operations:
+      - method: POST
+        name: uploadaudiov2audiospost
+        description: Upload Audio
+        call: imentiv-ai-audio-emotion-api.uploadaudiov2audiospost
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/audios/{audio-id}/multimodal-analytics
+      name: v2-audios-audio-id-multimodal-analytics
+      description: REST surface for v2-audios-audio_id-multimodal-analytics.
+      operations:
+      - method: GET
+        name: getaudiomultimodalinsightsv2audiosaudioidmultimodalanalyticsget
+        description: Get Audio Multimodal Insights
+        call: imentiv-ai-audio-emotion-api.getaudiomultimodalinsightsv2audiosaudioidmultimodalanalyticsget
+        with:
+          audio_id: rest.audio_id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: imentiv-ai-audio-emotion-api-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Welcome to Imentiv AI — Audio Emotion API. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: list-audios
+      description: List Audios
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.listaudiosv1audiosget
+      with:
+        offset_audio_id: tools.offset_audio_id
+        page_size: tools.page_size
+        direction: tools.direction
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-audio-emotion-insights
+      description: Get Audio Emotion Insights
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.getaudioemotioninsightsv1audiosaudioidget
+      with:
+        audio_id: tools.audio_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: reprocess-audio
+      description: Reprocess Audio
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.reprocessaudiov1audiosaudioidput
+      with:
+        audio_id: tools.audio_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-audio
+      description: Delete An Audio
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.deleteanaudiov1audiosaudioiddelete
+      with:
+        audio_id: tools.audio_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: edit-title-description
+      description: Edit Title Or Description
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.edittitleordescriptionv1audiosaudioidmetadataput
+      with:
+        audio_id: tools.audio_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: download-audio-emotion-report
+      description: Download Audio Emotion Report
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.downloadaudioemotionreportv1audiosaudioidreportget
+      with:
+        audio_id: tools.audio_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-speaker-names
+      description: Update Speaker Names
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.updatespeakernamesv1audiosaudioidspeakersnamesput
+      with:
+        audio_id: tools.audio_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-audio-transcripts-segments
+      description: Update Audio Transcripts Segments
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.updateaudiotranscriptssegmentsv1audiosaudioidtranscriptput
+      with:
+        audio_id: tools.audio_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: replace-audio-transcript
+      description: Replace Audio Transcript
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.replaceaudiotranscriptv1audiosaudioidtranscriptreplaceput
+      with:
+        audio_id: tools.audio_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-audio-segment
+      description: Delete Audio Segment
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.deleteaudiosegmentv1audiosaudioidsegmentindexdelete
+      with:
+        audio_id: tools.audio_id
+        segment_index: tools.segment_index
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: upload-audio
+      description: Upload Audio
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: imentiv-ai-audio-emotion-api.uploadaudiov2audiospost
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-audio-multimodal-insights
+      description: Get Audio Multimodal Insights
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-audio-emotion-api.getaudiomultimodalinsightsv2audiosaudioidmultimodalanalyticsget
+      with:
+        audio_id: tools.audio_id
+      outputParameters:
+      - type: object
+        mapping: $.

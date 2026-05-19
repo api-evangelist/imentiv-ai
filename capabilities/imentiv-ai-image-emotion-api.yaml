@@ -1,0 +1,443 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Welcome to Imentiv AI — Image Emotion API
+  description: 'Welcome to Imentiv AI — Image Emotion API. 9 operations. Lead operation: List Images. Self-contained Naftiko
+    capability covering one Imentiv Ai business surface.'
+  tags:
+  - Imentiv Ai
+  - Image Emotion API
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    IMENTIV_AI_API_KEY: IMENTIV_AI_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: imentiv-ai-image-emotion-api
+    baseUri: ''
+    description: Welcome to Imentiv AI — Image Emotion API business capability. Self-contained, no shared references.
+    resources:
+    - name: v1-images
+      path: /v1/images
+      operations:
+      - name: listimagesv1imagesget
+        method: GET
+        description: List Images
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: start_after
+          in: query
+          type: string
+          description: ID of the last image from the previous page. Fetches results after this ID.
+        - name: page_size
+          in: query
+          type: integer
+          description: Number of results to return per page. The default is 10.
+        - name: direction
+          in: query
+          type: string
+          description: 'Pagination direction: ''forward'' or ''backward''. Default is ''forward'''
+    - name: v1-images-image_id
+      path: /v1/images/{image_id}
+      operations:
+      - name: getimageemotionanalysisv1imagesimageidget
+        method: GET
+        description: Get Image Emotion Analysis
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: image_id
+          in: path
+          type: string
+          description: Unique ID of the image to retrieve.
+          required: true
+      - name: deleteimagev1imagesimageiddelete
+        method: DELETE
+        description: Delete Image
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: image_id
+          in: path
+          type: string
+          description: Unique ID of the image
+          required: true
+      - name: reprocessimagev1imagesimageidput
+        method: PUT
+        description: Reprocess Image
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: image_id
+          in: path
+          type: string
+          description: The unique image ID of the image.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: v1-images-image_id-annotated_image
+      path: /v1/images/{image_id}/annotated_image
+      operations:
+      - name: sendimagev1imagesimageidannotatedimageget
+        method: GET
+        description: Send Image
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: image_id
+          in: path
+          type: string
+          description: Unique ID of the image.
+          required: true
+    - name: v1-images-image_id-faces-face_id-note
+      path: /v1/images/{image_id}/faces/{face_id}/note
+      operations:
+      - name: addnotetospecificfacev1imagesimageidfacesfaceidnoteput
+        method: PUT
+        description: Add Note To Specific Face
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: image_id
+          in: path
+          type: string
+          description: The unique image ID of the image
+          required: true
+        - name: face_id
+          in: path
+          type: string
+          description: Unique ID of the face within the image
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: v1-images-image_id-metadata
+      path: /v1/images/{image_id}/metadata
+      operations:
+      - name: editimagemetadatav1imagesimageidmetadataput
+        method: PUT
+        description: Edit Image Metadata
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: image_id
+          in: path
+          type: string
+          description: Provide the image ID to edit the title or description of the image
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: false
+    - name: v1-images-image_id-report
+      path: /v1/images/{image_id}/report
+      operations:
+      - name: downloadimageemotionreportv1imagesimageidreportget
+        method: GET
+        description: Download Image Emotion Report
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: image_id
+          in: path
+          type: string
+          description: Unique ID of the image
+          required: true
+    - name: v2-images
+      path: /v2/images
+      operations:
+      - name: uploadimagev2imagespost
+        method: POST
+        description: Upload Image
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: X-API-Key
+      value: '{{env.IMENTIV_AI_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: imentiv-ai-image-emotion-api-rest
+    port: 8080
+    description: REST adapter for Welcome to Imentiv AI — Image Emotion API. One Spectral-compliant resource per consumed
+      operation, prefixed with /v1.
+    resources:
+    - path: /v1/v1/images
+      name: v1-images
+      description: REST surface for v1-images.
+      operations:
+      - method: GET
+        name: listimagesv1imagesget
+        description: List Images
+        call: imentiv-ai-image-emotion-api.listimagesv1imagesget
+        with:
+          start_after: rest.start_after
+          page_size: rest.page_size
+          direction: rest.direction
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/images/{image-id}
+      name: v1-images-image-id
+      description: REST surface for v1-images-image_id.
+      operations:
+      - method: GET
+        name: getimageemotionanalysisv1imagesimageidget
+        description: Get Image Emotion Analysis
+        call: imentiv-ai-image-emotion-api.getimageemotionanalysisv1imagesimageidget
+        with:
+          image_id: rest.image_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deleteimagev1imagesimageiddelete
+        description: Delete Image
+        call: imentiv-ai-image-emotion-api.deleteimagev1imagesimageiddelete
+        with:
+          image_id: rest.image_id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: reprocessimagev1imagesimageidput
+        description: Reprocess Image
+        call: imentiv-ai-image-emotion-api.reprocessimagev1imagesimageidput
+        with:
+          image_id: rest.image_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/images/{image-id}/annotated-image
+      name: v1-images-image-id-annotated-image
+      description: REST surface for v1-images-image_id-annotated_image.
+      operations:
+      - method: GET
+        name: sendimagev1imagesimageidannotatedimageget
+        description: Send Image
+        call: imentiv-ai-image-emotion-api.sendimagev1imagesimageidannotatedimageget
+        with:
+          image_id: rest.image_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/images/{image-id}/faces/{face-id}/note
+      name: v1-images-image-id-faces-face-id-note
+      description: REST surface for v1-images-image_id-faces-face_id-note.
+      operations:
+      - method: PUT
+        name: addnotetospecificfacev1imagesimageidfacesfaceidnoteput
+        description: Add Note To Specific Face
+        call: imentiv-ai-image-emotion-api.addnotetospecificfacev1imagesimageidfacesfaceidnoteput
+        with:
+          image_id: rest.image_id
+          face_id: rest.face_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/images/{image-id}/metadata
+      name: v1-images-image-id-metadata
+      description: REST surface for v1-images-image_id-metadata.
+      operations:
+      - method: PUT
+        name: editimagemetadatav1imagesimageidmetadataput
+        description: Edit Image Metadata
+        call: imentiv-ai-image-emotion-api.editimagemetadatav1imagesimageidmetadataput
+        with:
+          image_id: rest.image_id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/images/{image-id}/report
+      name: v1-images-image-id-report
+      description: REST surface for v1-images-image_id-report.
+      operations:
+      - method: GET
+        name: downloadimageemotionreportv1imagesimageidreportget
+        description: Download Image Emotion Report
+        call: imentiv-ai-image-emotion-api.downloadimageemotionreportv1imagesimageidreportget
+        with:
+          image_id: rest.image_id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v2/images
+      name: v2-images
+      description: REST surface for v2-images.
+      operations:
+      - method: POST
+        name: uploadimagev2imagespost
+        description: Upload Image
+        call: imentiv-ai-image-emotion-api.uploadimagev2imagespost
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: imentiv-ai-image-emotion-api-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Welcome to Imentiv AI — Image Emotion API. One tool per consumed operation, routed inline
+      through this capability's consumes block.
+    tools:
+    - name: list-images
+      description: List Images
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-image-emotion-api.listimagesv1imagesget
+      with:
+        start_after: tools.start_after
+        page_size: tools.page_size
+        direction: tools.direction
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-image-emotion-analysis
+      description: Get Image Emotion Analysis
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-image-emotion-api.getimageemotionanalysisv1imagesimageidget
+      with:
+        image_id: tools.image_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-image
+      description: Delete Image
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: imentiv-ai-image-emotion-api.deleteimagev1imagesimageiddelete
+      with:
+        image_id: tools.image_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: reprocess-image
+      description: Reprocess Image
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-image-emotion-api.reprocessimagev1imagesimageidput
+      with:
+        image_id: tools.image_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: send-image
+      description: Send Image
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-image-emotion-api.sendimagev1imagesimageidannotatedimageget
+      with:
+        image_id: tools.image_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-note-specific-face
+      description: Add Note To Specific Face
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-image-emotion-api.addnotetospecificfacev1imagesimageidfacesfaceidnoteput
+      with:
+        image_id: tools.image_id
+        face_id: tools.face_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: edit-image-metadata
+      description: Edit Image Metadata
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-image-emotion-api.editimagemetadatav1imagesimageidmetadataput
+      with:
+        image_id: tools.image_id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: download-image-emotion-report
+      description: Download Image Emotion Report
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: imentiv-ai-image-emotion-api.downloadimageemotionreportv1imagesimageidreportget
+      with:
+        image_id: tools.image_id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: upload-image
+      description: Upload Image
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: imentiv-ai-image-emotion-api.uploadimagev2imagespost
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
