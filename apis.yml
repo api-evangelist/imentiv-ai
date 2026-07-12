@@ -36,6 +36,10 @@ apis:
       - type: OpenAPI
         url: https://raw.githubusercontent.com/api-evangelist/imentiv-ai/main/openapi/imentiv-ai-openapi.yml
 common:
+  - type: DomainSecurity
+    url: security/imentiv-ai-domain-security.yml
+  - type: Authentication
+    url: authentication/imentiv-ai-authentication.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/imentivai
   - type: Website

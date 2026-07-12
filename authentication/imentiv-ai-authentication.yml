@@ -1,0 +1,15 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/imentiv-ai-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: APIKeyHeader
+  type: apiKey
+  in: header
+  parameter: X-API-Key
+  sources:
+  - openapi/imentiv-ai-openapi.yml
