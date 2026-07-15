@@ -36,6 +36,8 @@ apis:
       - type: OpenAPI
         url: https://raw.githubusercontent.com/api-evangelist/imentiv-ai/main/openapi/imentiv-ai-openapi.yml
 common:
+  - type: AgenticAccess
+    url: agentic-access/imentiv-ai-agentic-access.yml
   - type: DomainSecurity
     url: security/imentiv-ai-domain-security.yml
   - type: Authentication

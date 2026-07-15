@@ -1,0 +1,833 @@
+generated: '2026-07-15'
+method: generated
+source: openapi/imentiv-ai-openapi.yml
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 61
+  by_action_class:
+    acting: 34
+    connected: 27
+  by_consequence:
+    write: 33
+    read: 27
+    physical: 1
+  human_in_the_loop_required: 0
+operations:
+- path: /v2/videos
+  method: post
+  operationId: upload_video_v2_videos_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos
+  method: get
+  operationId: list_videos_v1_videos_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/videos/{video_id}
+  method: get
+  operationId: get_video_emotion_insights_v1_videos__video_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/videos/{video_id}
+  method: delete
+  operationId: delete_video_v1_videos__video_id__delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/{video_id}
+  method: put
+  operationId: reprocess_video_v1_videos__video_id__put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v2/videos/{video_id}/multimodal-analytics
+  method: get
+  operationId: get_video_multimodal_insights_v2_videos__video_id__multimodal_analytics_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v2/videos/{video_id}/emotions/average
+  method: get
+  operationId: get_average_emotions_v2_videos__video_id__emotions_average_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v2/videos/{video_id}/annotated_video
+  method: get
+  operationId: get_annotated_video_v2_videos__video_id__annotated_video_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/videos/{video_id}/valence_arousal
+  method: get
+  operationId: get_valence_arousal_v1_videos__video_id__valence_arousal_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/videos/{video_id}/frames
+  method: get
+  operationId: get_multiple_frame_v1_videos__video_id__frames_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/videos/{video_id}/frames/{frame_id}
+  method: get
+  operationId: get_single_frame_v1_videos__video_id__frames__frame_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/videos/{video_id}/frames/{frame_id}/dominant_emotion
+  method: get
+  operationId: retrieve_domination_emotion_for_a_specific_frame_v1_videos__video_id__frames__frame_id__dominant_emotion_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/videos/{video_id}/frames/{frame_id}/valence_arousal
+  method: get
+  operationId: retrieve_emotion_intensity_v1_videos__video_id__frames__frame_id__valence_arousal_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/videos/{video_id}/frames/{frame_id}/faces/{face_id}/emotions
+  method: put
+  operationId: update_emotion_per_frame_v1_videos__video_id__frames__frame_id__faces__face_id__emotions_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/{video_id}/frames/{frame_id}/faces/{face_id}/note
+  method: put
+  operationId: edit_face_note_v1_videos__video_id__frames__frame_id__faces__face_id__note_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/{video_id}/frames/faces
+  method: put
+  operationId: update_multiple_faces_v1_videos__video_id__frames_faces_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/{video_id}/faces
+  method: put
+  operationId: merge_face_v1_videos__video_id__faces_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/{video_id}/faces
+  method: delete
+  operationId: delete_faces_v1_videos__video_id__faces_delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/{video_id}/faces/names
+  method: put
+  operationId: update_faces_names_v1_videos__video_id__faces_names_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/highlights
+  method: post
+  operationId: process_highlight_v1_videos_highlights_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/{video_id}/highlights
+  method: get
+  operationId: fetch_highlight_video_v1_videos__video_id__highlights_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/videos/{video_id}/highlights
+  method: put
+  operationId: update_highlight_video_v1_videos__video_id__highlights_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/{video_id}/highlight_video
+  method: get
+  operationId: download_highlight_video_v1_videos__video_id__highlight_video_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/videos/{video_id}/metadata
+  method: put
+  operationId: edit_title_or_description_by_id_v1_videos__video_id__metadata_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/{video_id}/report
+  method: post
+  operationId: generate_video_emotion_analysis_report_v1_videos__video_id__report_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/videos/{video_id}/report
+  method: get
+  operationId: download_video_emotion_analysis_report_v1_videos__video_id__report_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v2/audios
+  method: post
+  operationId: upload_audio_v2_audios_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/audios
+  method: get
+  operationId: list_audios_v1_audios_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/audios/{audio_id}
+  method: get
+  operationId: get_audio_emotion_insights_v1_audios__audio_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/audios/{audio_id}
+  method: put
+  operationId: reprocess_audio_v1_audios__audio_id__put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/audios/{audio_id}
+  method: delete
+  operationId: delete_an_audio_v1_audios__audio_id__delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v2/audios/{audio_id}/multimodal-analytics
+  method: get
+  operationId: get_audio_multimodal_insights_v2_audios__audio_id__multimodal_analytics_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/audios/{audio_id}/{segment_index}
+  method: delete
+  operationId: delete_audio_segment_v1_audios__audio_id___segment_index__delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/audios/{audio_id}/transcript
+  method: put
+  operationId: update_audio_transcripts_segments_v1_audios__audio_id__transcript_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/audios/{audio_id}/speakers/names
+  method: put
+  operationId: update_speaker_names_v1_audios__audio_id__speakers_names_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/audios/{audio_id}/metadata
+  method: put
+  operationId: edit_title_or_description_v1_audios__audio_id__metadata_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/audios/{audio_id}/report
+  method: get
+  operationId: download_audio_emotion_report_v1_audios__audio_id__report_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v2/texts
+  method: post
+  operationId: upload_text_v2_texts_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/texts
+  method: get
+  operationId: list_texts_v1_texts_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/texts/{text_id}
+  method: get
+  operationId: get_text_emotion_insights_v1_texts__text_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/texts/{text_id}
+  method: delete
+  operationId: delete_text_v1_texts__text_id__delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/texts/{text_id}
+  method: put
+  operationId: reprocess_text_v1_texts__text_id__put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v2/images
+  method: post
+  operationId: upload_image_v2_images_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/images
+  method: get
+  operationId: list_images_v1_images_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/images/{image_id}
+  method: get
+  operationId: get_image_emotion_analysis_v1_images__image_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/images/{image_id}
+  method: delete
+  operationId: delete_image_v1_images__image_id__delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/images/{image_id}
+  method: put
+  operationId: reprocess_image_v1_images__image_id__put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/images/{image_id}/annotated_image
+  method: get
+  operationId: send_image_v1_images__image_id__annotated_image_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/images/{image_id}/faces/{face_id}/note
+  method: put
+  operationId: add_note_to_specific_face_v1_images__image_id__faces__face_id__note_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/images/{image_id}/metadata
+  method: put
+  operationId: edit_image_metadata_v1_images__image_id__metadata_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/images/{image_id}/report
+  method: get
+  operationId: download_image_emotion_report_v1_images__image_id__report_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v2/reports/pdf/{media_id}
+  method: get
+  operationId: generate_pdf_report_v2_reports_pdf__media_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/texts/{text_id}/emotions
+  method: put
+  operationId: edit_text_v1_texts__text_id__emotions_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/texts/{text_id}/report
+  method: get
+  operationId: download_text_emotion_report_v1_texts__text_id__report_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/audios/{audio_id}/transcript/replace
+  method: put
+  operationId: replace_audio_transcript_v1_audios__audio_id__transcript_replace_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v2/{media_type}/{media_id}/ai-insights
+  method: post
+  operationId: chat_ai_insights_v2__media_type___media_id__ai_insights_post
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v2/{media_type}/{media_id}/ai-insights
+  method: get
+  operationId: get_ai_insights_history_v2__media_type___media_id__ai_insights_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v2/videos/{video_id}/speaker-face-match
+  method: put
+  operationId: update_speaker_face_match_v2_videos__video_id__speaker_face_match_put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v2/videos/{video_id}/speaker-face-match
+  method: post
+  operationId: trigger_speaker_face_match_v2_videos__video_id__speaker_face_match_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v2/videos/{video_id}/personality/analyze
+  method: post
+  operationId: trigger_personality_analysis_v2_videos__video_id__personality_analyze_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v2/videos/{video_id}/faces/{face_id}/personality-analysis
+  method: get
+  operationId: get_personality_analysis_v2_videos__video_id__faces__face_id__personality_analysis_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
