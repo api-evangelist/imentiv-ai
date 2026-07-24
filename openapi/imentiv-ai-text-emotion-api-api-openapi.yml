@@ -1,0 +1,566 @@
+openapi: 3.1.0
+info:
+  title: Welcome to Imentiv AI AI Insights API Text Emotion API API
+  description: "# Welcome to Imentiv AI\n\nImentiv AI is an advanced Emotion AI platform that leverages deep learning to analyze human emotions across multiple media formats, including video, audio, images, and text. By interpreting facial expressions, vocal tones, and linguistic cues, it provides detailed emotional insights to support use cases such as content creation, marketing optimization, education, mental health assessments, and more.\n\nImentiv AI offers a suite of Emotion Recognition APIs that allow developers and businesses to seamlessly integrate advanced emotion analysis into their applications, enabling deeper insights into user engagement and emotional responses.\n\n## Key Features of Imentiv AI APIs\n\n### 1. Video Emotion API\n**Functionality:** Analyzes emotions in videos, whether uploaded directly or via YouTube links.\n\n**Insights Provided:**\n- Frame-by-frame and actor-by-actor emotion analysis\n- Valence-arousal mapping to determine emotional intensity and positivity/negativity\n- Personality trait analysis using the Big Five (OCEAN) model\n- Emotion graphs and wheels to visualize emotional dynamics\n\n**Use Cases:** Suitable for researchers analyzing bulk videos, advertising campaigns, webinars, online meetings, and other video-based content to optimize engagement and content strategy.\n\n### 2. Image Emotion API\n**Functionality:** Detects and analyzes emotions in images.\n\n**Insights Provided:**\n- Face detection and recognition\n- Emotion analysis for each detected face\n- Overall emotional tone of the image\n\n**Use Cases:** Enhances image analysis for advertising, market research, psychological studies, and social media content.\n\n### 3. Audio Emotion API\n**Functionality:** Analyzes emotions in audio recordings, either via direct uploads or by extracting audio from YouTube videos.\n\n**Insights Provided:**\n- Differentiation between multiple speakers in a conversation\n- Emotion detection from vocal cues (e.g., happiness, sadness, anger, surprise)\n- Transcription and detection of up to 28 nuanced emotions (e.g., admiration, curiosity, disappointment, pride)\n- Audio summaries and detailed analytics\n\n**Use Cases:** Provides emotional insights for podcasts, voice messages, call analysis, and other audio-based content.\n\n### 4. Text Emotion API\n**Functionality:** Analyzes emotions in textual content.\n\n**Insights Provided:**\n- Detection of 28 distinct emotions, including curiosity, disappointment, and excitement\n- Overall sentiment analysis and identification of dominant emotions at sentence level\n\n**Use Cases:** Integrates into chatbots, social media platforms, and other text-based applications for sentiment and emotion analysis.\n\n---\n\n## Authorization\n\nLearn how to obtain your API keys to access Imentiv AI APIs.\n\n### Generate API Key:\n\n1. **Sign up** at [imentiv.ai](https://imentiv.ai) and log in to your account.\n2. Navigate to the **'My Profile'** tab to obtain your API key.\n3. Use this API key to authorize your API calls.\n\n> **Note:** Keep your API key secure and do not share it publicly. Include it in your API requests using the `Authorization` header or as specified in the endpoint documentation.\n        "
+  version: 1.0.0
+tags:
+- name: Text Emotion API
+  description: "The Text Emotion Analysis API by Imentiv analyzes a given piece of text and returns the detected emotional tone(s).\n\n**Features:**\n- The API processes the text, detects emotions for each paragraph, and returns results.\n- A callback mechanism is supported for asynchronous analysis.\n- **Supported emotions (28):** Admiration, Amusement, Approval, Caring, Desire, Excitement, Gratitude, Joy/Happy, Love, Optimism, Pride, Relief, Anger, Disappointment, Annoyance, Disapproval, Disgust, Embarrassment, Fear, Grief, Nervousness, Remorse, Sadness, Confusion, Curiosity, Realization, Surprise, Neutral\n            "
+paths:
+  /v2/texts:
+    post:
+      tags:
+      - Text Emotion API
+      summary: Upload Text
+      description: 'Analyze emotions and sentiment from text content.
+
+
+        Submit text directly and receive detailed emotion analysis
+
+
+        **How It Works:**
+
+        1. Submit your text with a title and receive an immediate response with a text ID
+
+        2. Text is queued for processing (typically completes within seconds)
+
+        3. Optionally receive a webhook notification via `callback_url` when complete
+
+        4. Retrieve results using the text ID
+
+
+        **Credit Usage:**
+
+        Processing is billed based on the word count of your text.'
+      operationId: upload_text_v2_texts_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_upload_text_v2_texts_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextEmotionResponseV2'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - APIKeyHeader: []
+  /v1/texts:
+    get:
+      tags:
+      - Text Emotion API
+      summary: List Texts
+      description: 'Retrieves a paginated list of all uploaded or processed images.
+
+        Use this endpoint to browse through text records based on their ID, status, and title.'
+      operationId: list_texts_v1_texts_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: start_after
+        in: query
+        required: false
+        schema:
+          type: string
+          description: The ID of the reference text from which to paginate forward/backward
+          title: Start After
+        description: The ID of the reference text from which to paginate forward/backward
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: 'Number of results to return (default: 10)'
+          default: 10
+          title: Page Size
+        description: 'Number of results to return (default: 10)'
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Pagination direction: forward (default) or backward'
+          default: forward
+          title: Direction
+        description: 'Pagination direction: forward (default) or backward'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/texts/{text_id}:
+    get:
+      tags:
+      - Text Emotion API
+      summary: Get Text Emotion Insights
+      description: 'Retrieves detailed emotion analysis results for a specific uploaded text.
+
+        Includes paragraph wise analysis, and supports 28 emotions.'
+      operationId: get_text_emotion_insights_v1_texts__text_id__get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: text_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the text.
+          title: Text Id
+        description: The unique ID of the text.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FetchTextResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Text Emotion API
+      summary: Delete Text
+      description: 'Deletes a specific text and all associated emotion analysis data from the system.
+
+        This action is irreversible.'
+      operationId: delete_text_v1_texts__text_id__delete
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: text_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique text ID of the text.
+          title: Text Id
+        description: The unique text ID of the text.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTextResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - Text Emotion API
+      summary: Reprocess Text
+      description: 'Reprocesses a text that has either failed or completed.
+
+        You can trigger the reprocessing by setting reprocess to True.
+
+        This will reanalyze the image and provide updated insights'
+      operationId: reprocess_text_v1_texts__text_id__put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: text_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the text.
+          title: Text Id
+        description: The unique ID of the text.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_reprocess_text_v1_texts__text_id__put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextReprocessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/texts/{text_id}/emotions:
+    put:
+      tags:
+      - Text Emotion API
+      summary: Edit Text
+      description: This end-point allows a user to edit the existing text and reprocess it to generate emotion insights.
+      operationId: edit_text_v1_texts__text_id__emotions_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: text_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique text ID of the text.
+          title: Text Id
+        description: The unique text ID of the text.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_edit_text_v1_texts__text_id__emotions_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextReprocessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/texts/{text_id}/report:
+    get:
+      tags:
+      - Text Emotion API
+      summary: Download Text Emotion Report
+      description: Downloads the emotion analysis insights for a specific text in CSV format based on the provided text id.
+      operationId: download_text_emotion_report_v1_texts__text_id__report_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: text_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the text.
+          title: Text Id
+        description: The unique ID of the text.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PaginatedResponse:
+      properties:
+        documents:
+          title: Documents
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - documents
+      - count
+      title: PaginatedResponse
+      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]): List of audio responses.\n    count (int): Total count of documents."
+    FetchTextResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        model_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model Id
+        document_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Document Type
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        word_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Word Count
+        segments:
+          anyOf:
+          - items:
+              anyOf:
+              - $ref: '#/components/schemas/Emotions'
+              - $ref: '#/components/schemas/TranscriptEmotions'
+            type: array
+          - type: 'null'
+          title: Segments
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text
+        emotions:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Emotions
+        parent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Id
+      type: object
+      required:
+      - id
+      - status
+      title: FetchTextResponse
+      description: "Detailed response for a text emotion analysis request.\n\nAttributes:\n    title (Optional[str]): Title of the text (available for v2 texts).\n    model_id (str): Model used to process the text.\n    created_at (Any): Timestamp of creation.\n    text (Optional[str]): The input text.\n    user_id (Optional[str]): ID of the user who submitted the text.\n    word_count (Optional[int]): Number of words in the input.\n    segments (Optional[List[Emotions]]): List of emotions per sentence.\n    emotions (Optional[dict]): Overall emotions detected in the text.\n    parent_id (Optional[str]): ID associated with parent audio id if any."
+    TextReprocessResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - status
+      - message
+      title: TextReprocessResponse
+      description: "Response model for reprocessing a text analysis request.\n\nAttributes:\n    message (str): Additional information about the reprocessing result."
+    DeleteTextResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: DeleteTextResponse
+      description: Response returned after deleting a text emotion analysis result.
+    TextEmotionResponseV2:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        word_count:
+          type: integer
+          title: Word Count
+        user_id:
+          type: string
+          title: User Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - word_count
+      - user_id
+      title: TextEmotionResponseV2
+      description: "V2 response model for text emotion detection.\n\nSimplified text-only processing without YouTube support.\nDirect text submission with mandatory title field.\n\nAttributes:\n    id (str): Unique ID of the text.\n    title (str): Title of the text.\n    status (str): Processing status (queue, processing, done, etc.).\n    word_count (int): Number of words in the text.\n    user_id (str): ID of the user who submitted the text.\n    created_at (Optional[str]): Timestamp when text was created."
+    Body_reprocess_text_v1_texts__text_id__put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The url to notify when text processing is completed
+        reprocess:
+          type: boolean
+          title: Reprocess
+          description: Set to 'True' to reprocess an already processed text; defaults to 'False'.
+          default: false
+      type: object
+      title: Body_reprocess_text_v1_texts__text_id__put
+    Body_edit_text_v1_texts__text_id__emotions_put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: 'Optional URL to receive a webhook notification when analysis is complete. Example: ''https://example.com/callback'''
+        text:
+          type: string
+          title: Text
+          description: The updated text to be analyzed for emotions.
+      type: object
+      required:
+      - text
+      title: Body_edit_text_v1_texts__text_id__emotions_put
+    Body_upload_text_v2_texts_post:
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: Title
+          description: A descriptive title for your text (e.g., 'Customer Feedback' or 'Meeting Notes').
+        text:
+          type: string
+          title: Text
+          description: The raw text content to be analyzed for emotions. Can be any text such as customer reviews, transcripts, or general content.
+        callback_url:
+          type: string
+          title: Callback Url
+          description: Your webhook URL to receive a notification when analysis completes.
+          default: ''
+      type: object
+      required:
+      - title
+      - text
+      title: Body_upload_text_v2_texts_post
+    Emotions:
+      properties:
+        emotions:
+          additionalProperties: true
+          type: object
+          title: Emotions
+        sentence:
+          type: string
+          title: Sentence
+      type: object
+      title: Emotions
+      description: "Model representing detected emotions in a sentence.\n\nAttributes:\n    emotions (Optional[dict]): Dictionary of emotion scores.\n    sentence (Optional[str]): The sentence where emotions were detected."
+    TranscriptEmotions:
+      properties:
+        emotions:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          title: Emotions
+        start_time:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Start Time
+        end_time:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: End Time
+        speaker_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Speaker Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        max_emotion:
+          additionalProperties:
+            anyOf:
+            - type: string
+            - type: number
+          type: object
+          title: Max Emotion
+        segment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Segment
+      type: object
+      required:
+      - max_emotion
+      title: TranscriptEmotions
+      description: "Represents emotional data for a transcript segment.\n\nAttributes:\n    emotions (Optional[Dict[str, str]]): Dictionary of detected emotions and their scores or labels.\n    start_time (Optional[int]): Start time of the segment in milliseconds.\n    end_time (Optional[int]): End time of the segment in milliseconds.\n    speaker_id (Optional[int]): ID of the speaker for this segment.\n    name (Optional[str]): Name of the speaker, if available.\n    max_emotion (Dict[str, Union[str, float]]): Emotion with the highest confidence.\n    segment (Optional[str]): The actual text of the transcript segment."
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-Key

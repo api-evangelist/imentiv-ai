@@ -1,0 +1,101 @@
+openapi: 3.1.0
+info:
+  title: Welcome to Imentiv AI AI Insights API Report API API
+  description: "# Welcome to Imentiv AI\n\nImentiv AI is an advanced Emotion AI platform that leverages deep learning to analyze human emotions across multiple media formats, including video, audio, images, and text. By interpreting facial expressions, vocal tones, and linguistic cues, it provides detailed emotional insights to support use cases such as content creation, marketing optimization, education, mental health assessments, and more.\n\nImentiv AI offers a suite of Emotion Recognition APIs that allow developers and businesses to seamlessly integrate advanced emotion analysis into their applications, enabling deeper insights into user engagement and emotional responses.\n\n## Key Features of Imentiv AI APIs\n\n### 1. Video Emotion API\n**Functionality:** Analyzes emotions in videos, whether uploaded directly or via YouTube links.\n\n**Insights Provided:**\n- Frame-by-frame and actor-by-actor emotion analysis\n- Valence-arousal mapping to determine emotional intensity and positivity/negativity\n- Personality trait analysis using the Big Five (OCEAN) model\n- Emotion graphs and wheels to visualize emotional dynamics\n\n**Use Cases:** Suitable for researchers analyzing bulk videos, advertising campaigns, webinars, online meetings, and other video-based content to optimize engagement and content strategy.\n\n### 2. Image Emotion API\n**Functionality:** Detects and analyzes emotions in images.\n\n**Insights Provided:**\n- Face detection and recognition\n- Emotion analysis for each detected face\n- Overall emotional tone of the image\n\n**Use Cases:** Enhances image analysis for advertising, market research, psychological studies, and social media content.\n\n### 3. Audio Emotion API\n**Functionality:** Analyzes emotions in audio recordings, either via direct uploads or by extracting audio from YouTube videos.\n\n**Insights Provided:**\n- Differentiation between multiple speakers in a conversation\n- Emotion detection from vocal cues (e.g., happiness, sadness, anger, surprise)\n- Transcription and detection of up to 28 nuanced emotions (e.g., admiration, curiosity, disappointment, pride)\n- Audio summaries and detailed analytics\n\n**Use Cases:** Provides emotional insights for podcasts, voice messages, call analysis, and other audio-based content.\n\n### 4. Text Emotion API\n**Functionality:** Analyzes emotions in textual content.\n\n**Insights Provided:**\n- Detection of 28 distinct emotions, including curiosity, disappointment, and excitement\n- Overall sentiment analysis and identification of dominant emotions at sentence level\n\n**Use Cases:** Integrates into chatbots, social media platforms, and other text-based applications for sentiment and emotion analysis.\n\n---\n\n## Authorization\n\nLearn how to obtain your API keys to access Imentiv AI APIs.\n\n### Generate API Key:\n\n1. **Sign up** at [imentiv.ai](https://imentiv.ai) and log in to your account.\n2. Navigate to the **'My Profile'** tab to obtain your API key.\n3. Use this API key to authorize your API calls.\n\n> **Note:** Keep your API key secure and do not share it publicly. Include it in your API requests using the `Authorization` header or as specified in the endpoint documentation.\n        "
+  version: 1.0.0
+tags:
+- name: Report API
+  description: "The Report API provides comprehensive emotion analysis reports in PDF format for analyzed media content.\n\n**Features:**\n- Generate detailed PDF reports for video emotion analysis\n- Includes visual charts, emotion timelines, and insights\n- Supports asynchronous report generation with callback notifications\n- Retrieve existing reports or trigger new generation\n\n**Use Cases:** Ideal for creating shareable analysis reports, documentation of emotional insights, and presentation-ready materials.\n            "
+paths:
+  /v2/reports/pdf/{media_id}:
+    get:
+      tags:
+      - Report API
+      summary: Generate Pdf Report
+      description: 'Get PDF report if available, or trigger generation if not.
+
+
+        - Returns PDF metadata if already generated
+
+        - Triggers generation and returns 202 if not available
+
+        - Returns processing status if generation in progress'
+      operationId: generate_pdf_report_v2_reports_pdf__media_id__get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: media_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the media
+          title: Media Id
+        description: Unique identifier of the media
+      - name: media_type
+        in: query
+        required: true
+        schema:
+          type: string
+          description: 'Type: Only ''video'' is allowed at present'
+          title: Media Type
+        description: 'Type: Only ''video'' is allowed at present'
+      - name: callback_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Callback URL for completion notification
+          title: Callback Url
+        description: Callback URL for completion notification
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-Key

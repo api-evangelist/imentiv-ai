@@ -1,0 +1,642 @@
+openapi: 3.1.0
+info:
+  title: Welcome to Imentiv AI AI Insights API Image Emotion API API
+  description: "# Welcome to Imentiv AI\n\nImentiv AI is an advanced Emotion AI platform that leverages deep learning to analyze human emotions across multiple media formats, including video, audio, images, and text. By interpreting facial expressions, vocal tones, and linguistic cues, it provides detailed emotional insights to support use cases such as content creation, marketing optimization, education, mental health assessments, and more.\n\nImentiv AI offers a suite of Emotion Recognition APIs that allow developers and businesses to seamlessly integrate advanced emotion analysis into their applications, enabling deeper insights into user engagement and emotional responses.\n\n## Key Features of Imentiv AI APIs\n\n### 1. Video Emotion API\n**Functionality:** Analyzes emotions in videos, whether uploaded directly or via YouTube links.\n\n**Insights Provided:**\n- Frame-by-frame and actor-by-actor emotion analysis\n- Valence-arousal mapping to determine emotional intensity and positivity/negativity\n- Personality trait analysis using the Big Five (OCEAN) model\n- Emotion graphs and wheels to visualize emotional dynamics\n\n**Use Cases:** Suitable for researchers analyzing bulk videos, advertising campaigns, webinars, online meetings, and other video-based content to optimize engagement and content strategy.\n\n### 2. Image Emotion API\n**Functionality:** Detects and analyzes emotions in images.\n\n**Insights Provided:**\n- Face detection and recognition\n- Emotion analysis for each detected face\n- Overall emotional tone of the image\n\n**Use Cases:** Enhances image analysis for advertising, market research, psychological studies, and social media content.\n\n### 3. Audio Emotion API\n**Functionality:** Analyzes emotions in audio recordings, either via direct uploads or by extracting audio from YouTube videos.\n\n**Insights Provided:**\n- Differentiation between multiple speakers in a conversation\n- Emotion detection from vocal cues (e.g., happiness, sadness, anger, surprise)\n- Transcription and detection of up to 28 nuanced emotions (e.g., admiration, curiosity, disappointment, pride)\n- Audio summaries and detailed analytics\n\n**Use Cases:** Provides emotional insights for podcasts, voice messages, call analysis, and other audio-based content.\n\n### 4. Text Emotion API\n**Functionality:** Analyzes emotions in textual content.\n\n**Insights Provided:**\n- Detection of 28 distinct emotions, including curiosity, disappointment, and excitement\n- Overall sentiment analysis and identification of dominant emotions at sentence level\n\n**Use Cases:** Integrates into chatbots, social media platforms, and other text-based applications for sentiment and emotion analysis.\n\n---\n\n## Authorization\n\nLearn how to obtain your API keys to access Imentiv AI APIs.\n\n### Generate API Key:\n\n1. **Sign up** at [imentiv.ai](https://imentiv.ai) and log in to your account.\n2. Navigate to the **'My Profile'** tab to obtain your API key.\n3. Use this API key to authorize your API calls.\n\n> **Note:** Keep your API key secure and do not share it publicly. Include it in your API requests using the `Authorization` header or as specified in the endpoint documentation.\n        "
+  version: 1.0.0
+tags:
+- name: Image Emotion API
+  description: "The Image Emotion Recognition API by Imentiv analyzes human facial expressions in an image and returns the detected emotions. It can detect multiple faces and evaluate each face's emotional state, providing detailed emotional labels such as happy, sad, angry, neutral, surprise, disgust, fear, and contempt.\n            "
+paths:
+  /v2/images:
+    post:
+      tags:
+      - Image Emotion API
+      summary: Upload Image
+      description: 'Analyze emotions and facial expressions from image content.
+
+
+        Submit an image from multiple sources and receive detailed emotion analysis
+
+        of all detected faces in the image.
+
+
+        **Input Sources:**
+
+        - **Cloud Storage**: Dropbox or other cloud service links
+
+        - **Direct URL**: Any publicly accessible image link
+
+        - **File Upload**: Upload image files directly from your device
+
+
+        **How It Works:**
+
+        1. Submit your image and receive an immediate response with an image ID
+
+        2. Image is queued for processing (typically completes within seconds)
+
+        3. Optionally receive a webhook notification via `callback_url` when complete
+
+        4. Retrieve results using the image ID
+
+
+        **Supported Formats:**
+
+        JPG, JPEG, PNG, WEBP
+
+
+        **Credit Usage:**
+
+        - UI: 10 credits per image
+
+        - API: 5 credits per image'
+      operationId: upload_image_v2_images_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_image_v2_images_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageEmotionResponseV2'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - APIKeyHeader: []
+  /v1/images:
+    get:
+      tags:
+      - Image Emotion API
+      summary: List Images
+      description: 'Retrieves a paginated list of all uploaded or processed images.
+
+        Use this endpoint to browse through image records based on their ID, status, and title.'
+      operationId: list_images_v1_images_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: start_after
+        in: query
+        required: false
+        schema:
+          type: string
+          description: ID of the last image from the previous page. Fetches results after this ID.
+          title: Start After
+        description: ID of the last image from the previous page. Fetches results after this ID.
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Number of results to return per page. The default is 10.
+          default: 10
+          title: Page Size
+        description: Number of results to return per page. The default is 10.
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Pagination direction: ''forward'' or ''backward''. Default is ''forward'''
+          default: forward
+          title: Direction
+        description: 'Pagination direction: ''forward'' or ''backward''. Default is ''forward'''
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/images/{image_id}:
+    get:
+      tags:
+      - Image Emotion API
+      summary: Get Image Emotion Analysis
+      description: 'Retrieves detailed emotion analysis results and metadata for a specific uploaded image.
+
+        Includes detected faces, their emotional scores, image dimensions, and annotated visualizations.'
+      operationId: get_image_emotion_analysis_v1_images__image_id__get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique ID of the image to retrieve.
+          title: Image Id
+        description: Unique ID of the image to retrieve.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageDBResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Image Emotion API
+      summary: Delete Image
+      description: Deletes a specific image and all associated emotion analysis data from the system. This action is irreversible.
+      operationId: delete_image_v1_images__image_id__delete
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique ID of the image
+          title: Image Id
+        description: Unique ID of the image
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageDeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - Image Emotion API
+      summary: Reprocess Image
+      description: 'Reprocesses an image that has either failed or completed.
+
+        You can trigger the reprocessing by setting reprocess to True.
+
+        This will reanalyze the image and provide updated insights.'
+      operationId: reprocess_image_v1_images__image_id__put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique image ID of the image.
+          title: Image Id
+        description: The unique image ID of the image.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_reprocess_image_v1_images__image_id__put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageReprocessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/images/{image_id}/annotated_image:
+    get:
+      tags:
+      - Image Emotion API
+      summary: Send Image
+      description: Downloads the annotated version of the image, which highlights detected faces and their corresponding emotions.
+      operationId: send_image_v1_images__image_id__annotated_image_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique ID of the image.
+          title: Image Id
+        description: Unique ID of the image.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/images/{image_id}/faces/{face_id}/note:
+    put:
+      tags:
+      - Image Emotion API
+      summary: Add Note To Specific Face
+      description: Adds or updates a note attached to a specific face detected in an image.
+      operationId: add_note_to_specific_face_v1_images__image_id__faces__face_id__note_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique image ID of the image
+          title: Image Id
+        description: The unique image ID of the image
+      - name: face_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique ID of the face within the image
+          title: Face Id
+        description: Unique ID of the face within the image
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_add_note_to_specific_face_v1_images__image_id__faces__face_id__note_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageNoteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/images/{image_id}/metadata:
+    put:
+      tags:
+      - Image Emotion API
+      summary: Edit Image Metadata
+      description: Edit image title and description of the uploaded image
+      operationId: edit_image_metadata_v1_images__image_id__metadata_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Provide the image ID to edit the title or description of the image
+          title: Image Id
+        description: Provide the image ID to edit the title or description of the image
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_edit_image_metadata_v1_images__image_id__metadata_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageEditResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/images/{image_id}/report:
+    get:
+      tags:
+      - Image Emotion API
+      summary: Download Image Emotion Report
+      description: 'Downloads the emotion analysis insights for a specific image in CSV format.
+
+        The report includes detected faces and their associated emotion scores.'
+      operationId: download_image_emotion_report_v1_images__image_id__report_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique ID of the image
+          title: Image Id
+        description: Unique ID of the image
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ImageEditResponse:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      title: ImageEditResponse
+      description: "Model for editing image metadata.\n\nAttributes:\n    title (str): Updated title.\n    description (str): Updated description."
+    ImageDeleteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: ImageDeleteResponse
+      description: Response returned after deleting an image analysis result.
+    Body_edit_image_metadata_v1_images__image_id__metadata_put:
+      properties:
+        title:
+          type: string
+          title: Title
+          default: ''
+        description:
+          type: string
+          title: Description
+          default: ''
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+        image_url:
+          type: string
+          title: Image Url
+          default: ''
+      type: object
+      title: Body_edit_image_metadata_v1_images__image_id__metadata_put
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PaginatedResponse:
+      properties:
+        documents:
+          title: Documents
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - documents
+      - count
+      title: PaginatedResponse
+      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]): List of audio responses.\n    count (int): Total count of documents."
+    ImageDBResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        title:
+          type: string
+          title: Title
+        description:
+          type: string
+          title: Description
+        created_at:
+          title: Created At
+        original_frame_image:
+          title: Original Frame Image
+        height:
+          type: number
+          title: Height
+        width:
+          type: number
+          title: Width
+        found_faces:
+          items:
+            type: integer
+          type: array
+          title: Found Faces
+        faces:
+          title: Faces
+        annotated_image:
+          title: Annotated Image
+      type: object
+      required:
+      - id
+      - status
+      - title
+      - description
+      - created_at
+      - original_frame_image
+      - height
+      - width
+      - found_faces
+      - faces
+      - annotated_image
+      title: ImageDBResponse
+      description: "Detailed response model for image emotion stored in DB.\n\nAttributes:\n    title (str): Title of the image.\n    description (str): Description provided by the user.\n    created_at (Any): Timestamp when image was added.\n    original_frame_image (Any): Original image file.\n    height (float): Height of the image.\n    width (float): Width of the image.\n    found_faces (int): Number of faces detected.\n    faces (Any): Detailed face data.\n    annotated_image (Any): Image with annotations (e.g., bounding boxes)."
+    Body_upload_image_v2_images_post:
+      properties:
+        title:
+          type: string
+          maxLength: 150
+          minLength: 1
+          title: Title
+          description: A descriptive title for your image (e.g., 'Customer Reaction' or 'Team Photo').
+        description:
+          type: string
+          maxLength: 300
+          title: Description
+          description: Optional notes about the image content or context.
+        image_url:
+          type: string
+          title: Image Url
+          description: URL to your image source (Dropbox or any direct image link). Leave empty if uploading a file instead.
+          default: ''
+        callback_url:
+          type: string
+          title: Callback Url
+          description: Your webhook URL to receive a notification when analysis completes.
+          default: ''
+        image_file:
+          title: Image File
+          description: Upload an image file directly (jpg, jpeg, png, webp). File upload takes priority over image_url.
+      type: object
+      required:
+      - title
+      title: Body_upload_image_v2_images_post
+    ImageEmotionResponseV2:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        media_source:
+          type: string
+          title: Media Source
+        media_source_url:
+          type: string
+          title: Media Source Url
+        media_source_type:
+          type: string
+          title: Media Source Type
+        user_id:
+          type: string
+          title: User Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - media_source
+      - media_source_url
+      - media_source_type
+      - user_id
+      title: ImageEmotionResponseV2
+      description: "V2 response model for image emotion detection with URL source tracking.\n\nSupports:\n- File uploads (JPG, JPEG, PNG, WEBP)\n- Cloud storage URLs (Dropbox, direct URLs)\n- URL source tracking\n\nAttributes:\n    id (str): Unique ID of the image.\n    title (str): Title of the image.\n    status (str): Processing status (\"queue\").\n    media_source (str): Source type (\"dropbox\", \"public_url\", \"file_upload\").\n    media_source_url (str): Full URL as provided by user or uploaded file URL.\n    media_source_type (str): Type of source media (always \"image\" for this endpoint).\n    user_id (str): ID of the user who uploaded the image.\n    created_at (Optional[str]): Timestamp when image was created."
+    ImageReprocessResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - status
+      - message
+      title: ImageReprocessResponse
+      description: Response model returned after reprocessing an image emotion analysis.
+    Body_add_note_to_specific_face_v1_images__image_id__faces__face_id__note_put:
+      properties:
+        note:
+          type: string
+          title: Note
+          description: Note to be updated for the detected face in the image
+          default: ''
+      type: object
+      title: Body_add_note_to_specific_face_v1_images__image_id__faces__face_id__note_put
+    Body_reprocess_image_v1_images__image_id__put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The callback url to notify image reprocessing is completed. Give a valid URL.
+        reprocess:
+          anyOf:
+          - type: boolean
+          - type: string
+          title: Reprocess
+          description: Set to 'True' to reprocess an already completed image; defaults to 'False'.
+          default: false
+      type: object
+      title: Body_reprocess_image_v1_images__image_id__put
+    ImageNoteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: ImageNoteResponse
+      description: Response after updating or retrieving notes for an image.
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-Key

@@ -1,0 +1,363 @@
+openapi: 3.1.0
+info:
+  title: Welcome to Imentiv AI AI Insights API API
+  description: "# Welcome to Imentiv AI\n\nImentiv AI is an advanced Emotion AI platform that leverages deep learning to analyze human emotions across multiple media formats, including video, audio, images, and text. By interpreting facial expressions, vocal tones, and linguistic cues, it provides detailed emotional insights to support use cases such as content creation, marketing optimization, education, mental health assessments, and more.\n\nImentiv AI offers a suite of Emotion Recognition APIs that allow developers and businesses to seamlessly integrate advanced emotion analysis into their applications, enabling deeper insights into user engagement and emotional responses.\n\n## Key Features of Imentiv AI APIs\n\n### 1. Video Emotion API\n**Functionality:** Analyzes emotions in videos, whether uploaded directly or via YouTube links.\n\n**Insights Provided:**\n- Frame-by-frame and actor-by-actor emotion analysis\n- Valence-arousal mapping to determine emotional intensity and positivity/negativity\n- Personality trait analysis using the Big Five (OCEAN) model\n- Emotion graphs and wheels to visualize emotional dynamics\n\n**Use Cases:** Suitable for researchers analyzing bulk videos, advertising campaigns, webinars, online meetings, and other video-based content to optimize engagement and content strategy.\n\n### 2. Image Emotion API\n**Functionality:** Detects and analyzes emotions in images.\n\n**Insights Provided:**\n- Face detection and recognition\n- Emotion analysis for each detected face\n- Overall emotional tone of the image\n\n**Use Cases:** Enhances image analysis for advertising, market research, psychological studies, and social media content.\n\n### 3. Audio Emotion API\n**Functionality:** Analyzes emotions in audio recordings, either via direct uploads or by extracting audio from YouTube videos.\n\n**Insights Provided:**\n- Differentiation between multiple speakers in a conversation\n- Emotion detection from vocal cues (e.g., happiness, sadness, anger, surprise)\n- Transcription and detection of up to 28 nuanced emotions (e.g., admiration, curiosity, disappointment, pride)\n- Audio summaries and detailed analytics\n\n**Use Cases:** Provides emotional insights for podcasts, voice messages, call analysis, and other audio-based content.\n\n### 4. Text Emotion API\n**Functionality:** Analyzes emotions in textual content.\n\n**Insights Provided:**\n- Detection of 28 distinct emotions, including curiosity, disappointment, and excitement\n- Overall sentiment analysis and identification of dominant emotions at sentence level\n\n**Use Cases:** Integrates into chatbots, social media platforms, and other text-based applications for sentiment and emotion analysis.\n\n---\n\n## Authorization\n\nLearn how to obtain your API keys to access Imentiv AI APIs.\n\n### Generate API Key:\n\n1. **Sign up** at [imentiv.ai](https://imentiv.ai) and log in to your account.\n2. Navigate to the **'My Profile'** tab to obtain your API key.\n3. Use this API key to authorize your API calls.\n\n> **Note:** Keep your API key secure and do not share it publicly. Include it in your API requests using the `Authorization` header or as specified in the endpoint documentation.\n        "
+  version: 1.0.0
+tags:
+- name: AI Insights API
+  description: "The AI Insights API provides conversational AI-powered analysis of emotional data from your media content.\n\n**Features:**\n- Ask natural language questions about detected emotions, patterns, and trends\n- Receive AI-generated insights with real-time streaming (SSE)\n- Conversation continuity across multiple messages\n- Works with all media types: video, audio, image, and text\n\n**Endpoints:**\n- `POST /v2/{media_type}/{media_id}/ai-insights` - Send a message and receive AI response (streaming recommended)\n- `GET /v2/{media_type}/{media_id}/ai-insights` - Retrieve conversation history\n\n**Use Cases:** Ideal for gaining deeper insights into emotional patterns, generating summaries, comparing emotional states, and understanding sentiment trends in your media content.\n            "
+paths:
+  /v2/{media_type}/{media_id}/ai-insights:
+    post:
+      tags:
+      - AI Insights API
+      summary: Send message to AI Insights
+      description: 'Send a message to AI Insights and receive an AI-generated response about the media''s emotional analysis.
+
+
+        ## Streaming (Recommended)
+
+
+        Set `stream=true` (default) to receive the response as Server-Sent Events (SSE) with progressive text chunks. This is the **recommended** approach as it provides real-time feedback and avoids potential timeout issues with longer responses.
+
+
+        **SSE Events:**
+
+        - `stream_start`: Initial event confirming the connection
+
+        - `metadata`: Contains `conversation_id` and `message_id`
+
+        - `stream_chunk`: Progressive text chunks from AI
+
+        - `stream_end`: Final event with complete text and token usage
+
+        - `done`: Completion signal
+
+        - `error`: Error event if processing fails (includes `error_id` and `message`)
+
+
+        ## Non-Streaming
+
+
+        Set `stream=false` to receive the complete response as JSON. **Note:** This mode waits for the full AI response before returning, which may result in longer response times or timeouts for complex queries. Use streaming mode for a better experience.
+
+
+        ## Requirements
+
+
+        - **Message Length:** Maximum 10,000 characters
+
+        - **Media Status:** Media processing must be completed (status: "completed")
+
+        - **Analysis Data:** Emotional analysis data must be available. If not yet ready, you''ll receive error code 1601 — retry after 30–60 seconds.
+
+
+        ## Conversation Management
+
+
+        The system maintains one conversation per user per media item. Your conversation history is preserved across multiple requests — no need to manage conversation IDs manually.
+
+
+        ## Supported Media Types
+
+
+        video, audio, image, text'
+      operationId: chat_ai_insights_v2__media_type___media_id__ai_insights_post
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: media_type
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Media Type
+      - name: media_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Media Id
+      - name: stream
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Enable SSE streaming (true) or return full JSON response (false)
+          default: true
+          title: Stream
+        description: Enable SSE streaming (true) or return full JSON response (false)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIInsightsChatRequest'
+      responses:
+        '200':
+          description: AI response (SSE stream or JSON)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIInsightsChatResponse'
+              example:
+                conversation_id: user123_01
+                message_id: 1
+                response: Based on the video analysis, the dominant emotions are...
+                token_usage:
+                  input_tokens: 1500
+                  output_tokens: 350
+                is_quota_exceeded: false
+            text/event-stream:
+              example: 'event: stream_start
+
+                data: {"status": "initializing"}
+
+
+                event: metadata
+
+                data: {"message_id": 1, "conversation_id": "user123_01"}
+
+
+                event: stream_chunk
+
+                data: {"text": "Based on the video analysis, "}
+
+
+                event: stream_chunk
+
+                data: {"text": "the dominant emotions are..."}
+
+
+                event: stream_end
+
+                data: {"message_id": 1, "full_text": "Based on...", "token_usage": {"input_tokens": 1500, "output_tokens": 350}}
+
+
+                event: done
+
+                data: {}
+
+                '
+        '400':
+          description: Bad Request - Analysis data not yet available
+          content:
+            application/json:
+              example:
+                error_id: 1601
+                message: CSV data not available for video. Please wait for processing to complete.
+                timestamp: '2024-01-15T10:30:00.000000+00:00'
+        '401':
+          description: Unauthorized - Authentication failed
+          content:
+            application/json:
+              example:
+                detail: Invalid User or Not Authorized
+        '404':
+          description: Not Found - Media not found
+          content:
+            application/json:
+              example:
+                detail: Video not found
+        '422':
+          description: Validation Error - Invalid input parameters
+          content:
+            application/json:
+              examples:
+                invalid_media_type:
+                  summary: Invalid media type
+                  value:
+                    detail: 'Invalid media_type. Must be one of: video, audio, image, text'
+                media_not_completed:
+                  summary: Media processing not completed
+                  value:
+                    detail: 'Media processing not completed. Current status: processing'
+                message_too_long:
+                  summary: Message exceeds length limit
+                  value:
+                    detail: '''message'' string should have at most 10000 characters'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                detail: Internal Server Error
+    get:
+      tags:
+      - AI Insights API
+      summary: Get AI Insights conversation history
+      description: 'Retrieve the conversation history for a specific media item''s AI Insights session.
+
+
+        ## Response
+
+
+        Returns all messages (user questions and AI responses) in chronological order.
+
+
+        **Empty History:** If no conversation exists yet, returns an empty `messages` array with a conversation_id. The conversation will be created automatically when you send your first message via POST.
+
+
+        ## Supported Media Types
+
+
+        video, audio, image, text'
+      operationId: get_ai_insights_history_v2__media_type___media_id__ai_insights_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: media_type
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Media Type
+      - name: media_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Media Id
+      responses:
+        '200':
+          description: Conversation history retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIInsightsHistoryResponse'
+              examples:
+                with_messages:
+                  summary: Conversation with messages
+                  value:
+                    conversation_id: user123_01
+                    messages:
+                    - role: user
+                      text: What emotions were detected?
+                      message_id: 1
+                      timestamp: '2024-01-15T10:30:00.000000'
+                    - role: ai_assistant
+                      text: Based on the analysis, the dominant emotions are...
+                      message_id: 1
+                      timestamp: '2024-01-15T10:30:05.000000'
+                empty_history:
+                  summary: No conversation yet
+                  value:
+                    conversation_id: user123_01
+                    messages: []
+        '401':
+          description: Unauthorized - Authentication failed
+          content:
+            application/json:
+              example:
+                detail: Invalid User or Not Authorized
+        '404':
+          description: Not Found - Media not found
+          content:
+            application/json:
+              example:
+                detail: Video not found
+        '422':
+          description: Validation Error - Invalid input parameters
+          content:
+            application/json:
+              example:
+                detail: 'Invalid media_type. Must be one of: video, audio, image, text'
+components:
+  schemas:
+    AIInsightsChatMessage:
+      properties:
+        role:
+          type: string
+          title: Role
+          description: 'Message role: ''user'' or ''ai_assistant'''
+        text:
+          type: string
+          title: Text
+          description: Message content
+        message_id:
+          type: integer
+          title: Message Id
+          description: Message ID
+        timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timestamp
+          description: ISO 8601 timestamp
+      type: object
+      required:
+      - role
+      - text
+      - message_id
+      title: AIInsightsChatMessage
+      description: "Individual message in conversation history.\n\nAttributes:\n    role (str): Message role - \"user\" or \"ai_assistant\".\n    text (str): Message text content.\n    message_id (int): Message ID within the conversation.\n    timestamp (Optional[str]): ISO 8601 timestamp when message was created."
+    AIInsightsHistoryResponse:
+      properties:
+        conversation_id:
+          type: string
+          title: Conversation Id
+          description: Conversation session ID
+        messages:
+          items:
+            $ref: '#/components/schemas/AIInsightsChatMessage'
+          type: array
+          title: Messages
+          description: Conversation message history
+      type: object
+      required:
+      - conversation_id
+      - messages
+      title: AIInsightsHistoryResponse
+      description: "Response model for retrieving AI Insights conversation history.\n\nAttributes:\n    conversation_id (str): The conversation session ID.\n    messages (List[AIInsightsChatMessage]): List of messages in chronological order\n                                             (user messages and AI responses)."
+    AIInsightsChatRequest:
+      properties:
+        message:
+          type: string
+          maxLength: 10000
+          minLength: 1
+          title: Message
+          description: User's question or message about the media content
+      type: object
+      required:
+      - message
+      title: AIInsightsChatRequest
+      description: "Request model for sending a message to AI Insights (REST API).\n\nThe system automatically manages conversation continuity - one conversation per user per media item.\n\nAttributes:\n    message (str): The user's question or message about the media content."
+    AIInsightsChatResponse:
+      properties:
+        conversation_id:
+          type: string
+          title: Conversation Id
+          description: Conversation session ID
+        message_id:
+          type: integer
+          title: Message Id
+          description: Message ID within conversation
+        response:
+          type: string
+          title: Response
+          description: AI assistant's complete response
+        token_usage:
+          anyOf:
+          - additionalProperties:
+              type: integer
+            type: object
+          - type: 'null'
+          title: Token Usage
+          description: Token usage (input_tokens, output_tokens)
+        is_quota_exceeded:
+          type: boolean
+          title: Is Quota Exceeded
+          description: Whether LLM quota exceeded
+          default: false
+      type: object
+      required:
+      - conversation_id
+      - message_id
+      - response
+      title: AIInsightsChatResponse
+      description: "Response model for AI Insights chat (non-streaming mode with ?stream=false).\n\nAttributes:\n    conversation_id (str): Unique identifier for this conversation session.\n    message_id (int): Sequential message ID within the conversation.\n    response (str): The complete AI assistant's response text.\n    token_usage (Optional[Dict[str, int]]): LLM token usage statistics\n                                             (input_tokens, output_tokens).\n    is_quota_exceeded (bool): Whether the user's LLM quota has been exceeded."
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-Key
