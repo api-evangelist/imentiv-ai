@@ -4,7 +4,20 @@ description: >-
   Imentiv AI is an AI-powered platform for analyzing the emotional makeup of videos. The platform uses advanced
   artificial intelligence to make videos emotionally smart by detecting and analyzing emotions in video content.
 type: Index
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/imentiv-ai.png
 tags:
   - Artificial Intelligence
   - Emotion Detection
@@ -15,26 +28,168 @@ modified: '2026-05-19'
 url: https://raw.githubusercontent.com/api-evangelist/imentiv-ai/refs/heads/main/apis.yml
 specificationVersion: '0.19'
 apis:
-  - aid: imentiv-ai:imentiv-ai-api
-    name: Imentiv AI API
-    description: >-
-      The Imentiv AI API enables developers to discover the emotional makeup of videos, audio, images, and text using
-      advanced Emotion AI. The platform detects emotions through facial expressions, vocal tones, and linguistic cues,
-      supporting use cases such as content creation, marketing optimization, education, and mental health assessments.
-    humanURL: https://imentiv.ai/
-    baseURL: https://api.imentiv.ai
-    tags:
-      - AI
-      - Emotion Detection
-      - Video Analysis
-      - Audio Analysis
-      - Image Analysis
-      - Text Analysis
-    properties:
-      - type: Documentation
-        url: https://imentiv.ai/
-      - type: OpenAPI
-        url: https://raw.githubusercontent.com/api-evangelist/imentiv-ai/main/openapi/imentiv-ai-openapi.yml
+- aid: imentiv-ai:imentiv-ai-ai-insights-api-api
+  name: Imentiv AI AI Insights API API
+  description: >-
+    The AI Insights API provides conversational AI-powered analysis of emotional data from your media
+    content.
+
+
+    **Features:**
+
+    - Ask natural language questions about detected emotions, patterns, and trends
+
+    - Receive AI-generated insights with real-time streaming (SSE)
+
+    - Conversation continuity across multiple messages
+
+    - Works with all media types: video, audio, image, and text
+
+
+    **Endpoints:**
+
+    - `POST /v2/{media_type}/{media_id}/ai-insights` - Send a message and receive AI response (streaming
+    recommended)
+
+    - `GET /v2/{media_type}/{media_id}/ai-insights` - Retrieve conversation history
+
+
+    **Use Cases:** Ideal for gaining deeper insights into emotional patterns, generating summaries, comparing
+    emotional states, and understanding sentiment trends in your media content.
+  humanURL: https://imentiv.ai/
+  baseURL: https://api.imentiv.ai
+  tags:
+  - AI Insights API
+  properties:
+  - type: OpenAPI
+    url: openapi/imentiv-ai-ai-insights-api-api-openapi.yml
+  - type: Documentation
+    url: https://imentiv.ai/
+- aid: imentiv-ai:imentiv-ai-audio-emotion-api-api
+  name: Imentiv AI Audio Emotion API API
+  description: >-
+    The Audio Emotion Analysis API processes audio files or YouTube URLs to analyze emotions and transcripts.
+    The API provides:
+
+
+    **Speaker Diarization:** Identifies and segments audio by speakers.
+
+
+    **Audio Emotion Analysis:** Detects one of 8 emotions per audio segment.
+
+
+    **Text Emotion Analysis:** Generates a transcript for each segment and detects one of 28 emotions
+    from the text.
+  humanURL: https://imentiv.ai/
+  baseURL: https://api.imentiv.ai
+  tags:
+  - Audio Emotion API
+  properties:
+  - type: OpenAPI
+    url: openapi/imentiv-ai-audio-emotion-api-api-openapi.yml
+  - type: Documentation
+    url: https://imentiv.ai/
+- aid: imentiv-ai:imentiv-ai-image-emotion-api-api
+  name: Imentiv AI Image Emotion API API
+  description: >-
+    The Image Emotion Recognition API by Imentiv analyzes human facial expressions in an image and returns
+    the detected emotions. It can detect multiple faces and evaluate each face's emotional state, providing
+    detailed emotional labels such as happy, sad, angry, neutral, surprise, disgust, fear, and contempt.
+  humanURL: https://imentiv.ai/
+  baseURL: https://api.imentiv.ai
+  tags:
+  - Image Emotion API
+  properties:
+  - type: OpenAPI
+    url: openapi/imentiv-ai-image-emotion-api-api-openapi.yml
+  - type: Documentation
+    url: https://imentiv.ai/
+- aid: imentiv-ai:imentiv-ai-report-api-api
+  name: Imentiv AI Report API API
+  description: >-
+    The Report API provides comprehensive emotion analysis reports in PDF format for analyzed media content.
+
+
+    **Features:**
+
+    - Generate detailed PDF reports for video emotion analysis
+
+    - Includes visual charts, emotion timelines, and insights
+
+    - Supports asynchronous report generation with callback notifications
+
+    - Retrieve existing reports or trigger new generation
+
+
+    **Use Cases:** Ideal for creating shareable analysis reports, documentation of emotional insights,
+    and presentation-ready materials.
+  humanURL: https://imentiv.ai/
+  baseURL: https://api.imentiv.ai
+  tags:
+  - Report API
+  properties:
+  - type: OpenAPI
+    url: openapi/imentiv-ai-report-api-api-openapi.yml
+  - type: Documentation
+    url: https://imentiv.ai/
+- aid: imentiv-ai:imentiv-ai-text-emotion-api-api
+  name: Imentiv AI Text Emotion API API
+  description: >-
+    The Text Emotion Analysis API by Imentiv analyzes a given piece of text and returns the detected emotional
+    tone(s).
+
+
+    **Features:**
+
+    - The API processes the text, detects emotions for each paragraph, and returns results.
+
+    - A callback mechanism is supported for asynchronous analysis.
+
+    - **Supported emotions (28):** Admiration, Amusement, Approval, Caring, Desire, Excitement, Gratitude,
+    Joy/Happy, Love, Optimism, Pride, Relief, Anger, Disappointment, Annoyance, Disapproval, Disgust,
+    Embarrassment, Fear, Grief, Nervousness, Remorse, Sadness, Confusion, Curiosity, Realization, Surprise,
+    Neutral
+  humanURL: https://imentiv.ai/
+  baseURL: https://api.imentiv.ai
+  tags:
+  - Text Emotion API
+  properties:
+  - type: OpenAPI
+    url: openapi/imentiv-ai-text-emotion-api-api-openapi.yml
+  - type: Documentation
+    url: https://imentiv.ai/
+- aid: imentiv-ai:imentiv-ai-video-emotion-api-api
+  name: Imentiv AI Video Emotion API API
+  description: >-
+    The Video Emotion Analysis API by Imentiv analyzes the emotional states of individuals in a video.
+    It performs multi-modal emotion detection using facial expressions, audio, and text transcript, and
+    has the following features:
+
+
+    - Overall emotion summary
+
+    - Frame-by-frame emotion data
+
+    - Per-face emotional analysis
+
+    - Valence-arousal-intensity data
+
+    - Audio and transcript emotion data
+
+    - Personality analysis
+
+    - Video Highlights
+
+    - Optional psychological insights
+  humanURL: https://imentiv.ai/
+  baseURL: https://api.imentiv.ai
+  tags:
+  - Video Emotion API
+  properties:
+  - type: OpenAPI
+    url: openapi/imentiv-ai-video-emotion-api-api-openapi.yml
+  - type: Documentation
+    url: https://imentiv.ai/
 common:
   - type: AgenticAccess
     url: agentic-access/imentiv-ai-agentic-access.yml
