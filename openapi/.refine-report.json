@@ -1,0 +1,24 @@
+{
+  "provider": "imentiv-ai",
+  "sources": [
+    "imentiv-ai-ai-insights-api-api-openapi.yml",
+    "imentiv-ai-audio-emotion-api-api-openapi.yml",
+    "imentiv-ai-image-emotion-api-api-openapi.yml",
+    "imentiv-ai-report-api-api-openapi.yml",
+    "imentiv-ai-text-emotion-api-api-openapi.yml",
+    "imentiv-ai-video-emotion-api-api-openapi.yml"
+  ],
+  "outputs": [
+    "imentiv-ai-ai-insights-api-api-openapi.yml",
+    "imentiv-ai-audio-emotion-api-api-openapi.yml",
+    "imentiv-ai-image-emotion-api-api-openapi.yml",
+    "imentiv-ai-report-api-api-openapi.yml",
+    "imentiv-ai-text-emotion-api-api-openapi.yml",
+    "imentiv-ai-video-emotion-api-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

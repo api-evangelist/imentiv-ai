@@ -1,0 +1,5420 @@
+openapi: 3.1.0
+info:
+  title: Welcome to Imentiv AI
+  description: "# Welcome to Imentiv AI\n\nImentiv AI is an advanced Emotion AI platform that leverages deep learning to analyze\
+    \ human emotions across multiple media formats, including video, audio, images, and text. By interpreting facial expressions,\
+    \ vocal tones, and linguistic cues, it provides detailed emotional insights to support use cases such as content creation,\
+    \ marketing optimization, education, mental health assessments, and more.\n\nImentiv AI offers a suite of Emotion Recognition\
+    \ APIs that allow developers and businesses to seamlessly integrate advanced emotion analysis into their applications,\
+    \ enabling deeper insights into user engagement and emotional responses.\n\n## Key Features of Imentiv AI APIs\n\n###\
+    \ 1. Video Emotion API\n**Functionality:** Analyzes emotions in videos, whether uploaded directly or via YouTube links.\n\
+    \n**Insights Provided:**\n- Frame-by-frame and actor-by-actor emotion analysis\n- Valence-arousal mapping to determine\
+    \ emotional intensity and positivity/negativity\n- Personality trait analysis using the Big Five (OCEAN) model\n- Emotion\
+    \ graphs and wheels to visualize emotional dynamics\n\n**Use Cases:** Suitable for researchers analyzing bulk videos,\
+    \ advertising campaigns, webinars, online meetings, and other video-based content to optimize engagement and content strategy.\n\
+    \n### 2. Image Emotion API\n**Functionality:** Detects and analyzes emotions in images.\n\n**Insights Provided:**\n- Face\
+    \ detection and recognition\n- Emotion analysis for each detected face\n- Overall emotional tone of the image\n\n**Use\
+    \ Cases:** Enhances image analysis for advertising, market research, psychological studies, and social media content.\n\
+    \n### 3. Audio Emotion API\n**Functionality:** Analyzes emotions in audio recordings, either via direct uploads or by\
+    \ extracting audio from YouTube videos.\n\n**Insights Provided:**\n- Differentiation between multiple speakers in a conversation\n\
+    - Emotion detection from vocal cues (e.g., happiness, sadness, anger, surprise)\n- Transcription and detection of up to\
+    \ 28 nuanced emotions (e.g., admiration, curiosity, disappointment, pride)\n- Audio summaries and detailed analytics\n\
+    \n**Use Cases:** Provides emotional insights for podcasts, voice messages, call analysis, and other audio-based content.\n\
+    \n### 4. Text Emotion API\n**Functionality:** Analyzes emotions in textual content.\n\n**Insights Provided:**\n- Detection\
+    \ of 28 distinct emotions, including curiosity, disappointment, and excitement\n- Overall sentiment analysis and identification\
+    \ of dominant emotions at sentence level\n\n**Use Cases:** Integrates into chatbots, social media platforms, and other\
+    \ text-based applications for sentiment and emotion analysis.\n\n---\n\n## Authorization\n\nLearn how to obtain your API\
+    \ keys to access Imentiv AI APIs.\n\n### Generate API Key:\n\n1. **Sign up** at [imentiv.ai](https://imentiv.ai) and log\
+    \ in to your account.\n2. Navigate to the **'My Profile'** tab to obtain your API key.\n3. Use this API key to authorize\
+    \ your API calls.\n\n> **Note:** Keep your API key secure and do not share it publicly. Include it in your API requests\
+    \ using the `Authorization` header or as specified in the endpoint documentation.\n        "
+  version: 1.0.0
+paths:
+  /v2/videos:
+    post:
+      tags:
+      - Video Emotion API
+      summary: Upload Video
+      description: 'Analyze emotions and facial expressions from video content.
+
+
+        Submit a video from multiple sources and receive detailed emotion analysis
+
+        of all detected faces throughout the video timeline.
+
+
+        **Input Sources:**
+
+        - **YouTube**: Provide any YouTube video URL
+
+        - **Cloud Storage**: Dropbox, Google Drive, or other cloud service links
+
+        - **Social Media**: Instagram, Facebook, Twitter (X) videos
+
+        - **Direct URL**: Any publicly accessible video link
+
+        - **File Upload**: Upload video files directly from your device
+
+
+        **Analyze Specific Segments:**
+
+        Focus on specific portions using `start_millis` and `end_millis` parameters.
+
+        This helps target key moments and optimize credit usage.
+
+
+        **How It Works:**
+
+        1. Submit your video and receive an immediate response with a video ID
+
+        2. Video is queued for processing (typically completes within minutes)
+
+        3. Optionally receive a webhook notification via `callback_url` when complete
+
+        4. Retrieve results using the video ID
+
+
+        **Supported Formats:**
+
+        MP4, AVI, MOV, WebM, MPEG
+
+
+        **Credit Usage:**
+
+        Processing time is billed based on the analyzed video duration.'
+      operationId: upload_video_v2_videos_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_video_v2_videos_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoEmotionResponseV2'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - APIKeyHeader: []
+  /v1/videos:
+    get:
+      tags:
+      - Video Emotion API
+      summary: List Videos
+      description: Retrieves a paginated list of uploaded video files associated with the authenticated user.
+      operationId: list_videos_v1_videos_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: offset_video_id
+        in: query
+        required: false
+        schema:
+          type: string
+          description: The ID of the reference video from which to paginate forward/backward
+          title: Offset Video Id
+        description: The ID of the reference video from which to paginate forward/backward
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: 'Number of results to return (default: 10)'
+          default: 10
+          title: Page Size
+        description: 'Number of results to return (default: 10)'
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Pagination direction: forward (default) or backward'
+          default: forward
+          title: Direction
+        description: 'Pagination direction: forward (default) or backward'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Get Video Emotion Insights
+      description: Get a single video details by ID
+      operationId: get_video_emotion_insights_v1_videos__video_id__get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the video to be fetched
+          title: Video Id
+        description: The unique ID of the video to be fetched
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Video Emotion API
+      summary: Delete Video
+      description: Permanently deletes a video file and all associated emotional insights. This action is irreversible.
+      operationId: delete_video_v1_videos__video_id__delete
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the video to be deleted.
+          title: Video Id
+        description: The unique ID of the video to be deleted.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoDeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - Video Emotion API
+      summary: Reprocess Video
+      description: 'Reprocess an already uploaded and completed video file.
+
+        This is useful when insights need to be regenerated or logic has been updated on the backend.
+
+        Reprocessing can optionally notify your system via a callback URL.'
+      operationId: reprocess_video_v1_videos__video_id__put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the video to reprocess
+          title: Video Id
+        description: Unique identifier of the video to reprocess
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_reprocess_video_v1_videos__video_id__put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReprocessVideoResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/videos/{video_id}/multimodal-analytics:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Get Video Multimodal Insights
+      description: 'Get complete multimodal analytics for a video including:
+
+        - Video emotion analysis (face-by-face)
+
+        - Audio emotion analysis (speaker-by-speaker)
+
+        - Text sentiment analysis
+
+        - Detected faces and speakers
+
+        - Overall summaries'
+      operationId: get_video_multimodal_insights_v2_videos__video_id__multimodal_analytics_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the video
+          title: Video Id
+        description: The unique ID of the video
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullVideoAnalyticsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/videos/{video_id}/emotions/average:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Get Average Emotions
+      description: 'Calculate and retrieve average emotion scores for a video with optional face filtering.
+
+
+        This endpoint computes the average emotion percentages across all frames in a video.
+
+        When a face_id is provided, it calculates the average emotions for only that specific face.
+
+
+        **Behavior:**
+
+        - **Without face_id**: Returns overall average emotion score for entire video (all faces combined)
+
+        - **With face_id**: Calculates average emotion scores for the specified face
+
+
+        **Parameters:**
+
+        - `video_id`: Unique identifier for the video
+
+        - `face_id`: (Optional) Calculate average emotions for only this face ID
+
+
+        **Response:**
+
+        Returns emotion scores as percentages (values sum to 1.0):
+
+        - `angry`: Percentage of anger emotion
+
+        - `disgust`: Percentage of disgust emotion
+
+        - `fear`: Percentage of fear emotion
+
+        - `happy`: Percentage of happiness emotion
+
+        - `sad`: Percentage of sadness emotion
+
+        - `surprise`: Percentage of surprise emotion
+
+        - `neutral`: Percentage of neutral emotion
+
+
+        **Use Cases:**
+
+        - **Overall video analysis**: Understand the general emotional tone of the entire video
+
+        - **Individual tracking**: Track emotional patterns of specific people throughout the video
+
+        - **Comparative analysis**: Compare emotional profiles between different faces in the same video
+
+
+        **Example Usage:**
+
+        - Overall average: `GET /v2/videos/123/emotions/average`
+
+        - Face-specific: `GET /v2/videos/123/emotions/average?face_id=1`
+
+
+        **Note:** Face-specific calculations require the face to appear in at least one frame.'
+      operationId: get_average_emotions_v2_videos__video_id__emotions_average_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video for which average emotions are to be calculated
+          title: Video Id
+        description: The unique video ID of the video for which average emotions are to be calculated
+      - name: face_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Optional face ID to calculate average emotions for a specific face
+          title: Face Id
+        description: Optional face ID to calculate average emotions for a specific face
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmotionScores'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/videos/{video_id}/annotated_video:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Get Annotated Video
+      description: "Get annotated video with emotion labels and bounding boxes overlaid on each frame.\n\n**How It Works:**\n\
+        - First request initiates video generation and returns a status response\n- Poll this endpoint to check generation\
+        \ progress\n- When ready, returns a secure signed URL for downloading the video\n\n**Response Types:**\n\n1. **Status\
+        \ Response** (JSON) - While generating:\n   ```json\n   {\n     \"video_id\": \"abc123\",\n     \"message\": \"Annotated\
+        \ video is currently being generated...\",\n     \"status\": \"pending\"\n   }\n   ```\n\n2. **Signed URL Response**\
+        \ (JSON) - When complete:\n   ```json\n   {\n     \"video_id\": \"abc123\",\n     \"download_url\": \"https://storage.googleapis.com/...\"\
+        ,\n     \"filename\": \"My_Video_abc123.mp4\",\n     \"expires_in_minutes\": 60,\n     \"expires_at\": \"2026-01-09T12:00:00Z\"\
+        ,\n     \"note\": \"Download URL will expire. Request a new URL if expired.\"\n   }\n   ```\n\n**Parameters:**\n-\
+        \ `video_id`: Video identifier\n- `callback_url`: Optional webhook URL to receive notification when generation completes\n\
+        \n**Prerequisites:**\nVideo analysis must be complete before requesting annotated video.\n\n**Security:**\n- New videos\
+        \ are stored privately and require signed URLs for access\n- Signed URLs expire after 60 minutes for security\n- Old\
+        \ videos may use public URLs (backward compatibility)\n\n**Example Workflow:**\n\n```python\n# 1. Request annotated\
+        \ video (with optional callback URL)\nGET /v2/videos/abc123/annotated_video?callback_url=https://example.com/webhook\n\
+        Response: {\"status\": \"pending\", \"message\": \"...\"}\n\n# 2. Check status (poll until ready)\nGET /v2/videos/abc123/annotated_video\n\
+        Response: {\"status\": \"in progress\", \"message\": \"...\"}\n\n# 3. Get download URL when ready\nGET /v2/videos/abc123/annotated_video\n\
+        Response: {\"video_id\": \"abc123\", \"download_url\": \"https://...\", ...}\n\n# 4. Download video from the signed\
+        \ URL\nGET <download_url>\n```"
+      operationId: get_annotated_video_v2_videos__video_id__annotated_video_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video
+          title: Video Id
+        description: The unique video ID of the video
+      - name: callback_url
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Optional callback URL to notify when annotated video generation is complete
+          default: ''
+          title: Callback Url
+        description: Optional callback URL to notify when annotated video generation is complete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/SignedDownloadUrlResponse'
+                - $ref: '#/components/schemas/AnnotatedVideoResponse'
+                title: Response Get Annotated Video V2 Videos  Video Id  Annotated Video Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/valence_arousal:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Get Valence Arousal
+      description: Get emotion intensities of a video based on video_id
+      operationId: get_valence_arousal_v1_videos__video_id__valence_arousal_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video whose emotion intensity is to be fetched
+          title: Video Id
+        description: The unique video ID of the video whose emotion intensity is to be fetched
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValenceArousalIntensity'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/frames:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Get Multiple Frame
+      description: API to Retrieve Frames of the video based on video_id.
+      operationId: get_multiple_frame_v1_videos__video_id__frames_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video for which the frames to be fetched
+          title: Video Id
+        description: The unique video ID of the video for which the frames to be fetched
+      - name: start_frame
+        in: query
+        required: false
+        schema:
+          type: string
+          description: The frame number from which retrieval should begin. Defaults to the start of the video if not provided.
+          title: Start Frame
+        description: The frame number from which retrieval should begin. Defaults to the start of the video if not provided.
+      - name: length
+        in: query
+        required: false
+        schema:
+          type: string
+          description: The number of frames to retrieve, starting from 'start_frame'. If omitted, all available frames will
+            be returned.
+          title: Length
+        description: The number of frames to retrieve, starting from 'start_frame'. If omitted, all available frames will
+          be returned.
+      - name: face_ids
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Optional comma-separated list of face IDs (e.g., '1,2,3')
+          default: ''
+          title: Face Ids
+        description: Optional comma-separated list of face IDs (e.g., '1,2,3')
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultipleFramesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/frames/{frame_id}:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Get Single Frame
+      description: Get a unique frame details based on video_id and frame_id
+      operationId: get_single_frame_v1_videos__video_id__frames__frame_id__get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video for which the frame to be fetched.
+          title: Video Id
+        description: The unique video ID of the video for which the frame to be fetched.
+      - name: frame_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique frame ID of the frame to be fetched.
+          title: Frame Id
+        description: The unique frame ID of the frame to be fetched.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FramesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/frames/{frame_id}/dominant_emotion:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Retrieve Domination Emotion For A Specific Frame
+      description: 'This API endpoint is designed to fetch and return the dominant emotion of frames within a video based
+        on its video_id.
+
+        If face_id is provided, the dominant emotion of a specific face will be the output.'
+      operationId: retrieve_domination_emotion_for_a_specific_frame_v1_videos__video_id__frames__frame_id__dominant_emotion_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the video from which the frame’s dominant emotion is to be fetched.
+          title: Video Id
+        description: Unique identifier of the video from which the frame’s dominant emotion is to be fetched.
+      - name: frame_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique id of the frame from which the dominant emotion is to be fetched.
+          title: Frame Id
+        description: The unique id of the frame from which the dominant emotion is to be fetched.
+      - name: face_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The id of the face whose dominant emotion is to be retrieved. If not provided, the dominant emotion
+            for the entire frame will be returned.
+          title: Face Id
+        description: The id of the face whose dominant emotion is to be retrieved. If not provided, the dominant emotion for
+          the entire frame will be returned.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FrameEmotionResponseData'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/frames/{frame_id}/valence_arousal:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Retrieve Emotion Intensity
+      description: Retrieve Emotion Intensity for a Specific Frame
+      operationId: retrieve_emotion_intensity_v1_videos__video_id__frames__frame_id__valence_arousal_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video for which the frame's valence, arousal, and intensity are to be fetched.
+          title: Video Id
+        description: The unique video ID of the video for which the frame's valence, arousal, and intensity are to be fetched.
+      - name: frame_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique frame ID of the frame from which to fetch the valence, arousal, and intensity.
+          title: Frame Id
+        description: The unique frame ID of the frame from which to fetch the valence, arousal, and intensity.
+      - name: face_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The ID of the face whose valence, arousal, and intensity are to be retrieved. If not provided, these
+            values for the entire frame will be returned.
+          title: Face Id
+        description: The ID of the face whose valence, arousal, and intensity are to be retrieved. If not provided, these
+          values for the entire frame will be returned.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValenceArousalIntensity'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/frames/{frame_id}/faces/{face_id}/emotions:
+    put:
+      tags:
+      - Video Emotion API
+      summary: Update Emotion Per Frame
+      description: Update the emotion of a specific face in a frame
+      operationId: update_emotion_per_frame_v1_videos__video_id__frames__frame_id__faces__face_id__emotions_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video.
+          title: Video Id
+        description: The unique video ID of the video.
+      - name: frame_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique frame ID of the frame.
+          title: Frame Id
+        description: The unique frame ID of the frame.
+      - name: face_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique face ID of the face in the frame.
+          title: Face Id
+        description: The unique face ID of the face in the frame.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_update_emotion_per_frame_v1_videos__video_id__frames__frame_id__faces__face_id__emotions_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateEmotionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/frames/{frame_id}/faces/{face_id}/note:
+    put:
+      tags:
+      - Video Emotion API
+      summary: Edit Face Note
+      description: Update the note associated with a detected face in a frame.
+      operationId: edit_face_note_v1_videos__video_id__frames__frame_id__faces__face_id__note_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video id of the video.
+          title: Video Id
+        description: The unique video id of the video.
+      - name: frame_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique id of the frame inside the video.
+          title: Frame Id
+        description: The unique id of the frame inside the video.
+      - name: face_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique id of the face inside the frame. Use '0' to add a note to the entire frame instead of a
+            specific face.
+          title: Face Id
+        description: The unique id of the face inside the frame. Use '0' to add a note to the entire frame instead of a specific
+          face.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_edit_face_note_v1_videos__video_id__frames__frame_id__faces__face_id__note_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FrameNoteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/frames/faces:
+    put:
+      tags:
+      - Video Emotion API
+      summary: Update Multiple Faces
+      description: Update Face ID in multiple frames of a video
+      operationId: update_multiple_faces_v1_videos__video_id__frames_faces_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video in which face ID to be changed
+          title: Video Id
+        description: The unique video ID of the video in which face ID to be changed
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_update_multiple_faces_v1_videos__video_id__frames_faces_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiFaceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/faces:
+    put:
+      tags:
+      - Video Emotion API
+      summary: Merge Face
+      description: Merge multiple face detections into a single face to remove duplicates from a video.
+      operationId: merge_face_v1_videos__video_id__faces_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video.
+          title: Video Id
+        description: The unique video ID of the video.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_merge_face_v1_videos__video_id__faces_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MergeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Video Emotion API
+      summary: Delete Faces
+      description: Delete specified faces from a video while ensuring at least one face remains.
+      operationId: delete_faces_v1_videos__video_id__faces_delete
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique identifier of the video from which faces will be deleted.
+          title: Video Id
+        description: The unique identifier of the video from which faces will be deleted.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_delete_faces_v1_videos__video_id__faces_delete'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteFacesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/faces/names:
+    put:
+      tags:
+      - Video Emotion API
+      summary: Update Faces Names
+      description: Updates the names of multiple faces in a video.
+      operationId: update_faces_names_v1_videos__video_id__faces_names_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video.
+          title: Video Id
+        description: The unique video ID of the video.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/FaceNameItem'
+              description: List of face id and name pairs.
+              title: Face Updates
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NameUpdateResponse'
+                title: Response Update Faces Names V1 Videos  Video Id  Faces Names Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/highlights:
+    post:
+      tags:
+      - Video Emotion API
+      summary: Process Highlight
+      description: "Trigger automatic highlight video generation using emotion-based analysis.\n\nAnalyzes video frames to\
+        \ identify emotionally significant moments and generates\na highlight reel. The process runs asynchronously via Celery\
+        \ workers.\n\nArgs:\n    video_id: The unique video ID for highlight generation\n    user_info: Authenticated user\
+        \ information\n    api_info: API request metadata including domain\n\nReturns:\n    HighlightGenerateResponse: Contains\
+        \ video_id, processing status, and message\n    \nRaises:\n    InvalidParams: If video_id is missing\n    InvalidUser:\
+        \ If user doesn't own the video\n    CreditExpired: If user has insufficient credits\n    VideoNotFound: If video\
+        \ doesn't exist or is not completed"
+      operationId: process_highlight_v1_videos_highlights_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_process_highlight_v1_videos_highlights_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HighlightGenerateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - APIKeyHeader: []
+  /v1/videos/{video_id}/highlights:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Fetch Highlight Video
+      description: API endpoint for highlight generation of a video.
+      operationId: fetch_highlight_video_v1_videos__video_id__highlights_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The video id to get the highlight video url
+          title: Video Id
+        description: The video id to get the highlight video url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HighlightResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - Video Emotion API
+      summary: Update Highlight Video
+      description: "Generate custom highlight video using user-defined time segments.\n\nCreates a highlight reel by concatenating\
+        \ specific video segments chosen by the user.\nThe process runs asynchronously via Celery workers to handle video\
+        \ processing.\n\nArgs:\n    video_id: The unique video ID for which highlights are being generated\n    segments:\
+        \ List of time segments with start_millis and end_millis timestamps\n    user_info: Authenticated user information\n\
+        \nReturns:\n    HighlightGenerateResponse: Contains video_id, status=\"queue\", and processing message\n    \nRaises:\n\
+        \    InvalidParams: If segments list is empty\n    InvalidUser: If user doesn't own the video\n    UserVideoException:\
+        \ If segment timestamps are invalid:\n        - Both start and end are 0\n        - Start equals end\n        - Start\
+        \ is greater than or equal to end\n        - Timestamps are out of video duration bounds\n    CreditExpired: If user\
+        \ has insufficient credits\n    VideoNotFound: If video doesn't exist or is not completed"
+      operationId: update_highlight_video_v1_videos__video_id__highlights_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video id of the video for which the update highlight video to be edited.
+          title: Video Id
+        description: The unique video id of the video for which the update highlight video to be edited.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SegmentResponse'
+              description: List of video highlight segments
+              title: Segments
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HighlightGenerateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/highlight_video:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Download Highlight Video
+      description: Download the highlight video.
+      operationId: download_highlight_video_v1_videos__video_id__highlight_video_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The video id to download the highlight video.
+          title: Video Id
+        description: The video id to download the highlight video.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/metadata:
+    put:
+      tags:
+      - Video Emotion API
+      summary: Edit Title Or Description By Id
+      description: Edit the title or description of a video  based on the provided audio ID.
+      operationId: edit_title_or_description_by_id_v1_videos__video_id__metadata_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Provide the video ID to edit or title and description of the audio
+          title: Video Id
+        description: Provide the video ID to edit or title and description of the audio
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_edit_title_or_description_by_id_v1_videos__video_id__metadata_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoEditResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/videos/{video_id}/report:
+    post:
+      tags:
+      - Video Emotion API
+      summary: Generate Video Emotion Analysis Report
+      description: 'Initiates the generation of an analysis report for the specified video.
+
+        The user will be notified at the provided callback URL once the process is complete.'
+      operationId: generate_video_emotion_analysis_report_v1_videos__video_id__report_post
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique video ID of the video whose analysis report is to be generated.
+          title: Video Id
+        description: The unique video ID of the video whose analysis report is to be generated.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_generate_video_emotion_analysis_report_v1_videos__video_id__report_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateCSVResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Video Emotion API
+      summary: Download Video Emotion Analysis Report
+      description: Download a videos processed analysis details based on the provided video ID.
+      operationId: download_video_emotion_analysis_report_v1_videos__video_id__report_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Provide the video ID to download analysis
+          title: Video Id
+        description: Provide the video ID to download analysis
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/audios:
+    post:
+      tags:
+      - Audio Emotion API
+      summary: Upload Audio
+      description: 'Analyze emotions and speech patterns from audio content.
+
+
+        Submit audio from multiple sources and receive detailed emotion analysis,
+
+        speaker identification, and transcription with emotional insights.
+
+
+        **Input Sources:**
+
+        - **YouTube**: Provide any YouTube video URL (audio will be extracted)
+
+        - **Instagram**: Instagram Reels and video posts (public content)
+
+        - **Twitter/X**: Twitter video posts and media content
+
+        - **Facebook**: Facebook video posts (public content)
+
+        - **Cloud Storage**: Dropbox, Google Drive, or other cloud service links
+
+        - **Direct URL**: Any publicly accessible audio or video link
+
+        - **File Upload**: Upload audio files directly from your device
+
+
+        **Audio Extraction:**
+
+        Video files are supported for URLs only (YouTube, Instagram, Twitter, Facebook,
+
+        Dropbox, direct links) - the audio track will be automatically extracted and analyzed.
+
+        For file uploads, use audio formats only (MP3, WAV, AAC, M4A).
+
+
+        **Analyze Specific Segments:**
+
+        Focus on specific portions using `start_millis` and `end_millis` parameters.
+
+        This helps target key moments and optimize credit usage.
+
+
+        **How It Works:**
+
+        1. Submit your audio and receive an immediate response with an audio ID
+
+        2. Audio is queued for processing (typically completes within minutes)
+
+        3. Optionally receive a webhook notification via `callback_url` when complete
+
+        4. Retrieve results using the audio ID
+
+
+        **Supported Formats:**
+
+        - File Upload: MP3, WAV, AAC, M4A
+
+        - Media URLs: MP3, WAV, AAC, M4A, MP4, AVI, MOV (audio extracted from video URLs)
+
+
+        **Credit Usage:**
+
+        Processing time is billed based on the analyzed audio duration.
+
+
+        **Extra Parameters:**
+
+        - **speaker_diarization** (bool): Enable or disable speaker diarization for identifying different speakers in the
+        audio. Default is True.
+
+        - **text_emotion_analysis** (bool): Enable or disable transcript emotion analysis for the transcribed text. Default
+        is True.
+
+        - **language** (str, optional): Language code for the audio (e.g., ''en''). If not provided, language will be auto-detected.'
+      operationId: upload_audio_v2_audios_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_audio_v2_audios_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioEmotionResponseV2'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - APIKeyHeader: []
+  /v1/audios:
+    get:
+      tags:
+      - Audio Emotion API
+      summary: List Audios
+      description: API to get audios processed by user with pagination.
+      operationId: list_audios_v1_audios_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: offset_audio_id
+        in: query
+        required: false
+        schema:
+          type: string
+          description: The ID of the reference audio from which to paginate forward/backward
+          title: Offset Audio Id
+        description: The ID of the reference audio from which to paginate forward/backward
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: 'Number of results to return (default: 20, max: 100)'
+          default: 10
+          title: Page Size
+        description: 'Number of results to return (default: 20, max: 100)'
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Pagination direction: forward (default) or backward'
+          default: forward
+          title: Direction
+        description: 'Pagination direction: forward (default) or backward'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/audios/{audio_id}:
+    get:
+      tags:
+      - Audio Emotion API
+      summary: Get Audio Emotion Insights
+      description: Retrieve Single Audio based on audio_id.
+      operationId: get_audio_emotion_insights_v1_audios__audio_id__get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: audio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the uploaded audio
+          title: Audio Id
+        description: The unique ID of the uploaded audio
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Audio'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - Audio Emotion API
+      summary: Reprocess Audio
+      description: Reprocess an audio file based on audio id.
+      operationId: reprocess_audio_v1_audios__audio_id__put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: audio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the audio to reprocess
+          title: Audio Id
+        description: Unique identifier of the audio to reprocess
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_reprocess_audio_v1_audios__audio_id__put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioReprocessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Audio Emotion API
+      summary: Delete An Audio
+      description: Deletes a specific audio file and all associated emotion analysis data from the system. This action is
+        irreversible.
+      operationId: delete_an_audio_v1_audios__audio_id__delete
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: audio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the audio to be deleted
+          title: Audio Id
+        description: Unique identifier of the audio to be deleted
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioDeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/audios/{audio_id}/multimodal-analytics:
+    get:
+      tags:
+      - Audio Emotion API
+      summary: Get Audio Multimodal Insights
+      description: 'Get complete multimodal analytics for an audio file including:
+
+        - Audio emotion analysis (speaker-by-speaker)
+
+        - Text sentiment analysis from transcription
+
+        - Detected speakers
+
+        - Overall summaries'
+      operationId: get_audio_multimodal_insights_v2_audios__audio_id__multimodal_analytics_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: audio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the audio
+          title: Audio Id
+        description: The unique ID of the audio
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullAudioAnalyticsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/audios/{audio_id}/{segment_index}:
+    delete:
+      tags:
+      - Audio Emotion API
+      summary: Delete Audio Segment
+      description: 'Deletes a specific segment of an audio file based on the segment index. After deletion,
+
+        the remaining segments are reindexed to fill the gap — e.g., if segment 1 is deleted, segment 2 becomes 1'
+      operationId: delete_audio_segment_v1_audios__audio_id___segment_index__delete
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: audio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the audio file
+          title: Audio Id
+        description: Unique identifier of the audio file
+      - name: segment_index
+        in: path
+        required: true
+        schema:
+          type: integer
+          description: The index of the segment to delete (0-based indexing)
+          title: Segment Index
+        description: The index of the segment to delete (0-based indexing)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioSegmentDeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/audios/{audio_id}/transcript:
+    put:
+      tags:
+      - Audio Emotion API
+      summary: Update Audio Transcripts Segments
+      description: 'Update the transcript and timestamp data for specific segments within an audio file.
+
+        This is useful when refining speaker diarization, correcting transcription errors,
+
+        or uploading external transcript data.'
+      operationId: update_audio_transcripts_segments_v1_audios__audio_id__transcript_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: audio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the audio file
+          title: Audio Id
+        description: Unique identifier of the audio file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TranscriptSegment'
+              description: List of transcript segments to update.
+              title: Transcript Segments
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TranscriptSegment'
+                title: Response Update Audio Transcripts Segments V1 Audios  Audio Id  Transcript Put
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/audios/{audio_id}/speakers/names:
+    put:
+      tags:
+      - Audio Emotion API
+      summary: Update Speaker Names
+      description: 'Update the names of detected speakers in an audio file. This is useful for labeling anonymized
+
+        speaker IDs with human-readable names (e.g., "John", "Customer", "Agent").'
+      operationId: update_speaker_names_v1_audios__audio_id__speakers_names_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: audio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the audio file
+          title: Audio Id
+        description: Unique identifier of the audio file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SpeakerUpdate'
+              description: List of speaker ID and name pairs to update
+              title: Speaker Updates
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeakerUpdateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/audios/{audio_id}/metadata:
+    put:
+      tags:
+      - Audio Emotion API
+      summary: Edit Title Or Description
+      description: 'Update the metadata of an audio file.
+
+        This endpoint allows you to edit the title (which is auto-generated from the file name by default)
+
+        and add or update a description.'
+      operationId: edit_title_or_description_v1_audios__audio_id__metadata_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: audio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Provide the audio ID to edit the title or description of the audio
+          title: Audio Id
+        description: Provide the audio ID to edit the title or description of the audio
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_edit_title_or_description_v1_audios__audio_id__metadata_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioEditResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/audios/{audio_id}/report:
+    get:
+      tags:
+      - Audio Emotion API
+      summary: Download Audio Emotion Report
+      description: 'Download a detailed report of the emotional insights extracted from a specific audio file.
+
+        The report includes average emotions, segment-level analysis, speaker information,
+
+        and summary—formatted as a downloadable file (e.g., PDF or CSV).'
+      operationId: download_audio_emotion_report_v1_audios__audio_id__report_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: audio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the audio file
+          title: Audio Id
+        description: Unique identifier of the audio file
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/texts:
+    post:
+      tags:
+      - Text Emotion API
+      summary: Upload Text
+      description: 'Analyze emotions and sentiment from text content.
+
+
+        Submit text directly and receive detailed emotion analysis
+
+
+        **How It Works:**
+
+        1. Submit your text with a title and receive an immediate response with a text ID
+
+        2. Text is queued for processing (typically completes within seconds)
+
+        3. Optionally receive a webhook notification via `callback_url` when complete
+
+        4. Retrieve results using the text ID
+
+
+        **Credit Usage:**
+
+        Processing is billed based on the word count of your text.'
+      operationId: upload_text_v2_texts_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_upload_text_v2_texts_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextEmotionResponseV2'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - APIKeyHeader: []
+  /v1/texts:
+    get:
+      tags:
+      - Text Emotion API
+      summary: List Texts
+      description: 'Retrieves a paginated list of all uploaded or processed images.
+
+        Use this endpoint to browse through text records based on their ID, status, and title.'
+      operationId: list_texts_v1_texts_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: start_after
+        in: query
+        required: false
+        schema:
+          type: string
+          description: The ID of the reference text from which to paginate forward/backward
+          title: Start After
+        description: The ID of the reference text from which to paginate forward/backward
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: 'Number of results to return (default: 10)'
+          default: 10
+          title: Page Size
+        description: 'Number of results to return (default: 10)'
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Pagination direction: forward (default) or backward'
+          default: forward
+          title: Direction
+        description: 'Pagination direction: forward (default) or backward'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/texts/{text_id}:
+    get:
+      tags:
+      - Text Emotion API
+      summary: Get Text Emotion Insights
+      description: 'Retrieves detailed emotion analysis results for a specific uploaded text.
+
+        Includes paragraph wise analysis, and supports 28 emotions.'
+      operationId: get_text_emotion_insights_v1_texts__text_id__get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: text_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the text.
+          title: Text Id
+        description: The unique ID of the text.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FetchTextResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Text Emotion API
+      summary: Delete Text
+      description: 'Deletes a specific text and all associated emotion analysis data from the system.
+
+        This action is irreversible.'
+      operationId: delete_text_v1_texts__text_id__delete
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: text_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique text ID of the text.
+          title: Text Id
+        description: The unique text ID of the text.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTextResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - Text Emotion API
+      summary: Reprocess Text
+      description: 'Reprocesses a text that has either failed or completed.
+
+        You can trigger the reprocessing by setting reprocess to True.
+
+        This will reanalyze the image and provide updated insights'
+      operationId: reprocess_text_v1_texts__text_id__put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: text_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the text.
+          title: Text Id
+        description: The unique ID of the text.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_reprocess_text_v1_texts__text_id__put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextReprocessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/images:
+    post:
+      tags:
+      - Image Emotion API
+      summary: Upload Image
+      description: 'Analyze emotions and facial expressions from image content.
+
+
+        Submit an image from multiple sources and receive detailed emotion analysis
+
+        of all detected faces in the image.
+
+
+        **Input Sources:**
+
+        - **Cloud Storage**: Dropbox or other cloud service links
+
+        - **Direct URL**: Any publicly accessible image link
+
+        - **File Upload**: Upload image files directly from your device
+
+
+        **How It Works:**
+
+        1. Submit your image and receive an immediate response with an image ID
+
+        2. Image is queued for processing (typically completes within seconds)
+
+        3. Optionally receive a webhook notification via `callback_url` when complete
+
+        4. Retrieve results using the image ID
+
+
+        **Supported Formats:**
+
+        JPG, JPEG, PNG, WEBP
+
+
+        **Credit Usage:**
+
+        - UI: 10 credits per image
+
+        - API: 5 credits per image'
+      operationId: upload_image_v2_images_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_image_v2_images_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageEmotionResponseV2'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - APIKeyHeader: []
+  /v1/images:
+    get:
+      tags:
+      - Image Emotion API
+      summary: List Images
+      description: 'Retrieves a paginated list of all uploaded or processed images.
+
+        Use this endpoint to browse through image records based on their ID, status, and title.'
+      operationId: list_images_v1_images_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: start_after
+        in: query
+        required: false
+        schema:
+          type: string
+          description: ID of the last image from the previous page. Fetches results after this ID.
+          title: Start After
+        description: ID of the last image from the previous page. Fetches results after this ID.
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          description: Number of results to return per page. The default is 10.
+          default: 10
+          title: Page Size
+        description: Number of results to return per page. The default is 10.
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Pagination direction: ''forward'' or ''backward''. Default is ''forward'''
+          default: forward
+          title: Direction
+        description: 'Pagination direction: ''forward'' or ''backward''. Default is ''forward'''
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/images/{image_id}:
+    get:
+      tags:
+      - Image Emotion API
+      summary: Get Image Emotion Analysis
+      description: 'Retrieves detailed emotion analysis results and metadata for a specific uploaded image.
+
+        Includes detected faces, their emotional scores, image dimensions, and annotated visualizations.'
+      operationId: get_image_emotion_analysis_v1_images__image_id__get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique ID of the image to retrieve.
+          title: Image Id
+        description: Unique ID of the image to retrieve.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageDBResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Image Emotion API
+      summary: Delete Image
+      description: Deletes a specific image and all associated emotion analysis data from the system. This action is irreversible.
+      operationId: delete_image_v1_images__image_id__delete
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique ID of the image
+          title: Image Id
+        description: Unique ID of the image
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageDeleteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - Image Emotion API
+      summary: Reprocess Image
+      description: 'Reprocesses an image that has either failed or completed.
+
+        You can trigger the reprocessing by setting reprocess to True.
+
+        This will reanalyze the image and provide updated insights.'
+      operationId: reprocess_image_v1_images__image_id__put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique image ID of the image.
+          title: Image Id
+        description: The unique image ID of the image.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_reprocess_image_v1_images__image_id__put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageReprocessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/images/{image_id}/annotated_image:
+    get:
+      tags:
+      - Image Emotion API
+      summary: Send Image
+      description: Downloads the annotated version of the image, which highlights detected faces and their corresponding emotions.
+      operationId: send_image_v1_images__image_id__annotated_image_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique ID of the image.
+          title: Image Id
+        description: Unique ID of the image.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/images/{image_id}/faces/{face_id}/note:
+    put:
+      tags:
+      - Image Emotion API
+      summary: Add Note To Specific Face
+      description: Adds or updates a note attached to a specific face detected in an image.
+      operationId: add_note_to_specific_face_v1_images__image_id__faces__face_id__note_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique image ID of the image
+          title: Image Id
+        description: The unique image ID of the image
+      - name: face_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique ID of the face within the image
+          title: Face Id
+        description: Unique ID of the face within the image
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_add_note_to_specific_face_v1_images__image_id__faces__face_id__note_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageNoteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/images/{image_id}/metadata:
+    put:
+      tags:
+      - Image Emotion API
+      summary: Edit Image Metadata
+      description: Edit image title and description of the uploaded image
+      operationId: edit_image_metadata_v1_images__image_id__metadata_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Provide the image ID to edit the title or description of the image
+          title: Image Id
+        description: Provide the image ID to edit the title or description of the image
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_edit_image_metadata_v1_images__image_id__metadata_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageEditResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/images/{image_id}/report:
+    get:
+      tags:
+      - Image Emotion API
+      summary: Download Image Emotion Report
+      description: 'Downloads the emotion analysis insights for a specific image in CSV format.
+
+        The report includes detected faces and their associated emotion scores.'
+      operationId: download_image_emotion_report_v1_images__image_id__report_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique ID of the image
+          title: Image Id
+        description: Unique ID of the image
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/reports/pdf/{media_id}:
+    get:
+      tags:
+      - Report API
+      summary: Generate Pdf Report
+      description: 'Get PDF report if available, or trigger generation if not.
+
+
+        - Returns PDF metadata if already generated
+
+        - Triggers generation and returns 202 if not available
+
+        - Returns processing status if generation in progress'
+      operationId: generate_pdf_report_v2_reports_pdf__media_id__get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: media_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the media
+          title: Media Id
+        description: Unique identifier of the media
+      - name: media_type
+        in: query
+        required: true
+        schema:
+          type: string
+          description: 'Type: Only ''video'' is allowed at present'
+          title: Media Type
+        description: 'Type: Only ''video'' is allowed at present'
+      - name: callback_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Callback URL for completion notification
+          title: Callback Url
+        description: Callback URL for completion notification
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/texts/{text_id}/emotions:
+    put:
+      tags:
+      - Text Emotion API
+      summary: Edit Text
+      description: This end-point allows a user to edit the existing text and reprocess it to generate emotion insights.
+      operationId: edit_text_v1_texts__text_id__emotions_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: text_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique text ID of the text.
+          title: Text Id
+        description: The unique text ID of the text.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_edit_text_v1_texts__text_id__emotions_put'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextReprocessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/texts/{text_id}/report:
+    get:
+      tags:
+      - Text Emotion API
+      summary: Download Text Emotion Report
+      description: Downloads the emotion analysis insights for a specific text in CSV format based on the provided text id.
+      operationId: download_text_emotion_report_v1_texts__text_id__report_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: text_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The unique ID of the text.
+          title: Text Id
+        description: The unique ID of the text.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/audios/{audio_id}/transcript/replace:
+    put:
+      tags:
+      - Audio Emotion API
+      summary: Replace Audio Transcript
+      operationId: replace_audio_transcript_v1_audios__audio_id__transcript_replace_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: audio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the audio file
+          title: Audio Id
+        description: Unique identifier of the audio file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplaceTranscriptRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReplaceTranscriptResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/{media_type}/{media_id}/ai-insights:
+    post:
+      tags:
+      - AI Insights API
+      summary: Send message to AI Insights
+      description: 'Send a message to AI Insights and receive an AI-generated response about the media''s emotional analysis.
+
+
+        ## Streaming (Recommended)
+
+
+        Set `stream=true` (default) to receive the response as Server-Sent Events (SSE) with progressive text chunks. This
+        is the **recommended** approach as it provides real-time feedback and avoids potential timeout issues with longer
+        responses.
+
+
+        **SSE Events:**
+
+        - `stream_start`: Initial event confirming the connection
+
+        - `metadata`: Contains `conversation_id` and `message_id`
+
+        - `stream_chunk`: Progressive text chunks from AI
+
+        - `stream_end`: Final event with complete text and token usage
+
+        - `done`: Completion signal
+
+        - `error`: Error event if processing fails (includes `error_id` and `message`)
+
+
+        ## Non-Streaming
+
+
+        Set `stream=false` to receive the complete response as JSON. **Note:** This mode waits for the full AI response before
+        returning, which may result in longer response times or timeouts for complex queries. Use streaming mode for a better
+        experience.
+
+
+        ## Requirements
+
+
+        - **Message Length:** Maximum 10,000 characters
+
+        - **Media Status:** Media processing must be completed (status: "completed")
+
+        - **Analysis Data:** Emotional analysis data must be available. If not yet ready, you''ll receive error code 1601
+        — retry after 30–60 seconds.
+
+
+        ## Conversation Management
+
+
+        The system maintains one conversation per user per media item. Your conversation history is preserved across multiple
+        requests — no need to manage conversation IDs manually.
+
+
+        ## Supported Media Types
+
+
+        video, audio, image, text'
+      operationId: chat_ai_insights_v2__media_type___media_id__ai_insights_post
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: media_type
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Media Type
+      - name: media_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Media Id
+      - name: stream
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Enable SSE streaming (true) or return full JSON response (false)
+          default: true
+          title: Stream
+        description: Enable SSE streaming (true) or return full JSON response (false)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIInsightsChatRequest'
+      responses:
+        '200':
+          description: AI response (SSE stream or JSON)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIInsightsChatResponse'
+              example:
+                conversation_id: user123_01
+                message_id: 1
+                response: Based on the video analysis, the dominant emotions are...
+                token_usage:
+                  input_tokens: 1500
+                  output_tokens: 350
+                is_quota_exceeded: false
+            text/event-stream:
+              example: 'event: stream_start
+
+                data: {"status": "initializing"}
+
+
+                event: metadata
+
+                data: {"message_id": 1, "conversation_id": "user123_01"}
+
+
+                event: stream_chunk
+
+                data: {"text": "Based on the video analysis, "}
+
+
+                event: stream_chunk
+
+                data: {"text": "the dominant emotions are..."}
+
+
+                event: stream_end
+
+                data: {"message_id": 1, "full_text": "Based on...", "token_usage": {"input_tokens": 1500, "output_tokens":
+                350}}
+
+
+                event: done
+
+                data: {}
+
+                '
+        '400':
+          description: Bad Request - Analysis data not yet available
+          content:
+            application/json:
+              example:
+                error_id: 1601
+                message: CSV data not available for video. Please wait for processing to complete.
+                timestamp: '2024-01-15T10:30:00.000000+00:00'
+        '401':
+          description: Unauthorized - Authentication failed
+          content:
+            application/json:
+              example:
+                detail: Invalid User or Not Authorized
+        '404':
+          description: Not Found - Media not found
+          content:
+            application/json:
+              example:
+                detail: Video not found
+        '422':
+          description: Validation Error - Invalid input parameters
+          content:
+            application/json:
+              examples:
+                invalid_media_type:
+                  summary: Invalid media type
+                  value:
+                    detail: 'Invalid media_type. Must be one of: video, audio, image, text'
+                media_not_completed:
+                  summary: Media processing not completed
+                  value:
+                    detail: 'Media processing not completed. Current status: processing'
+                message_too_long:
+                  summary: Message exceeds length limit
+                  value:
+                    detail: '''message'' string should have at most 10000 characters'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                detail: Internal Server Error
+    get:
+      tags:
+      - AI Insights API
+      summary: Get AI Insights conversation history
+      description: 'Retrieve the conversation history for a specific media item''s AI Insights session.
+
+
+        ## Response
+
+
+        Returns all messages (user questions and AI responses) in chronological order.
+
+
+        **Empty History:** If no conversation exists yet, returns an empty `messages` array with a conversation_id. The conversation
+        will be created automatically when you send your first message via POST.
+
+
+        ## Supported Media Types
+
+
+        video, audio, image, text'
+      operationId: get_ai_insights_history_v2__media_type___media_id__ai_insights_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: media_type
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Media Type
+      - name: media_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Media Id
+      responses:
+        '200':
+          description: Conversation history retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIInsightsHistoryResponse'
+              examples:
+                with_messages:
+                  summary: Conversation with messages
+                  value:
+                    conversation_id: user123_01
+                    messages:
+                    - role: user
+                      text: What emotions were detected?
+                      message_id: 1
+                      timestamp: '2024-01-15T10:30:00.000000'
+                    - role: ai_assistant
+                      text: Based on the analysis, the dominant emotions are...
+                      message_id: 1
+                      timestamp: '2024-01-15T10:30:05.000000'
+                empty_history:
+                  summary: No conversation yet
+                  value:
+                    conversation_id: user123_01
+                    messages: []
+        '401':
+          description: Unauthorized - Authentication failed
+          content:
+            application/json:
+              example:
+                detail: Invalid User or Not Authorized
+        '404':
+          description: Not Found - Media not found
+          content:
+            application/json:
+              example:
+                detail: Video not found
+        '422':
+          description: Validation Error - Invalid input parameters
+          content:
+            application/json:
+              example:
+                detail: 'Invalid media_type. Must be one of: video, audio, image, text'
+  /v2/videos/{video_id}/speaker-face-match:
+    put:
+      tags:
+      - Video Emotion API
+      summary: Update Speaker Face Match
+      description: "Manually match detected faces to identified speakers with bidirectional name synchronization.\n\nThis\
+        \ endpoint enables client-driven multimodal person identification by allowing you to manually\nspecify which detected\
+        \ faces (from video analysis) correspond to which identified speakers \n(from audio analysis). Each mapping synchronizes\
+        \ identity information across video and audio \nmodalities while managing personality analysis data.\n\n## Features\n\
+        \n- **Face-to-Speaker Mapping**: Links face IDs (from video) to speaker IDs (from audio)\n- **Bidirectional Name Sync**:\
+        \ Automatically synchronizes names between faces and speakers\n- **Duplicate Prevention**: Validates that each face\
+        \ and speaker is mapped only once\n- **Personality Data Cleanup**: Clears existing personality analysis when mappings\
+        \ change\n- **Batch Operations**: Process multiple mappings in a single request\n\n## Name Synchronization\n\nThe\
+        \ `name` field in each mapping supports bidirectional synchronization:\n\n- **Empty/null name** (`\"\"` or `null`):\
+        \ Fetches the speaker's name from the audio document\n  and applies it to the face\n- **Provided name** (e.g., `\"\
+        Alice\"`): Updates both the face name AND the speaker name\n  in their respective documents\n\nThis ensures consistency\
+        \ across audio and video data while giving you control over\nwhether to use existing speaker names or provide new\
+        \ ones.\n\n## Request Body\n\n```json\n{\n  \"mappings\": [\n    {\n      \"face_id\": 1,\n      \"speaker_id\": 0,\n\
+        \      \"name\": \"Alice Johnson\"\n    },\n    {\n      \"face_id\": 2,\n      \"speaker_id\": 1,\n      \"name\"\
+        : \"\"\n    }\n  ]\n}\n```\n\nEach mapping object contains:\n- `face_id` (int, required): ID of detected face from\
+        \ video analysis\n- `speaker_id` (int, required): ID of identified speaker from audio analysis\n- `name` (string,\
+        \ optional): Person's name for synchronization\n\n## Response\n\nReturns a confirmation response:\n```json\n{\n  \"\
+        status\": \"completed\",\n  \"message\": \"Speaker-face matching completed successfully\"\n}\n```\n\n## Prerequisites\n\
+        \n- Video must be in \"completed\" status\n- Video must have associated audio document (multimodal analysis)\n- Face\
+        \ IDs must exist in the video's face detections\n- Speaker IDs must exist in the audio's speaker identifications\n\
+        \n## Use Cases\n\n1. **Manual Initial Matching**: Manually map speakers to faces after video processing completes\n\
+        2. **Name Updates**: Update names while preserving analysis data\n3. **Correction of Auto-Matching**: Override or\
+        \ correct automatic face-to-speaker associations\n4. **Custom Mappings**: Specify mappings based on client-side knowledge\
+        \ or user input\n5. **Prepare for Personality Analysis**: Define mappings before triggering personality analysis\n\
+        6. **Batch Processing**: Map multiple face-speaker pairs in a single API call\n\n## Validation Rules\n\n- ✅ Each `face_id`\
+        \ must appear only once in the request (no duplicate faces)\n- ✅ Each `speaker_id` must appear only once in the request\
+        \ (no duplicate speakers)\n- ✅ All `face_id` values must exist in the video document\n- ✅ All `speaker_id` values\
+        \ must exist in the audio document\n- ✅ User must own the video (admin users can access any video)\n\n## Important\
+        \ Notes\n\n- **Manual Operation**: This endpoint requires the client to explicitly provide all \n  face-to-speaker\
+        \ mappings. For automatic AI-driven matching, use the POST endpoint.\n- **Personality Data**: When mappings are created\
+        \ or updated, any existing\n  personality analysis data for those faces is cleared and must be re-analyzed\n- **Audio\
+        \ Document Updates**: If you provide names, the audio document's speaker\n  names are automatically updated to match\n\
+        - **Idempotent**: Calling this endpoint multiple times with the same mappings\n  will update the entities (not create\
+        \ duplicates)\n\n## Example Scenarios\n\n### Scenario 1: Create New Mappings\n```json\nPUT /v2/videos/abc123/speaker-face-match\n\
+        {\n  \"mappings\": [\n    {\"face_id\": 1, \"speaker_id\": 0, \"name\": \"Alice\"},\n    {\"face_id\": 2, \"speaker_id\"\
+        : 1, \"name\": \"Bob\"}\n  ]\n}\n```\n\n### Scenario 2: Use Existing Speaker Names\n```json\nPUT /v2/videos/abc123/speaker-face-match\n\
+        {\n  \"mappings\": [\n    {\"face_id\": 1, \"speaker_id\": 0, \"name\": \"\"},\n    {\"face_id\": 2, \"speaker_id\"\
+        : 1, \"name\": \"\"}\n  ]\n}\n```\nNames will be fetched from the audio document's speaker records.\n\n### Scenario\
+        \ 3: Update Names\n```json\nPUT /v2/videos/abc123/speaker-face-match\n{\n  \"mappings\": [\n    {\"face_id\": 1, \"\
+        speaker_id\": 0, \"name\": \"Alice Johnson\"}\n  ]\n}\n```\nUpdates both the face name and speaker name to \"Alice\
+        \ Johnson\".\n\n## Error Responses\n\n- **400 Bad Request**: Empty mappings, duplicate face/speaker IDs, or missing\
+        \ audio ID\n- **401 Unauthorized**: Missing authentication\n- **403 Forbidden**: User doesn't own the video\n- **404\
+        \ Not Found**: Face ID or speaker ID not found in respective documents\n- **422 Unprocessable Entity**: Video processing\
+        \ not completed"
+      operationId: update_speaker_face_match_v2_videos__video_id__speaker_face_match_put
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the video. Video must be in 'completed' status with associated audio analysis.
+          title: Video Id
+        description: Unique identifier of the video. Video must be in 'completed' status with associated audio analysis.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SpeakerFaceMatchRequest'
+              description: 'List of face-to-speaker mappings. Each mapping contains: face_id (detected face from video), speaker_id
+                (identified speaker from audio), and optional name. Name behavior: empty/null fetches from speaker; provided
+                value updates both face and speaker. Validates against duplicate face_id and speaker_id values.'
+              title: Mappings
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeakerFaceMatchResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - Video Emotion API
+      summary: Trigger Speaker Face Match
+      description: "Trigger automatic AI-driven speaker-to-face matching for a video.\n\nThis endpoint initiates an asynchronous\
+        \ process that automatically matches\nspeakers from the audio analysis to faces detected in the video using AI.\n\n\
+        \n## Prerequisites\n\n- User must be the video owner or an admin\n- Video must be in 'completed' status\n- Audio must\
+        \ be in 'completed' status\n- Video must have an associated audio_id\n\n## Response\n\n```json\n{\n  \"video_id\"\
+        : \"abc123\",\n  \"audio_id\": \"xyz789\",\n  \"status\": \"processing\",\n  \"message\": \"Speaker-face match worker\
+        \ triggered successfully\"\n}\n```\n\n## Error Responses\n\n- **401 Unauthorized**: User is not authenticated or not\
+        \ authorized to access this video\n- **404 Not Found**: Video not found\n- **409 Conflict**: Video or audio processing\
+        \ not completed\n- **400 Bad Request**: Audio ID missing in video document"
+      operationId: trigger_speaker_face_match_v2_videos__video_id__speaker_face_match_post
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the video. Video must be in 'completed' status with associated audio.
+          title: Video Id
+        description: Unique identifier of the video. Video must be in 'completed' status with associated audio.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoSpeakerFaceMatchTriggerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/videos/{video_id}/personality/analyze:
+    post:
+      tags:
+      - Video Emotion API
+      summary: Trigger Personality Analysis
+      description: "Trigger personality analysis for a specific face in a video.\n\nInitiates asynchronous personality trait\
+        \ assessment based on facial expressions and,\nwhen available, vocal characteristics from linked audio speaker data.\n\
+        \n## Analysis Types\n\n- **overall**: Analyzes personality traits across the entire video\n- **by_segment**: Analyzes\
+        \ personality traits by time segments\n- **combined**: Performs both overall and segment analysis\n\nOverall and segment\
+        \ analyses are independent - triggering one does not affect the other.\n\n## Multimodal Analysis\n\n- **Face only**:\
+        \ Analyzes facial expressions when no speaker is linked\n- **Face + Audio**: Combines facial and vocal characteristics\
+        \ when face is linked to a speaker\n\n## Prerequisites\n\n- Video must be completed\n- Face ID must exist in the video\n\
+        - If face has speaker mapping: audio must be completed\n- User must have sufficient credits\n\n## Request\n\n```json\n\
+        {\n  \"face_id\": 1,\n  \"analysis_type\": \"overall\",\n  \"callback_url\": \"https://example.com/webhook\"\n}\n\
+        ```\n\n## Response\n\n```json\n{\n  \"video_id\": \"abc123\",\n  \"face_id\": 1,\n  \"speaker_id\": 2,\n  \"analysis_type\"\
+        : \"overall\",\n  \"status\": \"processing\",\n  \"message\": \"Personality analysis triggered successfully\"\n}\n\
+        ```\n\n## Notes\n\n- Analysis runs asynchronously in the background\n- Use callback_url for webhook notifications\
+        \ when complete\n- Credits are deducted when analysis is triggered\n- Retrieve results using the video analytics endpoints"
+      operationId: trigger_personality_analysis_v2_videos__video_id__personality_analyze_post
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the video. Video must be in 'completed' status with detected faces.
+          title: Video Id
+        description: Unique identifier of the video. Video must be in 'completed' status with detected faces.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_trigger_personality_analysis_v2_videos__video_id__personality_analyze_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalityTriggerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v2/videos/{video_id}/faces/{face_id}/personality-analysis:
+    get:
+      tags:
+      - Video Emotion API
+      summary: Get Personality Analysis
+      description: 'Retrieve OCEAN personality analysis results for a specific face in a video.
+
+
+        This endpoint provides comprehensive Big Five (OCEAN) personality trait analysis for a specific
+
+        face detected in a video. It retrieves both processing status and completed analysis data from
+
+        dual data sources, returning conditional data based on completion status.'
+      operationId: get_personality_analysis_v2_videos__video_id__faces__face_id__personality_analysis_get
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: video_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Unique identifier of the video containing the face.
+          title: Video Id
+        description: Unique identifier of the video containing the face.
+      - name: face_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+          description: Face identifier for which to retrieve personality analysis.
+          title: Face Id
+        description: Face identifier for which to retrieve personality analysis.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalityAnalysisResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AIInsightsChatMessage:
+      properties:
+        role:
+          type: string
+          title: Role
+          description: 'Message role: ''user'' or ''ai_assistant'''
+        text:
+          type: string
+          title: Text
+          description: Message content
+        message_id:
+          type: integer
+          title: Message Id
+          description: Message ID
+        timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timestamp
+          description: ISO 8601 timestamp
+      type: object
+      required:
+      - role
+      - text
+      - message_id
+      title: AIInsightsChatMessage
+      description: "Individual message in conversation history.\n\nAttributes:\n    role (str): Message role - \"user\" or\
+        \ \"ai_assistant\".\n    text (str): Message text content.\n    message_id (int): Message ID within the conversation.\n\
+        \    timestamp (Optional[str]): ISO 8601 timestamp when message was created."
+    AIInsightsChatRequest:
+      properties:
+        message:
+          type: string
+          maxLength: 10000
+          minLength: 1
+          title: Message
+          description: User's question or message about the media content
+      type: object
+      required:
+      - message
+      title: AIInsightsChatRequest
+      description: "Request model for sending a message to AI Insights (REST API).\n\nThe system automatically manages conversation\
+        \ continuity - one conversation per user per media item.\n\nAttributes:\n    message (str): The user's question or\
+        \ message about the media content."
+    AIInsightsChatResponse:
+      properties:
+        conversation_id:
+          type: string
+          title: Conversation Id
+          description: Conversation session ID
+        message_id:
+          type: integer
+          title: Message Id
+          description: Message ID within conversation
+        response:
+          type: string
+          title: Response
+          description: AI assistant's complete response
+        token_usage:
+          anyOf:
+          - additionalProperties:
+              type: integer
+            type: object
+          - type: 'null'
+          title: Token Usage
+          description: Token usage (input_tokens, output_tokens)
+        is_quota_exceeded:
+          type: boolean
+          title: Is Quota Exceeded
+          description: Whether LLM quota exceeded
+          default: false
+      type: object
+      required:
+      - conversation_id
+      - message_id
+      - response
+      title: AIInsightsChatResponse
+      description: "Response model for AI Insights chat (non-streaming mode with ?stream=false).\n\nAttributes:\n    conversation_id\
+        \ (str): Unique identifier for this conversation session.\n    message_id (int): Sequential message ID within the\
+        \ conversation.\n    response (str): The complete AI assistant's response text.\n    token_usage (Optional[Dict[str,\
+        \ int]]): LLM token usage statistics\n                                             (input_tokens, output_tokens).\n\
+        \    is_quota_exceeded (bool): Whether the user's LLM quota has been exceeded."
+    AIInsightsHistoryResponse:
+      properties:
+        conversation_id:
+          type: string
+          title: Conversation Id
+          description: Conversation session ID
+        messages:
+          items:
+            $ref: '#/components/schemas/AIInsightsChatMessage'
+          type: array
+          title: Messages
+          description: Conversation message history
+      type: object
+      required:
+      - conversation_id
+      - messages
+      title: AIInsightsHistoryResponse
+      description: "Response model for retrieving AI Insights conversation history.\n\nAttributes:\n    conversation_id (str):\
+        \ The conversation session ID.\n    messages (List[AIInsightsChatMessage]): List of messages in chronological order\n\
+        \                                             (user messages and AI responses)."
+    AnnotatedVideoResponse:
+      properties:
+        video_id:
+          type: string
+          title: Video Id
+        message:
+          type: string
+          title: Message
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - video_id
+      - message
+      - status
+      title: AnnotatedVideoResponse
+      description: "Response for annotated video generation status.\n\nAttributes:\n    video_id (str): ID of the video.\n\
+        \    message (str): Status message.\n    status (str): Current status of annotated video generation (pending, in progress,\
+        \ completed)."
+    Audio:
+      properties:
+        created_at:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Created At
+        status:
+          type: string
+          title: Status
+        id:
+          type: string
+          title: Id
+        model_id:
+          type: string
+          title: Model Id
+          default: ''
+        url:
+          type: string
+          title: Url
+        audio_duration:
+          type: number
+          title: Audio Duration
+        task_completion_status:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Task Completion Status
+        user_id:
+          type: string
+          title: User Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        average_audio_emotions:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Average Audio Emotions
+        segment_audio_emotions:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Segment Audio Emotions
+        segment_text_emotions:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Segment Text Emotions
+        summary:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Summary
+        speakers:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Speakers
+      type: object
+      required:
+      - status
+      - id
+      - url
+      - audio_duration
+      - user_id
+      title: Audio
+      description: "Model representing audio metadata and analysis results.\n\nAttributes:\n    created_at (Optional[Any]):\
+        \ Timestamp when the audio was created.\n    status (str): Current processing status of the audio.\n    id (str):\
+        \ Unique identifier for the audio.\n    model_id (str): Models used to process audio.\n    url (str): Storage URL\
+        \ of the audio file.\n    audio_duration (float): Duration of the audio in seconds.\n    task_completion_status (Optional[int]):\
+        \ Status code indicating task completion.\n    user_id (str): ID of the user who uploaded the audio.\n    title (Optional[str]):\
+        \ Optional title for the audio.\n    average_audio_emotions (Optional[dict]): Average emotion scores for the audio.\n\
+        \    segment_audio_emotions (Optional[list[dict]]): Emotions per audio segment.\n    segment_text_emotions (Optional[list[dict]]):\
+        \ Text-based emotions per segment.\n    summary (Optional[Union[str, Dict[str, Any]]]): Text summary of the audio\
+        \ (string or dict with title, status, summary_body).\n    speakers (Optional[list[dict]]): Detected speaker information."
+    AudioDeleteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: AudioDeleteResponse
+      description: "Response model after deleting audio.\n\nInherits:\n    ResponseStatus: Generic success/error status model."
+    AudioEditResponse:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      title: AudioEditResponse
+      description: "Response model for editing audio data.\n\nInherits:\n    ImageEditResponse: Contains status and metadata\
+        \ after editing."
+    AudioEmotionResponseV2:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        duration:
+          type: integer
+          title: Duration
+        media_source:
+          type: string
+          title: Media Source
+        media_source_url:
+          type: string
+          title: Media Source Url
+        media_source_type:
+          type: string
+          title: Media Source Type
+        user_id:
+          type: string
+          title: User Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - duration
+      - media_source
+      - media_source_url
+      - media_source_type
+      - user_id
+      title: AudioEmotionResponseV2
+      description: "V2 response model for audio emotion detection with URL source tracking.\n\nSupports:\n- YouTube URLs (audio\
+        \ extracted from video)\n- Cloud storage URLs (Dropbox, direct URLs, etc.)\n- Time parameters for all URL types\n\
+        - URL source tracking with media type detection\n\nAttributes:\n    id (str): Unique ID of the audio.\n    title (str):\
+        \ Title of the audio.\n    status (str): Processing status (queue, processing, done, etc.).\n    duration (int): Duration\
+        \ in seconds (trimmed duration if time params provided).\n    media_source (str): Source type (\"youtube\", \"dropbox\"\
+        , \"public_url\", \"file_upload\").\n    media_source_url (str): Full URL as provided by user.\n    media_source_type\
+        \ (str): Type of source media (\"video\" or \"audio\").\n    user_id (str): ID of the user who uploaded the audio.\n\
+        \    created_at (Optional[str]): Timestamp when audio was created."
+    AudioReprocessResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - status
+      - message
+      title: AudioReprocessResponse
+      description: "Response model for audio reprocessing.\n\nInherits:\n    TextReprocessResponse: Reuse response format\
+        \ for audio reprocessing."
+    AudioSegmentDeleteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        segment_id:
+          type: integer
+          title: Segment Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - segment_id
+      - message
+      title: AudioSegmentDeleteResponse
+      description: "Response for deleting an audio segment.\n\nAttributes:\n    id (str): Audio ID the segment belongs to.\n\
+        \    segment_id (int): Segment number that was deleted.\n    message (str): Status message of the deletion operation."
+    AutoSpeakerFaceMatchTriggerResponse:
+      properties:
+        video_id:
+          type: string
+          title: Video Id
+        audio_id:
+          type: string
+          title: Audio Id
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - video_id
+      - audio_id
+      - status
+      - message
+      title: AutoSpeakerFaceMatchTriggerResponse
+      description: "Response model for triggering the automatic speaker-face match worker.\n\nAttributes:\n    video_id (str):\
+        \ Unique identifier of the video.\n    audio_id (str): Unique identifier of the audio document.\n    status (str):\
+        \ Status of the trigger operation (e.g., \"processing\").\n    message (str): Informational message about the operation."
+    Body_add_note_to_specific_face_v1_images__image_id__faces__face_id__note_put:
+      properties:
+        note:
+          type: string
+          title: Note
+          description: Note to be updated for the detected face in the image
+          default: ''
+      type: object
+      title: Body_add_note_to_specific_face_v1_images__image_id__faces__face_id__note_put
+    Body_delete_faces_v1_videos__video_id__faces_delete:
+      properties:
+        face_ids:
+          type: string
+          title: Face Ids
+          description: Comma-separated list of face IDs to delete (e.g., 1,2,3)
+      type: object
+      required:
+      - face_ids
+      title: Body_delete_faces_v1_videos__video_id__faces_delete
+    Body_edit_face_note_v1_videos__video_id__frames__frame_id__faces__face_id__note_put:
+      properties:
+        note:
+          type: string
+          title: Note
+          description: The note to attach to the face or frame.
+      type: object
+      required:
+      - note
+      title: Body_edit_face_note_v1_videos__video_id__frames__frame_id__faces__face_id__note_put
+    Body_edit_image_metadata_v1_images__image_id__metadata_put:
+      properties:
+        title:
+          type: string
+          title: Title
+          default: ''
+        description:
+          type: string
+          title: Description
+          default: ''
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+        image_url:
+          type: string
+          title: Image Url
+          default: ''
+      type: object
+      title: Body_edit_image_metadata_v1_images__image_id__metadata_put
+    Body_edit_text_v1_texts__text_id__emotions_put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: 'Optional URL to receive a webhook notification when analysis is complete. Example: ''https://example.com/callback'''
+        text:
+          type: string
+          title: Text
+          description: The updated text to be analyzed for emotions.
+      type: object
+      required:
+      - text
+      title: Body_edit_text_v1_texts__text_id__emotions_put
+    Body_edit_title_or_description_by_id_v1_videos__video_id__metadata_put:
+      properties:
+        title:
+          type: string
+          title: Title
+          description: 'Title to be changed for the video (Max: 50 characters)'
+        description:
+          type: string
+          title: Description
+          description: 'Description to be changed for the video (Max: 300 characters)'
+      type: object
+      title: Body_edit_title_or_description_by_id_v1_videos__video_id__metadata_put
+    Body_edit_title_or_description_v1_audios__audio_id__metadata_put:
+      properties:
+        title:
+          type: string
+          title: Title
+          description: New title for the audio file (optional)
+        description:
+          type: string
+          title: Description
+          description: Description to add or update (optional)
+      type: object
+      title: Body_edit_title_or_description_v1_audios__audio_id__metadata_put
+    Body_generate_video_emotion_analysis_report_v1_videos__video_id__report_post:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The callback URL to notify when video CSV processing is completed. Provide a valid URL.
+      type: object
+      title: Body_generate_video_emotion_analysis_report_v1_videos__video_id__report_post
+    Body_merge_face_v1_videos__video_id__faces_put:
+      properties:
+        selected_face_id:
+          type: integer
+          title: Selected Face Id
+          description: The unique face ID of the face in the video to be selected.
+        merge_face_id:
+          type: string
+          title: Merge Face Id
+          description: A comma-separated list of unique face IDs of the faces in the video to be merged.
+      type: object
+      required:
+      - selected_face_id
+      - merge_face_id
+      title: Body_merge_face_v1_videos__video_id__faces_put
+    Body_process_highlight_v1_videos_highlights_post:
+      properties:
+        video_id:
+          type: string
+          title: Video Id
+          description: The unique video ID of the video for which the highlight to be generated.
+      type: object
+      required:
+      - video_id
+      title: Body_process_highlight_v1_videos_highlights_post
+    Body_reprocess_audio_v1_audios__audio_id__put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The callback url to notify audio reprocessing is completed. Give a valid URL.
+        reprocess:
+          type: boolean
+          title: Reprocess
+          description: Set to 'True' to reprocess an already completed audio; defaults to 'False'.
+          default: false
+      type: object
+      title: Body_reprocess_audio_v1_audios__audio_id__put
+    Body_reprocess_image_v1_images__image_id__put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The callback url to notify image reprocessing is completed. Give a valid URL.
+        reprocess:
+          anyOf:
+          - type: boolean
+          - type: string
+          title: Reprocess
+          description: Set to 'True' to reprocess an already completed image; defaults to 'False'.
+          default: false
+      type: object
+      title: Body_reprocess_image_v1_images__image_id__put
+    Body_reprocess_text_v1_texts__text_id__put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The url to notify when text processing is completed
+        reprocess:
+          type: boolean
+          title: Reprocess
+          description: Set to 'True' to reprocess an already processed text; defaults to 'False'.
+          default: false
+      type: object
+      title: Body_reprocess_text_v1_texts__text_id__put
+    Body_reprocess_video_v1_videos__video_id__put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The callback url to notify video reprocessing is completed. Give a valid URL.
+        reprocess:
+          type: boolean
+          title: Reprocess
+          description: Set to 'True' to reprocess an already completed video; defaults to 'False'.
+          default: false
+      type: object
+      title: Body_reprocess_video_v1_videos__video_id__put
+    Body_trigger_personality_analysis_v2_videos__video_id__personality_analyze_post:
+      properties:
+        face_id:
+          type: integer
+          title: Face Id
+          description: Face identifier from video analysis to perform personality assessment on. Must exist in the video's
+            detected faces.
+        analysis_type:
+          type: string
+          title: Analysis Type
+          description: 'Type of personality analysis: ''overall'', ''by_segment'', or ''combined''. Default is ''overall''.'
+          default: overall
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+          description: Optional webhook URL to receive notification when personality analysis completes. Webhook will receive
+            the analysis results as JSON payload.
+      type: object
+      required:
+      - face_id
+      title: Body_trigger_personality_analysis_v2_videos__video_id__personality_analyze_post
+    Body_update_emotion_per_frame_v1_videos__video_id__frames__frame_id__faces__face_id__emotions_put:
+      properties:
+        angry:
+          type: number
+          title: Angry
+          default: 0
+        contempt:
+          type: number
+          title: Contempt
+          default: 0
+        disgust:
+          type: number
+          title: Disgust
+          default: 0
+        fear:
+          type: number
+          title: Fear
+          default: 0
+        happy:
+          type: number
+          title: Happy
+          default: 0
+        neutral:
+          type: number
+          title: Neutral
+          default: 0
+        sad:
+          type: number
+          title: Sad
+          default: 0
+        surprise:
+          type: number
+          title: Surprise
+          default: 0
+      type: object
+      title: Body_update_emotion_per_frame_v1_videos__video_id__frames__frame_id__faces__face_id__emotions_put
+    Body_update_multiple_faces_v1_videos__video_id__frames_faces_put:
+      properties:
+        frame_ids:
+          type: string
+          title: Frame Ids
+          description: The comma separated list of frame IDs to be updated.
+        current_face_id:
+          type: integer
+          title: Current Face Id
+          description: The face ID to be replaced.
+        new_face_id:
+          type: integer
+          title: New Face Id
+          description: The new face ID to replace with.
+      type: object
+      required:
+      - frame_ids
+      - current_face_id
+      - new_face_id
+      title: Body_update_multiple_faces_v1_videos__video_id__frames_faces_put
+    Body_upload_audio_v2_audios_post:
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: Title
+          description: A descriptive title for your audio (e.g., 'Customer Call' or 'Team Meeting').
+        description:
+          type: string
+          title: Description
+          description: Optional notes about the audio content or context.
+        media_url:
+          type: string
+          title: Media Url
+          description: URL to your audio/video source (YouTube, Instagram, Twitter, Facebook, Dropbox, or any direct media
+            link). Audio will be extracted if source is video. Leave empty if uploading a file instead.
+          default: ''
+        start_millis:
+          type: number
+          title: Start Millis
+          description: Start point in milliseconds to begin analysis. Use 0 to start from the beginning. If provided (>0),
+            end_millis is required with minimum 1-second (1000ms) gap.
+          default: 0
+        end_millis:
+          type: number
+          title: End Millis
+          description: End point in milliseconds to stop analysis. Use 0 only when analyzing the full audio (start_millis
+            must also be 0). If start_millis is provided, end_millis is required and must be at least 1000ms greater than
+            start_millis.
+          default: 0
+        callback_url:
+          type: string
+          title: Callback Url
+          description: Your webhook URL to receive a notification when analysis completes.
+          default: ''
+        audio_file:
+          title: Audio File
+          description: Upload an audio file directly (mp3, wav, aac, m4a). File upload takes priority over media_url.
+        speaker_diarization:
+          type: boolean
+          title: Speaker Diarization
+          description: Speaker diarization. Enabled by default.
+          default: true
+        text_emotion_analysis:
+          type: boolean
+          title: Text Emotion Analysis
+          description: Text emotion analysis. Enabled by default.
+          default: true
+        language:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Language
+          description: Language code for analysis. Auto-detected if not provided.
+      type: object
+      required:
+      - title
+      title: Body_upload_audio_v2_audios_post
+    Body_upload_image_v2_images_post:
+      properties:
+        title:
+          type: string
+          maxLength: 150
+          minLength: 1
+          title: Title
+          description: A descriptive title for your image (e.g., 'Customer Reaction' or 'Team Photo').
+        description:
+          type: string
+          maxLength: 300
+          title: Description
+          description: Optional notes about the image content or context.
+        image_url:
+          type: string
+          title: Image Url
+          description: URL to your image source (Dropbox or any direct image link). Leave empty if uploading a file instead.
+          default: ''
+        callback_url:
+          type: string
+          title: Callback Url
+          description: Your webhook URL to receive a notification when analysis completes.
+          default: ''
+        image_file:
+          title: Image File
+          description: Upload an image file directly (jpg, jpeg, png, webp). File upload takes priority over image_url.
+      type: object
+      required:
+      - title
+      title: Body_upload_image_v2_images_post
+    Body_upload_text_v2_texts_post:
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: Title
+          description: A descriptive title for your text (e.g., 'Customer Feedback' or 'Meeting Notes').
+        text:
+          type: string
+          title: Text
+          description: The raw text content to be analyzed for emotions. Can be any text such as customer reviews, transcripts,
+            or general content.
+        callback_url:
+          type: string
+          title: Callback Url
+          description: Your webhook URL to receive a notification when analysis completes.
+          default: ''
+      type: object
+      required:
+      - title
+      - text
+      title: Body_upload_text_v2_texts_post
+    Body_upload_video_v2_videos_post:
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: Title
+          description: A descriptive title for your video (e.g., 'Team Meeting' or 'Customer Interview').
+        description:
+          type: string
+          title: Description
+          description: Optional notes about the video content or context.
+        video_url:
+          type: string
+          title: Video Url
+          description: 'URL to your video. Supported sources: YouTube, Dropbox, Instagram, Facebook, Twitter (X), or any direct
+            video link. Leave empty if uploading a file instead. '
+          default: ''
+        start_millis:
+          type: number
+          title: Start Millis
+          description: Start point in milliseconds to begin analysis. Use 0 to start from the beginning. If provided (>0),
+            end_millis is required with minimum 1-second (1000ms) gap.
+          default: 0
+        end_millis:
+          type: number
+          title: End Millis
+          description: End point in milliseconds to stop analysis. Use 0 only when analyzing the full video (start_millis
+            must also be 0). If start_millis is provided, end_millis is required and must be at least 1000ms greater than
+            start_millis.
+          default: 0
+        callback_url:
+          type: string
+          title: Callback Url
+          description: Your webhook URL to receive a notification when analysis completes.
+          default: ''
+        video_file:
+          title: Video File
+          description: Upload a video file directly (mp4, avi, mov, webm, mpeg). File upload takes priority over video_url.
+        project_id:
+          type: string
+          title: Project Id
+          description: Optional project ID to associate the video with an existing project.
+          default: ''
+      type: object
+      required:
+      - title
+      title: Body_upload_video_v2_videos_post
+    BoundingBox:
+      additionalProperties: true
+      type: object
+    DeleteFacesResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - message
+      title: DeleteFacesResponse
+      description: "Response model after deleting one or more faces.\n\nAttributes:\n    id (str): Video or frame ID the faces\
+        \ belonged to.\n    message (str): Confirmation or error message."
+    DeleteTextResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: DeleteTextResponse
+      description: Response returned after deleting a text emotion analysis result.
+    EmotionAnalysis:
+      properties:
+        overall:
+          $ref: '#/components/schemas/OverallEmotions'
+          examples:
+          - audio:
+              angry: 0.047
+              happy: 0.185
+              neutral: 0.638
+            text:
+              admiration: 0.015
+              joy: 0.018
+              neutral: 0.75
+            video:
+              angry: 0.059
+              happy: 0.175
+              neutral: 0.408
+              sad: 0.049
+        faces:
+          anyOf:
+          - additionalProperties:
+              additionalProperties:
+                type: number
+              type: object
+            type: object
+          - type: 'null'
+          title: Faces
+          examples:
+          - John Smith:
+              happy: 0.175
+              neutral: 0.408
+              sad: 0.049
+            face_2:
+              angry: 0.087
+              happy: 0.184
+              neutral: 0.314
+        speakers:
+          additionalProperties:
+            $ref: '#/components/schemas/SpeakerEmotions'
+          type: object
+          title: Speakers
+          examples:
+          - Interviewer:
+              audio:
+                angry: 0.05
+                happy: 0.18
+                neutral: 0.65
+              text:
+                curiosity: 0.08
+                neutral: 0.85
+            John Smith:
+              audio:
+                angry: 0.045
+                happy: 0.19
+                neutral: 0.625
+              text:
+                admiration: 0.02
+                joy: 0.025
+                neutral: 0.72
+      type: object
+      required:
+      - overall
+      title: EmotionAnalysis
+      description: Hierarchical emotion analysis structure.
+    EmotionScores:
+      properties:
+        angry:
+          type: number
+          minimum: 0
+          title: Angry
+          description: Score for angry
+          default: 0
+        contempt:
+          type: number
+          minimum: 0
+          title: Contempt
+          description: Score for contempt
+          default: 0
+        disgust:
+          type: number
+          minimum: 0
+          title: Disgust
+          description: Score for disgust
+          default: 0
+        fear:
+          type: number
+          minimum: 0
+          title: Fear
+          description: Score for fear
+          default: 0
+        happy:
+          type: number
+          minimum: 0
+          title: Happy
+          description: Score for happy
+          default: 0
+        neutral:
+          type: number
+          minimum: 0
+          title: Neutral
+          description: Score for neutral
+          default: 0
+        sad:
+          type: number
+          minimum: 0
+          title: Sad
+          description: Score for sad
+          default: 0
+        surprise:
+          type: number
+          minimum: 0
+          title: Surprise
+          description: Score for surprise
+          default: 0
+      type: object
+      title: EmotionScores
+      description: 'Emotion scores representing the intensity of each emotion.
+
+
+        All scores must be non-negative integers.'
+    Emotions:
+      properties:
+        emotions:
+          additionalProperties: true
+          type: object
+          title: Emotions
+        sentence:
+          type: string
+          title: Sentence
+      type: object
+      title: Emotions
+      description: "Model representing detected emotions in a sentence.\n\nAttributes:\n    emotions (Optional[dict]): Dictionary\
+        \ of emotion scores.\n    sentence (Optional[str]): The sentence where emotions were detected."
+    FaceNameItem:
+      properties:
+        face_id:
+          type: integer
+          title: Face Id
+          default: 0
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - name
+      title: FaceNameItem
+      description: 'Represents a mapping between a face ID and its assigned name.
+
+
+        Used for labeling or identifying detected faces.'
+    Faces:
+      properties:
+        image:
+          type: string
+          title: Image
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        face_id:
+          type: integer
+          title: Face Id
+      type: object
+      required:
+      - image
+      - face_id
+      title: Faces
+      description: "Model representing a detected face.\n\nAttributes:\n    image (str): Image data (base64 or URL) of the\
+        \ face.\n    name (Optional[str]): Optional name of the person.\n    face_id (int): Unique identifier for the face."
+    FetchTextResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        model_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model Id
+        document_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Document Type
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        word_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Word Count
+        segments:
+          anyOf:
+          - items:
+              anyOf:
+              - $ref: '#/components/schemas/Emotions'
+              - $ref: '#/components/schemas/TranscriptEmotions'
+            type: array
+          - type: 'null'
+          title: Segments
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Text
+        emotions:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Emotions
+        parent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Id
+      type: object
+      required:
+      - id
+      - status
+      title: FetchTextResponse
+      description: "Detailed response for a text emotion analysis request.\n\nAttributes:\n    title (Optional[str]): Title\
+        \ of the text (available for v2 texts).\n    model_id (str): Model used to process the text.\n    created_at (Any):\
+        \ Timestamp of creation.\n    text (Optional[str]): The input text.\n    user_id (Optional[str]): ID of the user who\
+        \ submitted the text.\n    word_count (Optional[int]): Number of words in the input.\n    segments (Optional[List[Emotions]]):\
+        \ List of emotions per sentence.\n    emotions (Optional[dict]): Overall emotions detected in the text.\n    parent_id\
+        \ (Optional[str]): ID associated with parent audio id if any."
+    FrameEmotionResponseData:
+      properties:
+        frame_id:
+          type: string
+          title: Frame Id
+        face_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Face Id
+        dominant_emotion:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dominant Emotion
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+      type: object
+      required:
+      - frame_id
+      title: FrameEmotionResponseData
+      description: "Model for dominant emotion data of a frame.\n\nAttributes:\n    frame_id (str): Identifier for the video\
+        \ frame.\n    face_id (Optional[int]): Face ID detected in the frame.\n    dominant_emotion (Optional[str]): Most\
+        \ prominent emotion detected.\n    message (Optional[str]): Optional message or status info."
+    FrameNoteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: FrameNoteResponse
+      description: "Model for response after adding a note to a frame.\n\nAttributes:\n    id (str): Frame ID or reference.\n\
+        \    status (str): Status of the note operation."
+    FramesResponse:
+      properties:
+        original_frame_image:
+          type: string
+          title: Original Frame Image
+        frame_image:
+          type: string
+          title: Frame Image
+        found_faces:
+          items:
+            type: integer
+          type: array
+          title: Found Faces
+        timestamp:
+          type: integer
+          title: Timestamp
+        faces:
+          items:
+            $ref: '#/components/schemas/BoundingBox'
+          type: array
+          title: Faces
+        frame_id:
+          type: integer
+          title: Frame Id
+        note:
+          type: string
+          title: Note
+      type: object
+      title: FramesResponse
+      description: "Model for a single video frame with face data.\n\nAttributes:\n    original_frame_image (str): Unprocessed\
+        \ frame image.\n    frame_image (str): Processed frame image with annotations.\n    found_faces (List[int]): List\
+        \ of detected face IDs.\n    timestamp (int): Timestamp of the frame in milliseconds.\n    faces (List[BoundingBox]):\
+        \ Face details including bounding boxes.\n    frame_id (int): Frame identifier.\n    note (str): Optional notes or\
+        \ remarks."
+    FullAudioAnalyticsResponse:
+      properties:
+        title:
+          type: string
+          title: Title
+          default: ''
+          examples:
+          - Podcast Episode 42
+        status:
+          type: string
+          title: Status
+          default: ''
+          examples:
+          - completed
+        description:
+          type: string
+          title: Description
+          default: ''
+          examples:
+          - Discussion about AI ethics
+        created_at:
+          type: string
+          title: Created At
+          default: ''
+          examples:
+          - '2025-12-01T10:15:00Z'
+        media_type:
+          type: string
+          title: Media Type
+          default: audio
+          examples:
+          - audio
+        audio_id:
+          type: string
+          title: Audio Id
+          default: ''
+          examples:
+          - 1154940c-473f-46cb-a32d-923e6f23bedc
+        text_id:
+          type: string
+          title: Text Id
+          default: ''
+          examples:
+          - c74a3fe1-e8a3-4c7a-98c9-a496ee4a3fb8
+        duration:
+          type: number
+          title: Duration
+          default: 0
+          examples:
+          - 3245.5
+        speaker_count:
+          type: integer
+          title: Speaker Count
+          default: 0
+          examples:
+          - 2
+        media_source_url:
+          type: string
+          title: Media Source Url
+          default: ''
+          examples:
+          - https://storage.googleapis.com/.../audio.mp3
+        youtube_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Youtube Url
+          examples:
+          - https://youtube.com/watch?v=...
+        detected_speakers:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Detected Speakers
+          examples:
+          - - name: Alice Johnson
+              speaker_id: 1
+            - name: Bob Williams
+              speaker_id: 2
+        emotion_analysis:
+          $ref: '#/components/schemas/EmotionAnalysis'
+          examples:
+          - overall:
+              audio:
+                angry: 0.025
+                happy: 0.28
+                neutral: 0.55
+              text:
+                admiration: 0.045
+                joy: 0.04
+                neutral: 0.45
+            speakers:
+              Alice Johnson:
+                audio:
+                  angry: 0.02
+                  happy: 0.32
+                  neutral: 0.52
+                text:
+                  admiration: 0.06
+                  joy: 0.055
+                  neutral: 0.4
+              Bob Williams:
+                audio:
+                  angry: 0.03
+                  happy: 0.24
+                  neutral: 0.58
+                text:
+                  amusement: 0.07
+                  neutral: 0.5
+      type: object
+      required:
+      - emotion_analysis
+      title: FullAudioAnalyticsResponse
+      description: Complete multimodal analytics response for audio content.
+    FullVideoAnalyticsResponse:
+      properties:
+        title:
+          type: string
+          title: Title
+          default: ''
+          examples:
+          - Customer Interview - Q4 2025
+        status:
+          type: string
+          title: Status
+          default: ''
+          examples:
+          - completed
+        description:
+          type: string
+          title: Description
+          default: ''
+          examples:
+          - Quarterly customer satisfaction interview
+        created_at:
+          type: string
+          title: Created At
+          default: ''
+          examples:
+          - '2025-12-01T14:30:00Z'
+        media_type:
+          type: string
+          title: Media Type
+          default: video
+          examples:
+          - video
+        video_id:
+          type: string
+          title: Video Id
+          default: ''
+          examples:
+          - 01a5aceb-8411-4174-b80f-af6789dbd925
+        audio_id:
+          type: string
+          title: Audio Id
+          default: ''
+          examples:
+          - 1154940c-473f-46cb-a32d-923e6f23bedc
+        text_id:
+          type: string
+          title: Text Id
+          default: ''
+          examples:
+          - c74a3fe1-e8a3-4c7a-98c9-a496ee4a3fb8
+        duration:
+          type: number
+          title: Duration
+          default: 0
+          examples:
+          - 20.56
+        total_frames_count:
+          type: integer
+          title: Total Frames Count
+          default: 0
+          examples:
+          - 87480
+        frame_rate:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Frame Rate
+          examples:
+          - 30
+        frame_height:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Frame Height
+          examples:
+          - 1080
+        frame_width:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Frame Width
+          examples:
+          - 1920
+        face_count:
+          type: integer
+          title: Face Count
+          default: 0
+          examples:
+          - 2
+        speaker_count:
+          type: integer
+          title: Speaker Count
+          default: 0
+          examples:
+          - 2
+        media_source_url:
+          type: string
+          title: Media Source Url
+          default: ''
+          examples:
+          - https://storage.googleapis.com/.../video.mp4
+        annotated_video_url:
+          type: string
+          title: Annotated Video Url
+          default: ''
+          examples:
+          - https://storage.googleapis.com/.../annotated.mp4
+        youtube_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Youtube Url
+          examples:
+          - null
+        detected_faces:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Detected Faces
+          examples:
+          - - face_id: 1
+              image: https://storage.googleapis.com/.../faces/1.jpg
+              name: John Smith
+            - face_id: 2
+              image: https://storage.googleapis.com/.../faces/2.jpg
+              name: ''
+        detected_speakers:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Detected Speakers
+          examples:
+          - - name: John Smith
+              speaker_id: 1
+            - name: Interviewer
+              speaker_id: 2
+        emotion_analysis:
+          $ref: '#/components/schemas/EmotionAnalysis'
+          examples:
+          - faces:
+              John Smith:
+                happy: 0.175
+                neutral: 0.408
+                sad: 0.049
+              face_2:
+                angry: 0.087
+                happy: 0.184
+                neutral: 0.314
+            overall:
+              audio:
+                angry: 0.047
+                happy: 0.185
+                neutral: 0.638
+              text:
+                admiration: 0.015
+                joy: 0.018
+                neutral: 0.75
+              video:
+                angry: 0.059
+                happy: 0.175
+                neutral: 0.408
+                sad: 0.049
+            speakers:
+              Interviewer:
+                audio:
+                  angry: 0.05
+                  happy: 0.18
+                  neutral: 0.65
+                text:
+                  curiosity: 0.08
+                  neutral: 0.85
+              John Smith:
+                audio:
+                  angry: 0.045
+                  happy: 0.19
+                  neutral: 0.625
+                text:
+                  admiration: 0.02
+                  joy: 0.025
+                  neutral: 0.72
+      type: object
+      required:
+      - emotion_analysis
+      title: FullVideoAnalyticsResponse
+      description: Complete multimodal analytics response for video content.
+    GenerateCSVResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        message:
+          type: string
+          title: Message
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - message
+      - status
+      title: GenerateCSVResponse
+      description: "Response after generating a CSV report.\n\nAttributes:\n    id (str): ID of the resource associated with\
+        \ the CSV.\n    message (str): Confirmation or status message.\n    status (str): Current status of the CSV generation."
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    HighlightGenerateResponse:
+      properties:
+        video_id:
+          type: string
+          title: Video Id
+        message:
+          type: string
+          title: Message
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - video_id
+      - message
+      - status
+      title: HighlightGenerateResponse
+      description: "Model for highlight video generation trigger response.\n\nAttributes:\n    video_id (str): The video ID\
+        \ for which highlights are being generated.\n    message (str): Status message about the highlight generation process.\n\
+        \    status (str): Current status of highlight generation (queue, processing, completed, failed)."
+    HighlightResponse:
+      properties:
+        highlight_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Highlight Status
+        highlight_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Highlight Url
+      type: object
+      title: HighlightResponse
+      description: "Model for highlight video response.\n\nAttributes:\n    message (str): Status or success message.\n  \
+        \  highlight_url (str): URL to the generated highlight video."
+    ImageDBResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        title:
+          type: string
+          title: Title
+        description:
+          type: string
+          title: Description
+        created_at:
+          title: Created At
+        original_frame_image:
+          title: Original Frame Image
+        height:
+          type: number
+          title: Height
+        width:
+          type: number
+          title: Width
+        found_faces:
+          items:
+            type: integer
+          type: array
+          title: Found Faces
+        faces:
+          title: Faces
+        annotated_image:
+          title: Annotated Image
+      type: object
+      required:
+      - id
+      - status
+      - title
+      - description
+      - created_at
+      - original_frame_image
+      - height
+      - width
+      - found_faces
+      - faces
+      - annotated_image
+      title: ImageDBResponse
+      description: "Detailed response model for image emotion stored in DB.\n\nAttributes:\n    title (str): Title of the\
+        \ image.\n    description (str): Description provided by the user.\n    created_at (Any): Timestamp when image was\
+        \ added.\n    original_frame_image (Any): Original image file.\n    height (float): Height of the image.\n    width\
+        \ (float): Width of the image.\n    found_faces (int): Number of faces detected.\n    faces (Any): Detailed face data.\n\
+        \    annotated_image (Any): Image with annotations (e.g., bounding boxes)."
+    ImageDeleteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: ImageDeleteResponse
+      description: Response returned after deleting an image analysis result.
+    ImageEditResponse:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      title: ImageEditResponse
+      description: "Model for editing image metadata.\n\nAttributes:\n    title (str): Updated title.\n    description (str):\
+        \ Updated description."
+    ImageEmotionResponseV2:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        media_source:
+          type: string
+          title: Media Source
+        media_source_url:
+          type: string
+          title: Media Source Url
+        media_source_type:
+          type: string
+          title: Media Source Type
+        user_id:
+          type: string
+          title: User Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - media_source
+      - media_source_url
+      - media_source_type
+      - user_id
+      title: ImageEmotionResponseV2
+      description: "V2 response model for image emotion detection with URL source tracking.\n\nSupports:\n- File uploads (JPG,\
+        \ JPEG, PNG, WEBP)\n- Cloud storage URLs (Dropbox, direct URLs)\n- URL source tracking\n\nAttributes:\n    id (str):\
+        \ Unique ID of the image.\n    title (str): Title of the image.\n    status (str): Processing status (\"queue\").\n\
+        \    media_source (str): Source type (\"dropbox\", \"public_url\", \"file_upload\").\n    media_source_url (str):\
+        \ Full URL as provided by user or uploaded file URL.\n    media_source_type (str): Type of source media (always \"\
+        image\" for this endpoint).\n    user_id (str): ID of the user who uploaded the image.\n    created_at (Optional[str]):\
+        \ Timestamp when image was created."
+    ImageNoteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: ImageNoteResponse
+      description: Response after updating or retrieving notes for an image.
+    ImageReprocessResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - status
+      - message
+      title: ImageReprocessResponse
+      description: Response model returned after reprocessing an image emotion analysis.
+    ListOfFaces:
+      properties:
+        faces:
+          items:
+            $ref: '#/components/schemas/Faces'
+          type: array
+          title: Faces
+      type: object
+      required:
+      - faces
+      title: ListOfFaces
+      description: "Model representing a collection of faces.\n\nAttributes:\n    faces (List[Faces]): List of detected or\
+        \ named faces."
+    MergeResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - message
+      title: MergeResponse
+      description: "Response model for merging video/audio content.\n\nAttributes:\n    message (str): Status message about\
+        \ the merge result."
+    MultiFaceResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+        updated_frames:
+          items: {}
+          type: array
+          title: Updated Frames
+      type: object
+      required:
+      - message
+      - updated_frames
+      title: MultiFaceResponse
+      description: "Response model after updating multiple faces.\n\nAttributes:\n    message (str): Operation status or result.\n\
+        \    updated_frames (List): List of frames with updated faces."
+    MultipleFramesResponse:
+      properties:
+        processed_frames:
+          items:
+            $ref: '#/components/schemas/FramesResponse'
+          type: array
+          title: Processed Frames
+      type: object
+      required:
+      - processed_frames
+      title: MultipleFramesResponse
+      description: Model for returning the MultipleFrame Responses
+    NameUpdateResponse:
+      properties:
+        face_id:
+          type: integer
+          title: Face Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - face_id
+      - name
+      title: NameUpdateResponse
+      description: "Model for updating the name associated with a face.\n\nAttributes:\n    face_id (int): Identifier of the\
+        \ face being updated.\n    name (str): New name to assign to the face."
+    OverallEmotions:
+      properties:
+        video:
+          anyOf:
+          - additionalProperties:
+              type: number
+            type: object
+          - type: 'null'
+          title: Video
+          examples:
+          - angry: 0.059
+            happy: 0.175
+            neutral: 0.408
+            sad: 0.049
+        audio:
+          additionalProperties:
+            type: number
+          type: object
+          title: Audio
+          examples:
+          - angry: 0.047
+            happy: 0.185
+            neutral: 0.638
+        text:
+          additionalProperties:
+            type: number
+          type: object
+          title: Text
+          examples:
+          - admiration: 0.015
+            joy: 0.018
+            neutral: 0.75
+      type: object
+      title: OverallEmotions
+      description: Overall emotions across modalities.
+    PaginatedResponse:
+      properties:
+        documents:
+          title: Documents
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - documents
+      - count
+      title: PaginatedResponse
+      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]):\
+        \ List of audio responses.\n    count (int): Total count of documents."
+    PersonalityAnalysisResponse:
+      properties:
+        video_id:
+          type: string
+          title: Video Id
+        face_id:
+          type: integer
+          minimum: 1
+          title: Face Id
+        analysis_status:
+          anyOf:
+          - additionalProperties:
+              $ref: '#/components/schemas/PersonalityAnalysisStatus'
+            type: object
+          - type: 'null'
+          title: Analysis Status
+        overall:
+          anyOf:
+          - $ref: '#/components/schemas/PersonalityOverallMetrics'
+          - type: 'null'
+        by_segment:
+          anyOf:
+          - $ref: '#/components/schemas/PersonalitySegmentMetrics'
+          - type: 'null'
+      type: object
+      required:
+      - video_id
+      - face_id
+      title: PersonalityAnalysisResponse
+      description: "Complete response for personality analysis retrieval (public API).\n\nAttributes:\n    video_id (str):\
+        \ Video identifier\n    face_id (int): Face identifier (must be >= 1)\n    analysis_status (Optional[Dict[str, PersonalityAnalysisStatus]]):\
+        \ Status of overall and/or by_segment analysis (only includes keys that exist)\n    overall (Optional[PersonalityOverallMetrics]):\
+        \ Overall analysis (only if completed)\n    by_segment (Optional[PersonalitySegmentMetrics]): Segment analysis (only\
+        \ if completed)"
+    PersonalityAnalysisStatus:
+      properties:
+        status:
+          type: string
+          pattern: ^(pending|processing|completed|failed)$
+          title: Status
+        percentage:
+          anyOf:
+          - type: integer
+            maximum: 100
+            minimum: 0
+          - type: 'null'
+          title: Percentage
+      type: object
+      required:
+      - status
+      title: PersonalityAnalysisStatus
+      description: "Status detail for personality analysis processing.\n\nAttributes:\n    status (str): One of: pending,\
+        \ processing, completed, failed\n    percentage (Optional[int]): Progress percentage (0-100), only present during\
+        \ processing"
+    PersonalityOceanMetrics:
+      properties:
+        agreeableness:
+          type: number
+          maximum: 1
+          minimum: 0
+          title: Agreeableness
+        conscientiousness:
+          type: number
+          maximum: 1
+          minimum: 0
+          title: Conscientiousness
+        extraversion:
+          type: number
+          maximum: 1
+          minimum: 0
+          title: Extraversion
+        neuroticism:
+          type: number
+          maximum: 1
+          minimum: 0
+          title: Neuroticism
+        openness:
+          type: number
+          maximum: 1
+          minimum: 0
+          title: Openness
+      type: object
+      required:
+      - agreeableness
+      - conscientiousness
+      - extraversion
+      - neuroticism
+      - openness
+      title: PersonalityOceanMetrics
+      description: "OCEAN personality trait metrics (Big Five personality traits).\n\nAttributes:\n    agreeableness (float):\
+        \ Agreeableness level (0-1 range)\n    conscientiousness (float): Conscientiousness level (0-1 range)\n    extraversion\
+        \ (float): Extraversion level (0-1 range)\n    neuroticism (float): Neuroticism level (0-1 range)\n    openness (float):\
+        \ Openness to experience (0-1 range)"
+    PersonalityOverallMetrics:
+      properties:
+        ocean_metrics:
+          $ref: '#/components/schemas/PersonalityOceanMetrics'
+      type: object
+      required:
+      - ocean_metrics
+      title: PersonalityOverallMetrics
+      description: "Overall personality analysis metrics.\n\nAttributes:\n    ocean_metrics (PersonalityOceanMetrics): OCEAN\
+        \ personality trait scores"
+    PersonalitySegmentItem:
+      properties:
+        segment_id:
+          type: integer
+          minimum: 1
+          title: Segment Id
+        start_millis:
+          type: integer
+          minimum: 0
+          title: Start Millis
+        end_millis:
+          type: integer
+          exclusiveMinimum: 0
+          title: End Millis
+        ocean_metrics:
+          $ref: '#/components/schemas/PersonalityOceanMetrics'
+      type: object
+      required:
+      - segment_id
+      - start_millis
+      - end_millis
+      - ocean_metrics
+      title: PersonalitySegmentItem
+      description: "Individual segment data with OCEAN metrics.\n\nAttributes:\n    segment_id (int): Unique identifier for\
+        \ this segment\n    start_millis (int): Segment start time in milliseconds\n    end_millis (int): Segment end time\
+        \ in milliseconds\n    ocean_metrics (PersonalityOceanMetrics): OCEAN personality trait scores for this segment"
+    PersonalitySegmentMetrics:
+      properties:
+        segment_interval_millis:
+          type: integer
+          exclusiveMinimum: 0
+          title: Segment Interval Millis
+        segments:
+          items:
+            $ref: '#/components/schemas/PersonalitySegmentItem'
+          type: array
+          title: Segments
+      type: object
+      required:
+      - segment_interval_millis
+      - segments
+      title: PersonalitySegmentMetrics
+      description: "Segment-level personality analysis with segment interval and list of segments.\n\nAttributes:\n    segment_interval_millis\
+        \ (int): Interval duration in milliseconds\n    segments (List[PersonalitySegmentItem]): List of segment data with\
+        \ OCEAN metrics"
+    PersonalityTriggerResponse:
+      properties:
+        video_id:
+          type: string
+          title: Video Id
+        face_id:
+          type: integer
+          title: Face Id
+        speaker_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Speaker Id
+        analysis_type:
+          type: string
+          title: Analysis Type
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - video_id
+      - face_id
+      - analysis_type
+      - status
+      - message
+      title: PersonalityTriggerResponse
+      description: "Response model returned after triggering personality processing\nfor a specific face (and optionally a\
+        \ speaker) within a video.\n\nAttributes:\n    video_id (str): Unique identifier of the video where personality processing\
+        \ was triggered.\n    face_id (int): Identifier of the face entity associated with the personality trigger.\n    speaker_id\
+        \ (Optional[int]): Identifier of the linked speaker entity, if applicable; otherwise None.\n    analysis_type (str):\
+        \ Type of personality analysis - 'overall', 'by_segment', or 'combined'.\n    status (str): Result status of the trigger\
+        \ operation\n    message (str): Status message describing the result of the trigger operation."
+    ReplaceTranscriptRequest:
+      properties:
+        transcript:
+          type: string
+          minLength: 1
+          title: Transcript
+        format:
+          type: string
+          const: text
+          title: Format
+          default: text
+      type: object
+      required:
+      - transcript
+      title: ReplaceTranscriptRequest
+    ReplaceTranscriptResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        segments_count:
+          type: integer
+          title: Segments Count
+        speakers:
+          items:
+            $ref: '#/components/schemas/SpeakerUpdate'
+          type: array
+          title: Speakers
+      type: object
+      required:
+      - id
+      - status
+      - segments_count
+      - speakers
+      title: ReplaceTranscriptResponse
+    ReprocessVideoResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        message:
+          type: string
+          title: Message
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - message
+      - status
+      title: ReprocessVideoResponse
+      description: "Response returned after requesting reprocessing of a video.\n\nInherits from:\n    GenerateCSVResponse"
+    SegmentResponse:
+      properties:
+        start_millis:
+          type: number
+          title: Start Millis
+        end_millis:
+          type: number
+          title: End Millis
+      type: object
+      required:
+      - start_millis
+      - end_millis
+      title: SegmentResponse
+      description: "Model for a video segment time range.\n\nAttributes:\n    start_millis (float): Start time in milliseconds.\n\
+        \    end_millis (float): End time in milliseconds."
+    SignedDownloadUrlResponse:
+      properties:
+        video_id:
+          type: string
+          title: Video Id
+        download_url:
+          type: string
+          title: Download Url
+        filename:
+          type: string
+          title: Filename
+        expires_in_minutes:
+          type: integer
+          title: Expires In Minutes
+        expires_at:
+          type: string
+          title: Expires At
+        note:
+          type: string
+          title: Note
+          default: Download URL will expire. Request a new URL if expired.
+      type: object
+      required:
+      - video_id
+      - download_url
+      - filename
+      - expires_in_minutes
+      - expires_at
+      title: SignedDownloadUrlResponse
+      description: "Response containing a signed URL for downloading annotated video.\n\nAttributes:\n    video_id (str):\
+        \ ID of the video.\n    download_url (str): Signed URL for downloading the video file.\n    filename (str): Suggested\
+        \ filename for the download.\n    expires_in_minutes (int): Number of minutes until the URL expires.\n    expires_at\
+        \ (str): ISO 8601 formatted expiration timestamp.\n    note (str): Additional information about the download."
+    SpeakerEmotions:
+      properties:
+        audio:
+          additionalProperties:
+            type: number
+          type: object
+          title: Audio
+          examples:
+          - angry: 0.045
+            happy: 0.19
+            neutral: 0.625
+        text:
+          additionalProperties:
+            type: number
+          type: object
+          title: Text
+          examples:
+          - admiration: 0.02
+            joy: 0.025
+            neutral: 0.72
+      type: object
+      title: SpeakerEmotions
+      description: Speaker-specific emotions across audio and text modalities.
+    SpeakerFaceMatchRequest:
+      properties:
+        speaker_id:
+          type: integer
+          title: Speaker Id
+        face_id:
+          type: integer
+          title: Face Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+      type: object
+      required:
+      - speaker_id
+      - face_id
+      - name
+      title: SpeakerFaceMatchRequest
+      description: "Request model for mapping a detected face to a speaker with an optional name.\n\nAttributes:\n    speaker_id\
+        \ (int): Unique identifier for the speaker from audio analysis.\n    face_id (int): Unique identifier for the detected\
+        \ face in the video.\n    name (Optional[str]): Optional name for the person. If empty/null, fetches from speaker;\n\
+        \                          if provided, updates both face and speaker names."
+    SpeakerFaceMatchResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - status
+      - message
+      title: SpeakerFaceMatchResponse
+      description: "Response model for the result of speaker-face matching operations.\n\nAttributes:\n    status (str): Status\
+        \ of the operation (e.g., \"completed\").\n    message (str): Informational message about the operation result."
+    SpeakerUpdate:
+      properties:
+        speaker_id:
+          type: integer
+          title: Speaker Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - speaker_id
+      - name
+      title: SpeakerUpdate
+      description: "Model for updating a speaker's name.\n\nAttributes:\n    speaker_id (int): Identifier of the speaker.\n\
+        \    name (str): New name for the speaker."
+    SpeakerUpdateResponse:
+      properties:
+        speakers:
+          items:
+            $ref: '#/components/schemas/SpeakerUpdate'
+          type: array
+          title: Speakers
+      type: object
+      required:
+      - speakers
+      title: SpeakerUpdateResponse
+      description: "Response model after updating speakers.\n\nAttributes:\n    speakers (List[SpeakerUpdate]): List of updated\
+        \ speakers."
+    TextEmotionResponseV2:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        word_count:
+          type: integer
+          title: Word Count
+        user_id:
+          type: string
+          title: User Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - word_count
+      - user_id
+      title: TextEmotionResponseV2
+      description: "V2 response model for text emotion detection.\n\nSimplified text-only processing without YouTube support.\n\
+        Direct text submission with mandatory title field.\n\nAttributes:\n    id (str): Unique ID of the text.\n    title\
+        \ (str): Title of the text.\n    status (str): Processing status (queue, processing, done, etc.).\n    word_count\
+        \ (int): Number of words in the text.\n    user_id (str): ID of the user who submitted the text.\n    created_at (Optional[str]):\
+        \ Timestamp when text was created."
+    TextReprocessResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - status
+      - message
+      title: TextReprocessResponse
+      description: "Response model for reprocessing a text analysis request.\n\nAttributes:\n    message (str): Additional\
+        \ information about the reprocessing result."
+    TranscriptEmotions:
+      properties:
+        emotions:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          title: Emotions
+        start_time:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Start Time
+        end_time:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: End Time
+        speaker_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Speaker Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        max_emotion:
+          additionalProperties:
+            anyOf:
+            - type: string
+            - type: number
+          type: object
+          title: Max Emotion
+        segment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Segment
+      type: object
+      required:
+      - max_emotion
+      title: TranscriptEmotions
+      description: "Represents emotional data for a transcript segment.\n\nAttributes:\n    emotions (Optional[Dict[str, str]]):\
+        \ Dictionary of detected emotions and their scores or labels.\n    start_time (Optional[int]): Start time of the segment\
+        \ in milliseconds.\n    end_time (Optional[int]): End time of the segment in milliseconds.\n    speaker_id (Optional[int]):\
+        \ ID of the speaker for this segment.\n    name (Optional[str]): Name of the speaker, if available.\n    max_emotion\
+        \ (Dict[str, Union[str, float]]): Emotion with the highest confidence.\n    segment (Optional[str]): The actual text\
+        \ of the transcript segment."
+    TranscriptSegment:
+      properties:
+        start_millis:
+          type: number
+          minimum: 0
+          title: Start Millis
+          description: Start time in milliseconds (>= 0)
+        end_millis:
+          type: number
+          minimum: 0
+          title: End Millis
+          description: End time in milliseconds (>= 0)
+        segment:
+          type: string
+          title: Segment
+        speaker_id:
+          type: integer
+          title: Speaker Id
+      type: object
+      required:
+      - start_millis
+      - end_millis
+      - segment
+      - speaker_id
+      title: TranscriptSegment
+      description: "Represents a single segment of transcribed audio with timing and speaker ID.\n\nAttributes:\n    start_millis\
+        \ (float): Start time of the segment in milliseconds (must be >= 0).\n    end_millis (float): End time of the segment\
+        \ in milliseconds (must be >= 0).\n    segment (str): Transcribed text for the segment.\n    speaker_id (int): Identifier\
+        \ of the speaker in this segment."
+    UpdateEmotionResponse:
+      properties:
+        frame_id:
+          type: string
+          title: Frame Id
+        face_id:
+          type: integer
+          title: Face Id
+        emotions:
+          additionalProperties:
+            type: number
+          type: object
+          title: Emotions
+      type: object
+      required:
+      - frame_id
+      - face_id
+      - emotions
+      title: UpdateEmotionResponse
+      description: "Model representing updated emotion values for a face.\n\nAttributes:\n    frame_id (str): Frame identifier.\n\
+        \    face_id (int): ID of the face.\n    emotions (Dict[str, float]): Dictionary of emotion scores."
+    ValenceArousalIntensity:
+      properties:
+        valence:
+          type: number
+          title: Valence
+        arousal:
+          type: number
+          title: Arousal
+        intensity:
+          type: number
+          title: Intensity
+      type: object
+      required:
+      - valence
+      - arousal
+      - intensity
+      title: ValenceArousalIntensity
+      description: "Model representing emotional intensity values.\n\nAttributes:\n    valence (float): Positive or negative\
+        \ emotion scale.\n    arousal (float): Energy or excitement level.\n    intensity (float): Overall emotion strength."
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    VideoDeleteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: VideoDeleteResponse
+      description: "Response after deleting a video entry.\n\nInherits:\n    ResponseStatus: Generic response with status\
+        \ and message."
+    VideoEditResponse:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      title: VideoEditResponse
+      description: "Response model after editing a video.\n\nInherits:\n    ImageEditResponse: Includes status and edit metadata."
+    VideoEmotionResponseV2:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        duration:
+          type: integer
+          title: Duration
+        media_source:
+          type: string
+          title: Media Source
+        media_source_url:
+          type: string
+          title: Media Source Url
+        user_id:
+          type: string
+          title: User Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - duration
+      - media_source
+      - media_source_url
+      - user_id
+      title: VideoEmotionResponseV2
+      description: "V2 response model for video emotion detection with URL source tracking.\n\nSupports:\n- YouTube URLs\n\
+        - Cloud storage URLs (Dropbox, direct URLs, etc.)\n- Social Media URLs (Instagram Reels, Facebook videos/reels, Twitter/X\
+        \ status videos)\n- Time parameters for all URL types\n- URL source tracking\n\nAttributes:\n    id (str): Unique\
+        \ ID of the video.\n    title (str): Title of the video.\n    status (str): Processing status (queue, processing,\
+        \ done, etc.).\n    duration (int): Duration in seconds (trimmed duration if time params provided).\n    media_source\
+        \ (str): Source type (\"youtube\", \"dropbox\", \"instagram\", \"facebook\", \"twitter\", \"public_url\", \"file_upload\"\
+        ).\n    media_source_url (str): Full URL as provided by user.\n    user_id (str): ID of the user who uploaded the\
+        \ video.\n    created_at (Optional[str]): Timestamp when video was created."
+    VideoResponse:
+      properties:
+        title:
+          type: string
+          title: Title
+          default: ''
+        description:
+          type: string
+          title: Description
+          default: ''
+        id:
+          type: string
+          title: Id
+        audio_id:
+          type: string
+          title: Audio Id
+          default: ''
+        model_id:
+          type: string
+          title: Model Id
+          default: ''
+        emotions_list:
+          items:
+            type: string
+          type: array
+          title: Emotions List
+          default:
+          - angry
+          - contempt
+          - disgust
+          - fear
+          - happy
+          - neutral
+          - sad
+          - surprise
+        url:
+          type: string
+          title: Url
+        faces:
+          $ref: '#/components/schemas/ListOfFaces'
+        annotated_video_mp4:
+          title: Annotated Video Mp4
+        summary:
+          type: string
+          title: Summary
+          default: ''
+        total_frames_count:
+          type: integer
+          title: Total Frames Count
+        fps:
+          type: number
+          title: Fps
+        height:
+          type: number
+          title: Height
+        width:
+          type: number
+          title: Width
+        status:
+          type: string
+          title: Status
+        created_at:
+          title: Created At
+          default: ''
+        thumbnail_image:
+          type: string
+          title: Thumbnail Image
+          default: ''
+        text_id:
+          type: string
+          title: Text Id
+          default: ''
+      type: object
+      required:
+      - id
+      - status
+      title: VideoResponse
+      description: "Model representing detailed video metadata and analysis.\n\nAttributes:\n    title (Optional[str]): Title\
+        \ of the video.\n    description (str): Description of the video.\n    id (str): Unique video identifier.\n    audio_id\
+        \ (str): Related audio ID if extracted.\n    model_id (str): Model used to process video.\n    emotions_list (List[str]):\
+        \ List of possible emotions.\n    url (Any): Original video file url\n    faces (ListOfFaces): Detected faces in the\
+        \ video.\n    annotated_video_mp4 (Any): Processed video with annotations.\n    summary (str): Summary text of the\
+        \ video.\n    total_frames_count (Optional[int]): Total number of frames.\n    fps (Optional[float]): Frames per second.\n\
+        \    height (Optional[float]): Height of the video.\n    width (Optional[float]): Width of the video.\n    status\
+        \ (str): Current processing status.\n    created_at (str): Creation timestamp.\n    thumbnail_image (str): URL or\
+        \ data of the thumbnail image.\n    text_id (str): Linked text analysis ID."
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-API-Key
+tags:
+- name: Video Emotion API
+  description: "The Video Emotion Analysis API by Imentiv analyzes the emotional states of individuals in a video. It performs\
+    \ multi-modal emotion detection using facial expressions, audio, and text transcript, and has the following features:\n\
+    \n- Overall emotion summary\n- Frame-by-frame emotion data\n- Per-face emotional analysis\n- Valence-arousal-intensity\
+    \ data\n- Audio and transcript emotion data\n- Personality analysis\n- Video Highlights\n- Optional psychological insights\n\
+    \            "
+- name: Image Emotion API
+  description: "The Image Emotion Recognition API by Imentiv analyzes human facial expressions in an image and returns the\
+    \ detected emotions. It can detect multiple faces and evaluate each face's emotional state, providing detailed emotional\
+    \ labels such as happy, sad, angry, neutral, surprise, disgust, fear, and contempt.\n            "
+- name: Audio Emotion API
+  description: "The Audio Emotion Analysis API processes audio files or YouTube URLs to analyze emotions and transcripts.\
+    \ The API provides:\n\n**Speaker Diarization:** Identifies and segments audio by speakers.\n\n**Audio Emotion Analysis:**\
+    \ Detects one of 8 emotions per audio segment.\n\n**Text Emotion Analysis:** Generates a transcript for each segment and\
+    \ detects one of 28 emotions from the text.\n            "
+- name: Text Emotion API
+  description: "The Text Emotion Analysis API by Imentiv analyzes a given piece of text and returns the detected emotional\
+    \ tone(s).\n\n**Features:**\n- The API processes the text, detects emotions for each paragraph, and returns results.\n\
+    - A callback mechanism is supported for asynchronous analysis.\n- **Supported emotions (28):** Admiration, Amusement,\
+    \ Approval, Caring, Desire, Excitement, Gratitude, Joy/Happy, Love, Optimism, Pride, Relief, Anger, Disappointment, Annoyance,\
+    \ Disapproval, Disgust, Embarrassment, Fear, Grief, Nervousness, Remorse, Sadness, Confusion, Curiosity, Realization,\
+    \ Surprise, Neutral\n            "
+- name: Report API
+  description: "The Report API provides comprehensive emotion analysis reports in PDF format for analyzed media content.\n\
+    \n**Features:**\n- Generate detailed PDF reports for video emotion analysis\n- Includes visual charts, emotion timelines,\
+    \ and insights\n- Supports asynchronous report generation with callback notifications\n- Retrieve existing reports or\
+    \ trigger new generation\n\n**Use Cases:** Ideal for creating shareable analysis reports, documentation of emotional insights,\
+    \ and presentation-ready materials.\n            "
+- name: AI Insights API
+  description: "The AI Insights API provides conversational AI-powered analysis of emotional data from your media content.\n\
+    \n**Features:**\n- Ask natural language questions about detected emotions, patterns, and trends\n- Receive AI-generated\
+    \ insights with real-time streaming (SSE)\n- Conversation continuity across multiple messages\n- Works with all media\
+    \ types: video, audio, image, and text\n\n**Endpoints:**\n- `POST /v2/{media_type}/{media_id}/ai-insights` - Send a message\
+    \ and receive AI response (streaming recommended)\n- `GET /v2/{media_type}/{media_id}/ai-insights` - Retrieve conversation\
+    \ history\n\n**Use Cases:** Ideal for gaining deeper insights into emotional patterns, generating summaries, comparing\
+    \ emotional states, and understanding sentiment trends in your media content.\n            "
