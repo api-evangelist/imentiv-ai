@@ -1,0 +1,269 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Welcome to Imentiv AI AI Insights API Image Emotion API API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Image Emotion API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload Image",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/images",
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Analyze emotions and facial expressions from image content.\n\nSubmit an image from multiple sources and receive detailed emotion analysis\nof all detected faces in the image.\n\n**Input Sources:**\n- **Cloud Storage**: Dropbox or other cloud service links\n- **Direct URL**: Any publicly accessible image link\n- **File Upload**: Upload image files directly from your device\n\n**How It Works:**\n1. Submit your image and receive an immediate response with an image ID\n2. Image is queued for processing (typica"
+        },
+        {
+          "info": {
+            "name": "List Images",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/images",
+            "params": [
+              {
+                "name": "start_after",
+                "value": "",
+                "type": "query",
+                "description": "ID of the last image from the previous page. Fetches results after this ID."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return per page. The default is 10."
+              },
+              {
+                "name": "direction",
+                "value": "",
+                "type": "query",
+                "description": "Pagination direction: 'forward' or 'backward'. Default is 'forward'"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a paginated list of all uploaded or processed images.\nUse this endpoint to browse through image records based on their ID, status, and title."
+        },
+        {
+          "info": {
+            "name": "Get Image Emotion Analysis",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/images/:image_id",
+            "params": [
+              {
+                "name": "image_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the image to retrieve."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves detailed emotion analysis results and metadata for a specific uploaded image.\nIncludes detected faces, their emotional scores, image dimensions, and annotated visualizations."
+        },
+        {
+          "info": {
+            "name": "Reprocess Image",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/images/:image_id",
+            "params": [
+              {
+                "name": "image_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique image ID of the image."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Reprocesses an image that has either failed or completed.\nYou can trigger the reprocessing by setting reprocess to True.\nThis will reanalyze the image and provide updated insights."
+        },
+        {
+          "info": {
+            "name": "Delete Image",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/v1/images/:image_id",
+            "params": [
+              {
+                "name": "image_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the image"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Deletes a specific image and all associated emotion analysis data from the system. This action is irreversible."
+        },
+        {
+          "info": {
+            "name": "Send Image",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/images/:image_id/annotated_image",
+            "params": [
+              {
+                "name": "image_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the image."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Downloads the annotated version of the image, which highlights detected faces and their corresponding emotions."
+        },
+        {
+          "info": {
+            "name": "Add Note To Specific Face",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/images/:image_id/faces/:face_id/note",
+            "params": [
+              {
+                "name": "image_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique image ID of the image"
+              },
+              {
+                "name": "face_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the face within the image"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Adds or updates a note attached to a specific face detected in an image."
+        },
+        {
+          "info": {
+            "name": "Edit Image Metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/images/:image_id/metadata",
+            "params": [
+              {
+                "name": "image_id",
+                "value": "",
+                "type": "path",
+                "description": "Provide the image ID to edit the title or description of the image"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Edit image title and description of the uploaded image"
+        },
+        {
+          "info": {
+            "name": "Download Image Emotion Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/images/:image_id/report",
+            "params": [
+              {
+                "name": "image_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the image"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Downloads the emotion analysis insights for a specific image in CSV format.\nThe report includes detected faces and their associated emotion scores."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,86 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Welcome to Imentiv AI AI Insights API API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "AI Insights API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get AI Insights conversation history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/:media_type/:media_id/ai-insights",
+            "params": [
+              {
+                "name": "media_type",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "media_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieve the conversation history for a specific media item's AI Insights session.\n\n## Response\n\nReturns all messages (user questions and AI responses) in chronological order.\n\n**Empty History:** If no conversation exists yet, returns an empty `messages` array with a conversation_id. The conversation will be created automatically when you send your first message via POST.\n\n## Supported Media Types\n\nvideo, audio, image, text"
+        },
+        {
+          "info": {
+            "name": "Send message to AI Insights",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/:media_type/:media_id/ai-insights",
+            "params": [
+              {
+                "name": "media_type",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "media_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "stream",
+                "value": "",
+                "type": "query",
+                "description": "Enable SSE streaming (true) or return full JSON response (false)"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Send a message to AI Insights and receive an AI-generated response about the media's emotional analysis.\n\n## Streaming (Recommended)\n\nSet `stream=true` (default) to receive the response as Server-Sent Events (SSE) with progressive text chunks. This is the **recommended** approach as it provides real-time feedback and avoids potential timeout issues with longer responses.\n\n**SSE Events:**\n- `stream_start`: Initial event confirming the connection\n- `metadata`: Contains `conversation_id` and `messa"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

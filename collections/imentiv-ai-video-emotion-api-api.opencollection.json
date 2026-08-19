@@ -1,0 +1,910 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Welcome to Imentiv AI AI Insights API Video Emotion API API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Video Emotion API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload Video",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/videos",
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Analyze emotions and facial expressions from video content.\n\nSubmit a video from multiple sources and receive detailed emotion analysis\nof all detected faces throughout the video timeline.\n\n**Input Sources:**\n- **YouTube**: Provide any YouTube video URL\n- **Cloud Storage**: Dropbox, Google Drive, or other cloud service links\n- **Social Media**: Instagram, Facebook, Twitter (X) videos\n- **Direct URL**: Any publicly accessible video link\n- **File Upload**: Upload video files directly from your dev"
+        },
+        {
+          "info": {
+            "name": "List Videos",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/videos",
+            "params": [
+              {
+                "name": "offset_video_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the reference video from which to paginate forward/backward"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return (default: 10)"
+              },
+              {
+                "name": "direction",
+                "value": "",
+                "type": "query",
+                "description": "Pagination direction: forward (default) or backward"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a paginated list of uploaded video files associated with the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get Video Emotion Insights",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/videos/:video_id",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the video to be fetched"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get a single video details by ID"
+        },
+        {
+          "info": {
+            "name": "Reprocess Video",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/videos/:video_id",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the video to reprocess"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Reprocess an already uploaded and completed video file.\nThis is useful when insights need to be regenerated or logic has been updated on the backend.\nReprocessing can optionally notify your system via a callback URL."
+        },
+        {
+          "info": {
+            "name": "Delete Video",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/v1/videos/:video_id",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the video to be deleted."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Permanently deletes a video file and all associated emotional insights. This action is irreversible."
+        },
+        {
+          "info": {
+            "name": "Get Video Multimodal Insights",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/videos/:video_id/multimodal-analytics",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the video"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get complete multimodal analytics for a video including:\n- Video emotion analysis (face-by-face)\n- Audio emotion analysis (speaker-by-speaker)\n- Text sentiment analysis\n- Detected faces and speakers\n- Overall summaries"
+        },
+        {
+          "info": {
+            "name": "Get Average Emotions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/videos/:video_id/emotions/average",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video for which average emotions are to be calculated"
+              },
+              {
+                "name": "face_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional face ID to calculate average emotions for a specific face"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Calculate and retrieve average emotion scores for a video with optional face filtering.\n\nThis endpoint computes the average emotion percentages across all frames in a video.\nWhen a face_id is provided, it calculates the average emotions for only that specific face.\n\n**Behavior:**\n- **Without face_id**: Returns overall average emotion score for entire video (all faces combined)\n- **With face_id**: Calculates average emotion scores for the specified face\n\n**Parameters:**\n- `video_id`: Unique ident"
+        },
+        {
+          "info": {
+            "name": "Get Annotated Video",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/videos/:video_id/annotated_video",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video"
+              },
+              {
+                "name": "callback_url",
+                "value": "",
+                "type": "query",
+                "description": "Optional callback URL to notify when annotated video generation is complete"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get annotated video with emotion labels and bounding boxes overlaid on each frame.\n\n**How It Works:**\n- First request initiates video generation and returns a status response\n- Poll this endpoint to check generation progress\n- When ready, returns a secure signed URL for downloading the video\n\n**Response Types:**\n\n1. **Status Response** (JSON) - While generating:\n   ```json\n   {\n     \"video_id\": \"abc123\",\n     \"message\": \"Annotated video is currently being generated...\",\n     \"status\": \"pending\"\n"
+        },
+        {
+          "info": {
+            "name": "Get Valence Arousal",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/videos/:video_id/valence_arousal",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video whose emotion intensity is to be fetched"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get emotion intensities of a video based on video_id"
+        },
+        {
+          "info": {
+            "name": "Get Multiple Frame",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/videos/:video_id/frames",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video for which the frames to be fetched"
+              },
+              {
+                "name": "start_frame",
+                "value": "",
+                "type": "query",
+                "description": "The frame number from which retrieval should begin. Defaults to the start of the video if not provided."
+              },
+              {
+                "name": "length",
+                "value": "",
+                "type": "query",
+                "description": "The number of frames to retrieve, starting from 'start_frame'. If omitted, all available frames will be returned."
+              },
+              {
+                "name": "face_ids",
+                "value": "",
+                "type": "query",
+                "description": "Optional comma-separated list of face IDs (e.g., '1,2,3')"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "API to Retrieve Frames of the video based on video_id."
+        },
+        {
+          "info": {
+            "name": "Get Single Frame",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/videos/:video_id/frames/:frame_id",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video for which the frame to be fetched."
+              },
+              {
+                "name": "frame_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique frame ID of the frame to be fetched."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get a unique frame details based on video_id and frame_id"
+        },
+        {
+          "info": {
+            "name": "Retrieve Domination Emotion For A Specific Frame",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/videos/:video_id/frames/:frame_id/dominant_emotion",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the video from which the frame’s dominant emotion is to be fetched."
+              },
+              {
+                "name": "frame_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique id of the frame from which the dominant emotion is to be fetched."
+              },
+              {
+                "name": "face_id",
+                "value": "",
+                "type": "query",
+                "description": "The id of the face whose dominant emotion is to be retrieved. If not provided, the dominant emotion for the entire frame will be returned."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This API endpoint is designed to fetch and return the dominant emotion of frames within a video based on its video_id.\nIf face_id is provided, the dominant emotion of a specific face will be the output."
+        },
+        {
+          "info": {
+            "name": "Retrieve Emotion Intensity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/videos/:video_id/frames/:frame_id/valence_arousal",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video for which the frame's valence, arousal, and intensity are to be fetched."
+              },
+              {
+                "name": "frame_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique frame ID of the frame from which to fetch the valence, arousal, and intensity."
+              },
+              {
+                "name": "face_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the face whose valence, arousal, and intensity are to be retrieved. If not provided, these values for the entire frame will be returned."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieve Emotion Intensity for a Specific Frame"
+        },
+        {
+          "info": {
+            "name": "Update Emotion Per Frame",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/videos/:video_id/frames/:frame_id/faces/:face_id/emotions",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video."
+              },
+              {
+                "name": "frame_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique frame ID of the frame."
+              },
+              {
+                "name": "face_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique face ID of the face in the frame."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update the emotion of a specific face in a frame"
+        },
+        {
+          "info": {
+            "name": "Edit Face Note",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/videos/:video_id/frames/:frame_id/faces/:face_id/note",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video id of the video."
+              },
+              {
+                "name": "frame_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique id of the frame inside the video."
+              },
+              {
+                "name": "face_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique id of the face inside the frame. Use '0' to add a note to the entire frame instead of a specific face."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update the note associated with a detected face in a frame."
+        },
+        {
+          "info": {
+            "name": "Update Multiple Faces",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/videos/:video_id/frames/faces",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video in which face ID to be changed"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update Face ID in multiple frames of a video"
+        },
+        {
+          "info": {
+            "name": "Merge Face",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/videos/:video_id/faces",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Merge multiple face detections into a single face to remove duplicates from a video."
+        },
+        {
+          "info": {
+            "name": "Delete Faces",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/v1/videos/:video_id/faces",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the video from which faces will be deleted."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete specified faces from a video while ensuring at least one face remains."
+        },
+        {
+          "info": {
+            "name": "Update Faces Names",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/videos/:video_id/faces/names",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Updates the names of multiple faces in a video."
+        },
+        {
+          "info": {
+            "name": "Process Highlight",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v1/videos/highlights",
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Trigger automatic highlight video generation using emotion-based analysis.\n\nAnalyzes video frames to identify emotionally significant moments and generates\na highlight reel. The process runs asynchronously via Celery workers.\n\nArgs:\n    video_id: The unique video ID for highlight generation\n    user_info: Authenticated user information\n    api_info: API request metadata including domain\n\nReturns:\n    HighlightGenerateResponse: Contains video_id, processing status, and message\n    \nRaises:\n    In"
+        },
+        {
+          "info": {
+            "name": "Fetch Highlight Video",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/videos/:video_id/highlights",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The video id to get the highlight video url"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "API endpoint for highlight generation of a video."
+        },
+        {
+          "info": {
+            "name": "Update Highlight Video",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/videos/:video_id/highlights",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video id of the video for which the update highlight video to be edited."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Generate custom highlight video using user-defined time segments.\n\nCreates a highlight reel by concatenating specific video segments chosen by the user.\nThe process runs asynchronously via Celery workers to handle video processing.\n\nArgs:\n    video_id: The unique video ID for which highlights are being generated\n    segments: List of time segments with start_millis and end_millis timestamps\n    user_info: Authenticated user information\n\nReturns:\n    HighlightGenerateResponse: Contains video_id, "
+        },
+        {
+          "info": {
+            "name": "Download Highlight Video",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/videos/:video_id/highlight_video",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The video id to download the highlight video."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Download the highlight video."
+        },
+        {
+          "info": {
+            "name": "Edit Title Or Description By Id",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/videos/:video_id/metadata",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "Provide the video ID to edit or title and description of the audio"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Edit the title or description of a video  based on the provided audio ID."
+        },
+        {
+          "info": {
+            "name": "Download Video Emotion Analysis Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/videos/:video_id/report",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "Provide the video ID to download analysis"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Download a videos processed analysis details based on the provided video ID."
+        },
+        {
+          "info": {
+            "name": "Generate Video Emotion Analysis Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v1/videos/:video_id/report",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique video ID of the video whose analysis report is to be generated."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Initiates the generation of an analysis report for the specified video.\nThe user will be notified at the provided callback URL once the process is complete."
+        },
+        {
+          "info": {
+            "name": "Trigger Speaker Face Match",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/videos/:video_id/speaker-face-match",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the video. Video must be in 'completed' status with associated audio."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Trigger automatic AI-driven speaker-to-face matching for a video.\n\nThis endpoint initiates an asynchronous process that automatically matches\nspeakers from the audio analysis to faces detected in the video using AI.\n\n\n## Prerequisites\n\n- User must be the video owner or an admin\n- Video must be in 'completed' status\n- Audio must be in 'completed' status\n- Video must have an associated audio_id\n\n## Response\n\n```json\n{\n  \"video_id\": \"abc123\",\n  \"audio_id\": \"xyz789\",\n  \"status\": \"processing\",\n  \"mes"
+        },
+        {
+          "info": {
+            "name": "Update Speaker Face Match",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v2/videos/:video_id/speaker-face-match",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the video. Video must be in 'completed' status with associated audio analysis."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Manually match detected faces to identified speakers with bidirectional name synchronization.\n\nThis endpoint enables client-driven multimodal person identification by allowing you to manually\nspecify which detected faces (from video analysis) correspond to which identified speakers \n(from audio analysis). Each mapping synchronizes identity information across video and audio \nmodalities while managing personality analysis data.\n\n## Features\n\n- **Face-to-Speaker Mapping**: Links face IDs (from vid"
+        },
+        {
+          "info": {
+            "name": "Trigger Personality Analysis",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/videos/:video_id/personality/analyze",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the video. Video must be in 'completed' status with detected faces."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Trigger personality analysis for a specific face in a video.\n\nInitiates asynchronous personality trait assessment based on facial expressions and,\nwhen available, vocal characteristics from linked audio speaker data.\n\n## Analysis Types\n\n- **overall**: Analyzes personality traits across the entire video\n- **by_segment**: Analyzes personality traits by time segments\n- **combined**: Performs both overall and segment analysis\n\nOverall and segment analyses are independent - triggering one does not af"
+        },
+        {
+          "info": {
+            "name": "Get Personality Analysis",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/videos/:video_id/faces/:face_id/personality-analysis",
+            "params": [
+              {
+                "name": "video_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the video containing the face."
+              },
+              {
+                "name": "face_id",
+                "value": "",
+                "type": "path",
+                "description": "Face identifier for which to retrieve personality analysis."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieve OCEAN personality analysis results for a specific face in a video.\n\nThis endpoint provides comprehensive Big Five (OCEAN) personality trait analysis for a specific\nface detected in a video. It retrieves both processing status and completed analysis data from\ndual data sources, returning conditional data based on completion status."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

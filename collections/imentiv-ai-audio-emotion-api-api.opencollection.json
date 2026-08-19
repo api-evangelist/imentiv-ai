@@ -1,0 +1,352 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Welcome to Imentiv AI AI Insights API Audio Emotion API API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Audio Emotion API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload Audio",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/audios",
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Analyze emotions and speech patterns from audio content.\n\nSubmit audio from multiple sources and receive detailed emotion analysis,\nspeaker identification, and transcription with emotional insights.\n\n**Input Sources:**\n- **YouTube**: Provide any YouTube video URL (audio will be extracted)\n- **Instagram**: Instagram Reels and video posts (public content)\n- **Twitter/X**: Twitter video posts and media content\n- **Facebook**: Facebook video posts (public content)\n- **Cloud Storage**: Dropbox, Googl"
+        },
+        {
+          "info": {
+            "name": "List Audios",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/audios",
+            "params": [
+              {
+                "name": "offset_audio_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the reference audio from which to paginate forward/backward"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return (default: 20, max: 100)"
+              },
+              {
+                "name": "direction",
+                "value": "",
+                "type": "query",
+                "description": "Pagination direction: forward (default) or backward"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "API to get audios processed by user with pagination."
+        },
+        {
+          "info": {
+            "name": "Get Audio Emotion Insights",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/audios/:audio_id",
+            "params": [
+              {
+                "name": "audio_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the uploaded audio"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieve Single Audio based on audio_id."
+        },
+        {
+          "info": {
+            "name": "Reprocess Audio",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/audios/:audio_id",
+            "params": [
+              {
+                "name": "audio_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the audio to reprocess"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Reprocess an audio file based on audio id."
+        },
+        {
+          "info": {
+            "name": "Delete An Audio",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/v1/audios/:audio_id",
+            "params": [
+              {
+                "name": "audio_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the audio to be deleted"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Deletes a specific audio file and all associated emotion analysis data from the system. This action is irreversible."
+        },
+        {
+          "info": {
+            "name": "Get Audio Multimodal Insights",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/audios/:audio_id/multimodal-analytics",
+            "params": [
+              {
+                "name": "audio_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the audio"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get complete multimodal analytics for an audio file including:\n- Audio emotion analysis (speaker-by-speaker)\n- Text sentiment analysis from transcription\n- Detected speakers\n- Overall summaries"
+        },
+        {
+          "info": {
+            "name": "Delete Audio Segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/v1/audios/:audio_id/:segment_index",
+            "params": [
+              {
+                "name": "audio_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the audio file"
+              },
+              {
+                "name": "segment_index",
+                "value": "",
+                "type": "path",
+                "description": "The index of the segment to delete (0-based indexing)"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Deletes a specific segment of an audio file based on the segment index. After deletion,\nthe remaining segments are reindexed to fill the gap — e.g., if segment 1 is deleted, segment 2 becomes 1"
+        },
+        {
+          "info": {
+            "name": "Update Audio Transcripts Segments",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/audios/:audio_id/transcript",
+            "params": [
+              {
+                "name": "audio_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the audio file"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update the transcript and timestamp data for specific segments within an audio file.\nThis is useful when refining speaker diarization, correcting transcription errors,\nor uploading external transcript data."
+        },
+        {
+          "info": {
+            "name": "Update Speaker Names",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/audios/:audio_id/speakers/names",
+            "params": [
+              {
+                "name": "audio_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the audio file"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update the names of detected speakers in an audio file. This is useful for labeling anonymized\nspeaker IDs with human-readable names (e.g., \"John\", \"Customer\", \"Agent\")."
+        },
+        {
+          "info": {
+            "name": "Edit Title Or Description",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/audios/:audio_id/metadata",
+            "params": [
+              {
+                "name": "audio_id",
+                "value": "",
+                "type": "path",
+                "description": "Provide the audio ID to edit the title or description of the audio"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update the metadata of an audio file.\nThis endpoint allows you to edit the title (which is auto-generated from the file name by default)\nand add or update a description."
+        },
+        {
+          "info": {
+            "name": "Download Audio Emotion Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/audios/:audio_id/report",
+            "params": [
+              {
+                "name": "audio_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the audio file"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Download a detailed report of the emotional insights extracted from a specific audio file.\nThe report includes average emotions, segment-level analysis, speaker information,\nand summary—formatted as a downloadable file (e.g., PDF or CSV)."
+        },
+        {
+          "info": {
+            "name": "Replace Audio Transcript",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/audios/:audio_id/transcript/replace",
+            "params": [
+              {
+                "name": "audio_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the audio file"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Replace Audio Transcript"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

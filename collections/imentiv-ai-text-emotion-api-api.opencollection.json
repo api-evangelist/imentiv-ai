@@ -1,0 +1,209 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Welcome to Imentiv AI AI Insights API Text Emotion API API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Text Emotion API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload Text",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/texts",
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Analyze emotions and sentiment from text content.\n\nSubmit text directly and receive detailed emotion analysis\n\n**How It Works:**\n1. Submit your text with a title and receive an immediate response with a text ID\n2. Text is queued for processing (typically completes within seconds)\n3. Optionally receive a webhook notification via `callback_url` when complete\n4. Retrieve results using the text ID\n\n**Credit Usage:**\nProcessing is billed based on the word count of your text."
+        },
+        {
+          "info": {
+            "name": "List Texts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/texts",
+            "params": [
+              {
+                "name": "start_after",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the reference text from which to paginate forward/backward"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to return (default: 10)"
+              },
+              {
+                "name": "direction",
+                "value": "",
+                "type": "query",
+                "description": "Pagination direction: forward (default) or backward"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves a paginated list of all uploaded or processed images.\nUse this endpoint to browse through text records based on their ID, status, and title."
+        },
+        {
+          "info": {
+            "name": "Get Text Emotion Insights",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/texts/:text_id",
+            "params": [
+              {
+                "name": "text_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the text."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Retrieves detailed emotion analysis results for a specific uploaded text.\nIncludes paragraph wise analysis, and supports 28 emotions."
+        },
+        {
+          "info": {
+            "name": "Reprocess Text",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/texts/:text_id",
+            "params": [
+              {
+                "name": "text_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the text."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Reprocesses a text that has either failed or completed.\nYou can trigger the reprocessing by setting reprocess to True.\nThis will reanalyze the image and provide updated insights"
+        },
+        {
+          "info": {
+            "name": "Delete Text",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/v1/texts/:text_id",
+            "params": [
+              {
+                "name": "text_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique text ID of the text."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Deletes a specific text and all associated emotion analysis data from the system.\nThis action is irreversible."
+        },
+        {
+          "info": {
+            "name": "Edit Text",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/texts/:text_id/emotions",
+            "params": [
+              {
+                "name": "text_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique text ID of the text."
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This end-point allows a user to edit the existing text and reprocess it to generate emotion insights."
+        },
+        {
+          "info": {
+            "name": "Download Text Emotion Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/texts/:text_id/report",
+            "params": [
+              {
+                "name": "text_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique ID of the text."
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Downloads the emotion analysis insights for a specific text in CSV format based on the provided text id."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

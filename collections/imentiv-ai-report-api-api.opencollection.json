@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Welcome to Imentiv AI AI Insights API Report API API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Report API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate Pdf Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/reports/pdf/:media_id",
+            "params": [
+              {
+                "name": "media_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the media"
+              },
+              {
+                "name": "media_type",
+                "value": "",
+                "type": "query",
+                "description": "Type: Only 'video' is allowed at present"
+              },
+              {
+                "name": "callback_url",
+                "value": "",
+                "type": "query",
+                "description": "Callback URL for completion notification"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-API-Key",
+              "value": "{{X-API-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get PDF report if available, or trigger generation if not.\n\n- Returns PDF metadata if already generated\n- Triggers generation and returns 202 if not available\n- Returns processing status if generation in progress"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
