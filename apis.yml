@@ -21,6 +21,11 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/imentiv-ai
 tags:
   - Artificial Intelligence
   - Emotion Detection
+  - Machine-Learning
+  - Video Analysis
+tags_raw:
+  - Artificial Intelligence
+  - Emotion Detection
   - Machine Learning
   - Video Analysis
 created: '2025-02-09'
