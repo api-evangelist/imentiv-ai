@@ -4,6 +4,17 @@ description: >-
   Imentiv AI is an AI-powered platform for analyzing the emotional makeup of videos. The platform uses advanced
   artificial intelligence to make videos emotionally smart by detecting and analyzing emotions in video content.
 type: Index
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: true
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
