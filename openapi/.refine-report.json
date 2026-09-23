@@ -1,12 +1,7 @@
 {
   "provider": "imentiv-ai",
   "sources": [
-    "imentiv-ai-ai-insights-api-api-openapi.yml",
-    "imentiv-ai-audio-emotion-api-api-openapi.yml",
-    "imentiv-ai-image-emotion-api-api-openapi.yml",
-    "imentiv-ai-report-api-api-openapi.yml",
-    "imentiv-ai-text-emotion-api-api-openapi.yml",
-    "imentiv-ai-video-emotion-api-api-openapi.yml"
+    "_original/imentiv-ai-openapi.yml"
   ],
   "outputs": [
     "imentiv-ai-ai-insights-api-api-openapi.yml",
@@ -19,6 +14,17 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "imentiv-ai-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "imentiv-ai-ai-insights-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "imentiv-ai-audio-emotion-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "imentiv-ai-image-emotion-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "imentiv-ai-report-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "imentiv-ai-text-emotion-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "imentiv-ai-video-emotion-api-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
