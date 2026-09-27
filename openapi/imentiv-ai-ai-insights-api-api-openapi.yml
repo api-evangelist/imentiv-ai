@@ -267,33 +267,37 @@ paths:
                 detail: 'Invalid media_type. Must be one of: video, audio, image, text'
 components:
   schemas:
-    AIInsightsChatMessage:
+    AIInsightsChatRequest:
       properties:
-        role:
+        message:
           type: string
-          title: Role
-          description: 'Message role: ''user'' or ''ai_assistant'''
-        text:
-          type: string
-          title: Text
-          description: Message content
-        message_id:
-          type: integer
-          title: Message Id
-          description: Message ID
-        timestamp:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Timestamp
-          description: ISO 8601 timestamp
+          maxLength: 10000
+          minLength: 1
+          title: Message
+          description: User's question or message about the media content
       type: object
       required:
-      - role
-      - text
-      - message_id
-      title: AIInsightsChatMessage
-      description: "Individual message in conversation history.\n\nAttributes:\n    role (str): Message role - \"user\" or \"ai_assistant\".\n    text (str): Message text content.\n    message_id (int): Message ID within the conversation.\n    timestamp (Optional[str]): ISO 8601 timestamp when message was created."
+      - message
+      title: AIInsightsChatRequest
+      description: "Request model for sending a message to AI Insights (REST API).\n\nThe system automatically manages conversation continuity - one conversation per user per media item.\n\nAttributes:\n    message (str): The user's question or message about the media content."
+    AIInsightsHistoryResponse:
+      properties:
+        conversation_id:
+          type: string
+          title: Conversation Id
+          description: Conversation session ID
+        messages:
+          items:
+            $ref: '#/components/schemas/AIInsightsChatMessage'
+          type: array
+          title: Messages
+          description: Conversation message history
+      type: object
+      required:
+      - conversation_id
+      - messages
+      title: AIInsightsHistoryResponse
+      description: "Response model for retrieving AI Insights conversation history.\n\nAttributes:\n    conversation_id (str): The conversation session ID.\n    messages (List[AIInsightsChatMessage]): List of messages in chronological order\n                                             (user messages and AI responses)."
     AIInsightsChatResponse:
       properties:
         conversation_id:
@@ -328,37 +332,33 @@ components:
       - response
       title: AIInsightsChatResponse
       description: "Response model for AI Insights chat (non-streaming mode with ?stream=false).\n\nAttributes:\n    conversation_id (str): Unique identifier for this conversation session.\n    message_id (int): Sequential message ID within the conversation.\n    response (str): The complete AI assistant's response text.\n    token_usage (Optional[Dict[str, int]]): LLM token usage statistics\n                                             (input_tokens, output_tokens).\n    is_quota_exceeded (bool): Whether the user's LLM quota has been exceeded."
-    AIInsightsHistoryResponse:
+    AIInsightsChatMessage:
       properties:
-        conversation_id:
+        role:
           type: string
-          title: Conversation Id
-          description: Conversation session ID
-        messages:
-          items:
-            $ref: '#/components/schemas/AIInsightsChatMessage'
-          type: array
-          title: Messages
-          description: Conversation message history
+          title: Role
+          description: 'Message role: ''user'' or ''ai_assistant'''
+        text:
+          type: string
+          title: Text
+          description: Message content
+        message_id:
+          type: integer
+          title: Message Id
+          description: Message ID
+        timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timestamp
+          description: ISO 8601 timestamp
       type: object
       required:
-      - conversation_id
-      - messages
-      title: AIInsightsHistoryResponse
-      description: "Response model for retrieving AI Insights conversation history.\n\nAttributes:\n    conversation_id (str): The conversation session ID.\n    messages (List[AIInsightsChatMessage]): List of messages in chronological order\n                                             (user messages and AI responses)."
-    AIInsightsChatRequest:
-      properties:
-        message:
-          type: string
-          maxLength: 10000
-          minLength: 1
-          title: Message
-          description: User's question or message about the media content
-      type: object
-      required:
-      - message
-      title: AIInsightsChatRequest
-      description: "Request model for sending a message to AI Insights (REST API).\n\nThe system automatically manages conversation continuity - one conversation per user per media item.\n\nAttributes:\n    message (str): The user's question or message about the media content."
+      - role
+      - text
+      - message_id
+      title: AIInsightsChatMessage
+      description: "Individual message in conversation history.\n\nAttributes:\n    role (str): Message role - \"user\" or \"ai_assistant\".\n    text (str): Message text content.\n    message_id (int): Message ID within the conversation.\n    timestamp (Optional[str]): ISO 8601 timestamp when message was created."
   securitySchemes:
     APIKeyHeader:
       type: apiKey

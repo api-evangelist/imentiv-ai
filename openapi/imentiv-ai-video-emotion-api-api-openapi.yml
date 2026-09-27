@@ -1621,23 +1621,152 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    PersonalitySegmentMetrics:
+    FrameNoteResponse:
       properties:
-        segment_interval_millis:
-          type: integer
-          exclusiveMinimum: 0
-          title: Segment Interval Millis
-        segments:
-          items:
-            $ref: '#/components/schemas/PersonalitySegmentItem'
-          type: array
-          title: Segments
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
       type: object
       required:
-      - segment_interval_millis
-      - segments
-      title: PersonalitySegmentMetrics
-      description: "Segment-level personality analysis with segment interval and list of segments.\n\nAttributes:\n    segment_interval_millis (int): Interval duration in milliseconds\n    segments (List[PersonalitySegmentItem]): List of segment data with OCEAN metrics"
+      - id
+      - status
+      title: FrameNoteResponse
+      description: "Model for response after adding a note to a frame.\n\nAttributes:\n    id (str): Frame ID or reference.\n    status (str): Status of the note operation."
+    SpeakerFaceMatchResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - status
+      - message
+      title: SpeakerFaceMatchResponse
+      description: "Response model for the result of speaker-face matching operations.\n\nAttributes:\n    status (str): Status of the operation (e.g., \"completed\").\n    message (str): Informational message about the operation result."
+    VideoEmotionResponseV2:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        duration:
+          type: integer
+          title: Duration
+        media_source:
+          type: string
+          title: Media Source
+        media_source_url:
+          type: string
+          title: Media Source Url
+        user_id:
+          type: string
+          title: User Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - duration
+      - media_source
+      - media_source_url
+      - user_id
+      title: VideoEmotionResponseV2
+      description: "V2 response model for video emotion detection with URL source tracking.\n\nSupports:\n- YouTube URLs\n- Cloud storage URLs (Dropbox, direct URLs, etc.)\n- Social Media URLs (Instagram Reels, Facebook videos/reels, Twitter/X status videos)\n- Time parameters for all URL types\n- URL source tracking\n\nAttributes:\n    id (str): Unique ID of the video.\n    title (str): Title of the video.\n    status (str): Processing status (queue, processing, done, etc.).\n    duration (int): Duration in seconds (trimmed duration if time params provided).\n    media_source (str): Source type (\"youtube\", \"dropbox\", \"instagram\", \"facebook\", \"twitter\", \"public_url\", \"file_upload\").\n    media_source_url (str): Full URL as provided by user.\n    user_id (str): ID of the user who uploaded the video.\n    created_at (Optional[str]): Timestamp when video was created."
+    Body_generate_video_emotion_analysis_report_v1_videos__video_id__report_post:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The callback URL to notify when video CSV processing is completed. Provide a valid URL.
+      type: object
+      title: Body_generate_video_emotion_analysis_report_v1_videos__video_id__report_post
+    UpdateEmotionResponse:
+      properties:
+        frame_id:
+          type: string
+          title: Frame Id
+        face_id:
+          type: integer
+          title: Face Id
+        emotions:
+          additionalProperties:
+            type: number
+          type: object
+          title: Emotions
+      type: object
+      required:
+      - frame_id
+      - face_id
+      - emotions
+      title: UpdateEmotionResponse
+      description: "Model representing updated emotion values for a face.\n\nAttributes:\n    frame_id (str): Frame identifier.\n    face_id (int): ID of the face.\n    emotions (Dict[str, float]): Dictionary of emotion scores."
+    VideoEditResponse:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      title: VideoEditResponse
+      description: "Response model after editing a video.\n\nInherits:\n    ImageEditResponse: Includes status and edit metadata."
+    Body_update_emotion_per_frame_v1_videos__video_id__frames__frame_id__faces__face_id__emotions_put:
+      properties:
+        angry:
+          type: number
+          title: Angry
+          default: 0
+        contempt:
+          type: number
+          title: Contempt
+          default: 0
+        disgust:
+          type: number
+          title: Disgust
+          default: 0
+        fear:
+          type: number
+          title: Fear
+          default: 0
+        happy:
+          type: number
+          title: Happy
+          default: 0
+        neutral:
+          type: number
+          title: Neutral
+          default: 0
+        sad:
+          type: number
+          title: Sad
+          default: 0
+        surprise:
+          type: number
+          title: Surprise
+          default: 0
+      type: object
+      title: Body_update_emotion_per_frame_v1_videos__video_id__frames__frame_id__faces__face_id__emotions_put
     EmotionScores:
       properties:
         angry:
@@ -1694,43 +1823,6 @@ components:
 
 
         All scores must be non-negative integers.'
-    SpeakerFaceMatchRequest:
-      properties:
-        speaker_id:
-          type: integer
-          title: Speaker Id
-        face_id:
-          type: integer
-          title: Face Id
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-      type: object
-      required:
-      - speaker_id
-      - face_id
-      - name
-      title: SpeakerFaceMatchRequest
-      description: "Request model for mapping a detected face to a speaker with an optional name.\n\nAttributes:\n    speaker_id (int): Unique identifier for the speaker from audio analysis.\n    face_id (int): Unique identifier for the detected face in the video.\n    name (Optional[str]): Optional name for the person. If empty/null, fetches from speaker;\n                          if provided, updates both face and speaker names."
-    PersonalityOverallMetrics:
-      properties:
-        ocean_metrics:
-          $ref: '#/components/schemas/PersonalityOceanMetrics'
-      type: object
-      required:
-      - ocean_metrics
-      title: PersonalityOverallMetrics
-      description: "Overall personality analysis metrics.\n\nAttributes:\n    ocean_metrics (PersonalityOceanMetrics): OCEAN personality trait scores"
-    Body_generate_video_emotion_analysis_report_v1_videos__video_id__report_post:
-      properties:
-        callback_url:
-          type: string
-          title: Callback Url
-          description: The callback URL to notify when video CSV processing is completed. Provide a valid URL.
-      type: object
-      title: Body_generate_video_emotion_analysis_report_v1_videos__video_id__report_post
     FullVideoAnalyticsResponse:
       properties:
         title:
@@ -1918,213 +2010,31 @@ components:
       - emotion_analysis
       title: FullVideoAnalyticsResponse
       description: Complete multimodal analytics response for video content.
-    SignedDownloadUrlResponse:
+    FrameEmotionResponseData:
       properties:
-        video_id:
+        frame_id:
           type: string
-          title: Video Id
-        download_url:
-          type: string
-          title: Download Url
-        filename:
-          type: string
-          title: Filename
-        expires_in_minutes:
-          type: integer
-          title: Expires In Minutes
-        expires_at:
-          type: string
-          title: Expires At
-        note:
-          type: string
-          title: Note
-          default: Download URL will expire. Request a new URL if expired.
-      type: object
-      required:
-      - video_id
-      - download_url
-      - filename
-      - expires_in_minutes
-      - expires_at
-      title: SignedDownloadUrlResponse
-      description: "Response containing a signed URL for downloading annotated video.\n\nAttributes:\n    video_id (str): ID of the video.\n    download_url (str): Signed URL for downloading the video file.\n    filename (str): Suggested filename for the download.\n    expires_in_minutes (int): Number of minutes until the URL expires.\n    expires_at (str): ISO 8601 formatted expiration timestamp.\n    note (str): Additional information about the download."
-    FrameNoteResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-      type: object
-      required:
-      - id
-      - status
-      title: FrameNoteResponse
-      description: "Model for response after adding a note to a frame.\n\nAttributes:\n    id (str): Frame ID or reference.\n    status (str): Status of the note operation."
-    SegmentResponse:
-      properties:
-        start_millis:
-          type: number
-          title: Start Millis
-        end_millis:
-          type: number
-          title: End Millis
-      type: object
-      required:
-      - start_millis
-      - end_millis
-      title: SegmentResponse
-      description: "Model for a video segment time range.\n\nAttributes:\n    start_millis (float): Start time in milliseconds.\n    end_millis (float): End time in milliseconds."
-    Body_reprocess_video_v1_videos__video_id__put:
-      properties:
-        callback_url:
-          type: string
-          title: Callback Url
-          description: The callback url to notify video reprocessing is completed. Give a valid URL.
-        reprocess:
-          type: boolean
-          title: Reprocess
-          description: Set to 'True' to reprocess an already completed video; defaults to 'False'.
-          default: false
-      type: object
-      title: Body_reprocess_video_v1_videos__video_id__put
-    PaginatedResponse:
-      properties:
-        documents:
-          title: Documents
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - documents
-      - count
-      title: PaginatedResponse
-      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]): List of audio responses.\n    count (int): Total count of documents."
-    ListOfFaces:
-      properties:
-        faces:
-          items:
-            $ref: '#/components/schemas/Faces'
-          type: array
-          title: Faces
-      type: object
-      required:
-      - faces
-      title: ListOfFaces
-      description: "Model representing a collection of faces.\n\nAttributes:\n    faces (List[Faces]): List of detected or named faces."
-    MergeResponse:
-      properties:
+          title: Frame Id
+        face_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Face Id
+        dominant_emotion:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dominant Emotion
         message:
-          type: string
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Message
       type: object
       required:
-      - message
-      title: MergeResponse
-      description: "Response model for merging video/audio content.\n\nAttributes:\n    message (str): Status message about the merge result."
-    Body_process_highlight_v1_videos_highlights_post:
-      properties:
-        video_id:
-          type: string
-          title: Video Id
-          description: The unique video ID of the video for which the highlight to be generated.
-      type: object
-      required:
-      - video_id
-      title: Body_process_highlight_v1_videos_highlights_post
-    Body_upload_video_v2_videos_post:
-      properties:
-        title:
-          type: string
-          minLength: 1
-          title: Title
-          description: A descriptive title for your video (e.g., 'Team Meeting' or 'Customer Interview').
-        description:
-          type: string
-          title: Description
-          description: Optional notes about the video content or context.
-        video_url:
-          type: string
-          title: Video Url
-          description: 'URL to your video. Supported sources: YouTube, Dropbox, Instagram, Facebook, Twitter (X), or any direct video link. Leave empty if uploading a file instead. '
-          default: ''
-        start_millis:
-          type: number
-          title: Start Millis
-          description: Start point in milliseconds to begin analysis. Use 0 to start from the beginning. If provided (>0), end_millis is required with minimum 1-second (1000ms) gap.
-          default: 0
-        end_millis:
-          type: number
-          title: End Millis
-          description: End point in milliseconds to stop analysis. Use 0 only when analyzing the full video (start_millis must also be 0). If start_millis is provided, end_millis is required and must be at least 1000ms greater than start_millis.
-          default: 0
-        callback_url:
-          type: string
-          title: Callback Url
-          description: Your webhook URL to receive a notification when analysis completes.
-          default: ''
-        video_file:
-          title: Video File
-          description: Upload a video file directly (mp4, avi, mov, webm, mpeg). File upload takes priority over video_url.
-        project_id:
-          type: string
-          title: Project Id
-          description: Optional project ID to associate the video with an existing project.
-          default: ''
-      type: object
-      required:
-      - title
-      title: Body_upload_video_v2_videos_post
-    VideoDeleteResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-      type: object
-      required:
-      - id
-      - status
-      title: VideoDeleteResponse
-      description: "Response after deleting a video entry.\n\nInherits:\n    ResponseStatus: Generic response with status and message."
-    PersonalitySegmentItem:
-      properties:
-        segment_id:
-          type: integer
-          minimum: 1
-          title: Segment Id
-        start_millis:
-          type: integer
-          minimum: 0
-          title: Start Millis
-        end_millis:
-          type: integer
-          exclusiveMinimum: 0
-          title: End Millis
-        ocean_metrics:
-          $ref: '#/components/schemas/PersonalityOceanMetrics'
-      type: object
-      required:
-      - segment_id
-      - start_millis
-      - end_millis
-      - ocean_metrics
-      title: PersonalitySegmentItem
-      description: "Individual segment data with OCEAN metrics.\n\nAttributes:\n    segment_id (int): Unique identifier for this segment\n    start_millis (int): Segment start time in milliseconds\n    end_millis (int): Segment end time in milliseconds\n    ocean_metrics (PersonalityOceanMetrics): OCEAN personality trait scores for this segment"
-    Body_edit_face_note_v1_videos__video_id__frames__frame_id__faces__face_id__note_put:
-      properties:
-        note:
-          type: string
-          title: Note
-          description: The note to attach to the face or frame.
-      type: object
-      required:
-      - note
-      title: Body_edit_face_note_v1_videos__video_id__frames__frame_id__faces__face_id__note_put
+      - frame_id
+      title: FrameEmotionResponseData
+      description: "Model for dominant emotion data of a frame.\n\nAttributes:\n    frame_id (str): Identifier for the video frame.\n    face_id (Optional[int]): Face ID detected in the frame.\n    dominant_emotion (Optional[str]): Most prominent emotion detected.\n    message (Optional[str]): Optional message or status info."
     OverallEmotions:
       properties:
         video:
@@ -2160,11 +2070,25 @@ components:
       type: object
       title: OverallEmotions
       description: Overall emotions across modalities.
-    GenerateCSVResponse:
+    SegmentResponse:
       properties:
-        id:
+        start_millis:
+          type: number
+          title: Start Millis
+        end_millis:
+          type: number
+          title: End Millis
+      type: object
+      required:
+      - start_millis
+      - end_millis
+      title: SegmentResponse
+      description: "Model for a video segment time range.\n\nAttributes:\n    start_millis (float): Start time in milliseconds.\n    end_millis (float): End time in milliseconds."
+    AnnotatedVideoResponse:
+      properties:
+        video_id:
           type: string
-          title: Id
+          title: Video Id
         message:
           type: string
           title: Message
@@ -2173,118 +2097,11 @@ components:
           title: Status
       type: object
       required:
-      - id
+      - video_id
       - message
       - status
-      title: GenerateCSVResponse
-      description: "Response after generating a CSV report.\n\nAttributes:\n    id (str): ID of the resource associated with the CSV.\n    message (str): Confirmation or status message.\n    status (str): Current status of the CSV generation."
-    EmotionAnalysis:
-      properties:
-        overall:
-          $ref: '#/components/schemas/OverallEmotions'
-          examples:
-          - audio:
-              angry: 0.047
-              happy: 0.185
-              neutral: 0.638
-            text:
-              admiration: 0.015
-              joy: 0.018
-              neutral: 0.75
-            video:
-              angry: 0.059
-              happy: 0.175
-              neutral: 0.408
-              sad: 0.049
-        faces:
-          anyOf:
-          - additionalProperties:
-              additionalProperties:
-                type: number
-              type: object
-            type: object
-          - type: 'null'
-          title: Faces
-          examples:
-          - John Smith:
-              happy: 0.175
-              neutral: 0.408
-              sad: 0.049
-            face_2:
-              angry: 0.087
-              happy: 0.184
-              neutral: 0.314
-        speakers:
-          additionalProperties:
-            $ref: '#/components/schemas/SpeakerEmotions'
-          type: object
-          title: Speakers
-          examples:
-          - Interviewer:
-              audio:
-                angry: 0.05
-                happy: 0.18
-                neutral: 0.65
-              text:
-                curiosity: 0.08
-                neutral: 0.85
-            John Smith:
-              audio:
-                angry: 0.045
-                happy: 0.19
-                neutral: 0.625
-              text:
-                admiration: 0.02
-                joy: 0.025
-                neutral: 0.72
-      type: object
-      required:
-      - overall
-      title: EmotionAnalysis
-      description: Hierarchical emotion analysis structure.
-    FrameEmotionResponseData:
-      properties:
-        frame_id:
-          type: string
-          title: Frame Id
-        face_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Face Id
-        dominant_emotion:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Dominant Emotion
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Message
-      type: object
-      required:
-      - frame_id
-      title: FrameEmotionResponseData
-      description: "Model for dominant emotion data of a frame.\n\nAttributes:\n    frame_id (str): Identifier for the video frame.\n    face_id (Optional[int]): Face ID detected in the frame.\n    dominant_emotion (Optional[str]): Most prominent emotion detected.\n    message (Optional[str]): Optional message or status info."
-    PersonalityAnalysisStatus:
-      properties:
-        status:
-          type: string
-          pattern: ^(pending|processing|completed|failed)$
-          title: Status
-        percentage:
-          anyOf:
-          - type: integer
-            maximum: 100
-            minimum: 0
-          - type: 'null'
-          title: Percentage
-      type: object
-      required:
-      - status
-      title: PersonalityAnalysisStatus
-      description: "Status detail for personality analysis processing.\n\nAttributes:\n    status (str): One of: pending, processing, completed, failed\n    percentage (Optional[int]): Progress percentage (0-100), only present during processing"
+      title: AnnotatedVideoResponse
+      description: "Response for annotated video generation status.\n\nAttributes:\n    video_id (str): ID of the video.\n    message (str): Status message.\n    status (str): Current status of annotated video generation (pending, in progress, completed)."
     HTTPValidationError:
       properties:
         detail:
@@ -2372,29 +2189,6 @@ components:
       - status
       title: VideoResponse
       description: "Model representing detailed video metadata and analysis.\n\nAttributes:\n    title (Optional[str]): Title of the video.\n    description (str): Description of the video.\n    id (str): Unique video identifier.\n    audio_id (str): Related audio ID if extracted.\n    model_id (str): Model used to process video.\n    emotions_list (List[str]): List of possible emotions.\n    url (Any): Original video file url\n    faces (ListOfFaces): Detected faces in the video.\n    annotated_video_mp4 (Any): Processed video with annotations.\n    summary (str): Summary text of the video.\n    total_frames_count (Optional[int]): Total number of frames.\n    fps (Optional[float]): Frames per second.\n    height (Optional[float]): Height of the video.\n    width (Optional[float]): Width of the video.\n    status (str): Current processing status.\n    created_at (str): Creation timestamp.\n    thumbnail_image (str): URL or data of the thumbnail image.\n    text_id (str): Linked text analysis ID."
-    SpeakerEmotions:
-      properties:
-        audio:
-          additionalProperties:
-            type: number
-          type: object
-          title: Audio
-          examples:
-          - angry: 0.045
-            happy: 0.19
-            neutral: 0.625
-        text:
-          additionalProperties:
-            type: number
-          type: object
-          title: Text
-          examples:
-          - admiration: 0.02
-            joy: 0.025
-            neutral: 0.72
-      type: object
-      title: SpeakerEmotions
-      description: Speaker-specific emotions across audio and text modalities.
     PersonalityAnalysisResponse:
       properties:
         video_id:
@@ -2425,158 +2219,18 @@ components:
       - face_id
       title: PersonalityAnalysisResponse
       description: "Complete response for personality analysis retrieval (public API).\n\nAttributes:\n    video_id (str): Video identifier\n    face_id (int): Face identifier (must be >= 1)\n    analysis_status (Optional[Dict[str, PersonalityAnalysisStatus]]): Status of overall and/or by_segment analysis (only includes keys that exist)\n    overall (Optional[PersonalityOverallMetrics]): Overall analysis (only if completed)\n    by_segment (Optional[PersonalitySegmentMetrics]): Segment analysis (only if completed)"
-    VideoEmotionResponseV2:
+    Body_edit_title_or_description_by_id_v1_videos__video_id__metadata_put:
       properties:
-        id:
-          type: string
-          title: Id
         title:
           type: string
           title: Title
-        status:
-          type: string
-          title: Status
-        duration:
-          type: integer
-          title: Duration
-        media_source:
-          type: string
-          title: Media Source
-        media_source_url:
-          type: string
-          title: Media Source Url
-        user_id:
-          type: string
-          title: User Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      type: object
-      required:
-      - id
-      - title
-      - status
-      - duration
-      - media_source
-      - media_source_url
-      - user_id
-      title: VideoEmotionResponseV2
-      description: "V2 response model for video emotion detection with URL source tracking.\n\nSupports:\n- YouTube URLs\n- Cloud storage URLs (Dropbox, direct URLs, etc.)\n- Social Media URLs (Instagram Reels, Facebook videos/reels, Twitter/X status videos)\n- Time parameters for all URL types\n- URL source tracking\n\nAttributes:\n    id (str): Unique ID of the video.\n    title (str): Title of the video.\n    status (str): Processing status (queue, processing, done, etc.).\n    duration (int): Duration in seconds (trimmed duration if time params provided).\n    media_source (str): Source type (\"youtube\", \"dropbox\", \"instagram\", \"facebook\", \"twitter\", \"public_url\", \"file_upload\").\n    media_source_url (str): Full URL as provided by user.\n    user_id (str): ID of the user who uploaded the video.\n    created_at (Optional[str]): Timestamp when video was created."
-    MultiFaceResponse:
-      properties:
-        message:
-          type: string
-          title: Message
-        updated_frames:
-          items: {}
-          type: array
-          title: Updated Frames
-      type: object
-      required:
-      - message
-      - updated_frames
-      title: MultiFaceResponse
-      description: "Response model after updating multiple faces.\n\nAttributes:\n    message (str): Operation status or result.\n    updated_frames (List): List of frames with updated faces."
-    UpdateEmotionResponse:
-      properties:
-        frame_id:
-          type: string
-          title: Frame Id
-        face_id:
-          type: integer
-          title: Face Id
-        emotions:
-          additionalProperties:
-            type: number
-          type: object
-          title: Emotions
-      type: object
-      required:
-      - frame_id
-      - face_id
-      - emotions
-      title: UpdateEmotionResponse
-      description: "Model representing updated emotion values for a face.\n\nAttributes:\n    frame_id (str): Frame identifier.\n    face_id (int): ID of the face.\n    emotions (Dict[str, float]): Dictionary of emotion scores."
-    Body_delete_faces_v1_videos__video_id__faces_delete:
-      properties:
-        face_ids:
-          type: string
-          title: Face Ids
-          description: Comma-separated list of face IDs to delete (e.g., 1,2,3)
-      type: object
-      required:
-      - face_ids
-      title: Body_delete_faces_v1_videos__video_id__faces_delete
-    VideoEditResponse:
-      properties:
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
+          description: 'Title to be changed for the video (Max: 50 characters)'
         description:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Description
+          description: 'Description to be changed for the video (Max: 300 characters)'
       type: object
-      title: VideoEditResponse
-      description: "Response model after editing a video.\n\nInherits:\n    ImageEditResponse: Includes status and edit metadata."
-    Body_update_multiple_faces_v1_videos__video_id__frames_faces_put:
-      properties:
-        frame_ids:
-          type: string
-          title: Frame Ids
-          description: The comma separated list of frame IDs to be updated.
-        current_face_id:
-          type: integer
-          title: Current Face Id
-          description: The face ID to be replaced.
-        new_face_id:
-          type: integer
-          title: New Face Id
-          description: The new face ID to replace with.
-      type: object
-      required:
-      - frame_ids
-      - current_face_id
-      - new_face_id
-      title: Body_update_multiple_faces_v1_videos__video_id__frames_faces_put
-    BoundingBox:
-      additionalProperties: true
-      type: object
-    FramesResponse:
-      properties:
-        original_frame_image:
-          type: string
-          title: Original Frame Image
-        frame_image:
-          type: string
-          title: Frame Image
-        found_faces:
-          items:
-            type: integer
-          type: array
-          title: Found Faces
-        timestamp:
-          type: integer
-          title: Timestamp
-        faces:
-          items:
-            $ref: '#/components/schemas/BoundingBox'
-          type: array
-          title: Faces
-        frame_id:
-          type: integer
-          title: Frame Id
-        note:
-          type: string
-          title: Note
-      type: object
-      title: FramesResponse
-      description: "Model for a single video frame with face data.\n\nAttributes:\n    original_frame_image (str): Unprocessed frame image.\n    frame_image (str): Processed frame image with annotations.\n    found_faces (List[int]): List of detected face IDs.\n    timestamp (int): Timestamp of the frame in milliseconds.\n    faces (List[BoundingBox]): Face details including bounding boxes.\n    frame_id (int): Frame identifier.\n    note (str): Optional notes or remarks."
+      title: Body_edit_title_or_description_by_id_v1_videos__video_id__metadata_put
     HighlightGenerateResponse:
       properties:
         video_id:
@@ -2595,49 +2249,47 @@ components:
       - status
       title: HighlightGenerateResponse
       description: "Model for highlight video generation trigger response.\n\nAttributes:\n    video_id (str): The video ID for which highlights are being generated.\n    message (str): Status message about the highlight generation process.\n    status (str): Current status of highlight generation (queue, processing, completed, failed)."
-    Body_merge_face_v1_videos__video_id__faces_put:
+    PersonalityTriggerResponse:
       properties:
-        selected_face_id:
+        video_id:
+          type: string
+          title: Video Id
+        face_id:
           type: integer
-          title: Selected Face Id
-          description: The unique face ID of the face in the video to be selected.
-        merge_face_id:
+          title: Face Id
+        speaker_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Speaker Id
+        analysis_type:
           type: string
-          title: Merge Face Id
-          description: A comma-separated list of unique face IDs of the faces in the video to be merged.
-      type: object
-      required:
-      - selected_face_id
-      - merge_face_id
-      title: Body_merge_face_v1_videos__video_id__faces_put
-    DeleteFacesResponse:
-      properties:
-        id:
+          title: Analysis Type
+        status:
           type: string
-          title: Id
+          title: Status
         message:
           type: string
           title: Message
       type: object
       required:
-      - id
+      - video_id
+      - face_id
+      - analysis_type
+      - status
       - message
-      title: DeleteFacesResponse
-      description: "Response model after deleting one or more faces.\n\nAttributes:\n    id (str): Video or frame ID the faces belonged to.\n    message (str): Confirmation or error message."
-    NameUpdateResponse:
+      title: PersonalityTriggerResponse
+      description: "Response model returned after triggering personality processing\nfor a specific face (and optionally a speaker) within a video.\n\nAttributes:\n    video_id (str): Unique identifier of the video where personality processing was triggered.\n    face_id (int): Identifier of the face entity associated with the personality trigger.\n    speaker_id (Optional[int]): Identifier of the linked speaker entity, if applicable; otherwise None.\n    analysis_type (str): Type of personality analysis - 'overall', 'by_segment', or 'combined'.\n    status (str): Result status of the trigger operation\n    message (str): Status message describing the result of the trigger operation."
+    Body_delete_faces_v1_videos__video_id__faces_delete:
       properties:
-        face_id:
-          type: integer
-          title: Face Id
-        name:
+        face_ids:
           type: string
-          title: Name
+          title: Face Ids
+          description: Comma-separated list of face IDs to delete (e.g., 1,2,3)
       type: object
       required:
-      - face_id
-      - name
-      title: NameUpdateResponse
-      description: "Model for updating the name associated with a face.\n\nAttributes:\n    face_id (int): Identifier of the face being updated.\n    name (str): New name to assign to the face."
+      - face_ids
+      title: Body_delete_faces_v1_videos__video_id__faces_delete
     Body_trigger_personality_analysis_v2_videos__video_id__personality_analyze_post:
       properties:
         face_id:
@@ -2659,140 +2311,48 @@ components:
       required:
       - face_id
       title: Body_trigger_personality_analysis_v2_videos__video_id__personality_analyze_post
-    MultipleFramesResponse:
+    PersonalityAnalysisStatus:
       properties:
-        processed_frames:
-          items:
-            $ref: '#/components/schemas/FramesResponse'
-          type: array
-          title: Processed Frames
-      type: object
-      required:
-      - processed_frames
-      title: MultipleFramesResponse
-      description: Model for returning the MultipleFrame Responses
-    AnnotatedVideoResponse:
-      properties:
-        video_id:
-          type: string
-          title: Video Id
-        message:
-          type: string
-          title: Message
         status:
           type: string
+          pattern: ^(pending|processing|completed|failed)$
           title: Status
+        percentage:
+          anyOf:
+          - type: integer
+            maximum: 100
+            minimum: 0
+          - type: 'null'
+          title: Percentage
       type: object
       required:
-      - video_id
-      - message
       - status
-      title: AnnotatedVideoResponse
-      description: "Response for annotated video generation status.\n\nAttributes:\n    video_id (str): ID of the video.\n    message (str): Status message.\n    status (str): Current status of annotated video generation (pending, in progress, completed)."
-    ReprocessVideoResponse:
+      title: PersonalityAnalysisStatus
+      description: "Status detail for personality analysis processing.\n\nAttributes:\n    status (str): One of: pending, processing, completed, failed\n    percentage (Optional[int]): Progress percentage (0-100), only present during processing"
+    PersonalitySegmentItem:
       properties:
-        id:
-          type: string
-          title: Id
-        message:
-          type: string
-          title: Message
-        status:
-          type: string
-          title: Status
-      type: object
-      required:
-      - id
-      - message
-      - status
-      title: ReprocessVideoResponse
-      description: "Response returned after requesting reprocessing of a video.\n\nInherits from:\n    GenerateCSVResponse"
-    FaceNameItem:
-      properties:
-        face_id:
+        segment_id:
           type: integer
-          title: Face Id
-          default: 0
-        name:
-          type: string
-          title: Name
+          minimum: 1
+          title: Segment Id
+        start_millis:
+          type: integer
+          minimum: 0
+          title: Start Millis
+        end_millis:
+          type: integer
+          exclusiveMinimum: 0
+          title: End Millis
+        ocean_metrics:
+          $ref: '#/components/schemas/PersonalityOceanMetrics'
       type: object
       required:
-      - name
-      title: FaceNameItem
-      description: 'Represents a mapping between a face ID and its assigned name.
-
-
-        Used for labeling or identifying detected faces.'
-    Body_edit_title_or_description_by_id_v1_videos__video_id__metadata_put:
-      properties:
-        title:
-          type: string
-          title: Title
-          description: 'Title to be changed for the video (Max: 50 characters)'
-        description:
-          type: string
-          title: Description
-          description: 'Description to be changed for the video (Max: 300 characters)'
-      type: object
-      title: Body_edit_title_or_description_by_id_v1_videos__video_id__metadata_put
-    Body_update_emotion_per_frame_v1_videos__video_id__frames__frame_id__faces__face_id__emotions_put:
-      properties:
-        angry:
-          type: number
-          title: Angry
-          default: 0
-        contempt:
-          type: number
-          title: Contempt
-          default: 0
-        disgust:
-          type: number
-          title: Disgust
-          default: 0
-        fear:
-          type: number
-          title: Fear
-          default: 0
-        happy:
-          type: number
-          title: Happy
-          default: 0
-        neutral:
-          type: number
-          title: Neutral
-          default: 0
-        sad:
-          type: number
-          title: Sad
-          default: 0
-        surprise:
-          type: number
-          title: Surprise
-          default: 0
-      type: object
-      title: Body_update_emotion_per_frame_v1_videos__video_id__frames__frame_id__faces__face_id__emotions_put
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - segment_id
+      - start_millis
+      - end_millis
+      - ocean_metrics
+      title: PersonalitySegmentItem
+      description: "Individual segment data with OCEAN metrics.\n\nAttributes:\n    segment_id (int): Unique identifier for this segment\n    start_millis (int): Segment start time in milliseconds\n    end_millis (int): Segment end time in milliseconds\n    ocean_metrics (PersonalityOceanMetrics): OCEAN personality trait scores for this segment"
     PersonalityOceanMetrics:
       properties:
         agreeableness:
@@ -2829,21 +2389,281 @@ components:
       - openness
       title: PersonalityOceanMetrics
       description: "OCEAN personality trait metrics (Big Five personality traits).\n\nAttributes:\n    agreeableness (float): Agreeableness level (0-1 range)\n    conscientiousness (float): Conscientiousness level (0-1 range)\n    extraversion (float): Extraversion level (0-1 range)\n    neuroticism (float): Neuroticism level (0-1 range)\n    openness (float): Openness to experience (0-1 range)"
-    HighlightResponse:
-      properties:
-        highlight_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Highlight Status
-        highlight_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Highlight Url
+    BoundingBox:
+      additionalProperties: true
       type: object
-      title: HighlightResponse
-      description: "Model for highlight video response.\n\nAttributes:\n    message (str): Status or success message.\n    highlight_url (str): URL to the generated highlight video."
+    FramesResponse:
+      properties:
+        original_frame_image:
+          type: string
+          title: Original Frame Image
+        frame_image:
+          type: string
+          title: Frame Image
+        found_faces:
+          items:
+            type: integer
+          type: array
+          title: Found Faces
+        timestamp:
+          type: integer
+          title: Timestamp
+        faces:
+          items:
+            $ref: '#/components/schemas/BoundingBox'
+          type: array
+          title: Faces
+        frame_id:
+          type: integer
+          title: Frame Id
+        note:
+          type: string
+          title: Note
+      type: object
+      title: FramesResponse
+      description: "Model for a single video frame with face data.\n\nAttributes:\n    original_frame_image (str): Unprocessed frame image.\n    frame_image (str): Processed frame image with annotations.\n    found_faces (List[int]): List of detected face IDs.\n    timestamp (int): Timestamp of the frame in milliseconds.\n    faces (List[BoundingBox]): Face details including bounding boxes.\n    frame_id (int): Frame identifier.\n    note (str): Optional notes or remarks."
+    SpeakerFaceMatchRequest:
+      properties:
+        speaker_id:
+          type: integer
+          title: Speaker Id
+        face_id:
+          type: integer
+          title: Face Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+      type: object
+      required:
+      - speaker_id
+      - face_id
+      - name
+      title: SpeakerFaceMatchRequest
+      description: "Request model for mapping a detected face to a speaker with an optional name.\n\nAttributes:\n    speaker_id (int): Unique identifier for the speaker from audio analysis.\n    face_id (int): Unique identifier for the detected face in the video.\n    name (Optional[str]): Optional name for the person. If empty/null, fetches from speaker;\n                          if provided, updates both face and speaker names."
+    Body_edit_face_note_v1_videos__video_id__frames__frame_id__faces__face_id__note_put:
+      properties:
+        note:
+          type: string
+          title: Note
+          description: The note to attach to the face or frame.
+      type: object
+      required:
+      - note
+      title: Body_edit_face_note_v1_videos__video_id__frames__frame_id__faces__face_id__note_put
+    Body_merge_face_v1_videos__video_id__faces_put:
+      properties:
+        selected_face_id:
+          type: integer
+          title: Selected Face Id
+          description: The unique face ID of the face in the video to be selected.
+        merge_face_id:
+          type: string
+          title: Merge Face Id
+          description: A comma-separated list of unique face IDs of the faces in the video to be merged.
+      type: object
+      required:
+      - selected_face_id
+      - merge_face_id
+      title: Body_merge_face_v1_videos__video_id__faces_put
+    MergeResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - message
+      title: MergeResponse
+      description: "Response model for merging video/audio content.\n\nAttributes:\n    message (str): Status message about the merge result."
+    ReprocessVideoResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        message:
+          type: string
+          title: Message
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - message
+      - status
+      title: ReprocessVideoResponse
+      description: "Response returned after requesting reprocessing of a video.\n\nInherits from:\n    GenerateCSVResponse"
+    VideoDeleteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: VideoDeleteResponse
+      description: "Response after deleting a video entry.\n\nInherits:\n    ResponseStatus: Generic response with status and message."
+    MultipleFramesResponse:
+      properties:
+        processed_frames:
+          items:
+            $ref: '#/components/schemas/FramesResponse'
+          type: array
+          title: Processed Frames
+      type: object
+      required:
+      - processed_frames
+      title: MultipleFramesResponse
+      description: Model for returning the MultipleFrame Responses
+    GenerateCSVResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        message:
+          type: string
+          title: Message
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - message
+      - status
+      title: GenerateCSVResponse
+      description: "Response after generating a CSV report.\n\nAttributes:\n    id (str): ID of the resource associated with the CSV.\n    message (str): Confirmation or status message.\n    status (str): Current status of the CSV generation."
+    EmotionAnalysis:
+      properties:
+        overall:
+          $ref: '#/components/schemas/OverallEmotions'
+          examples:
+          - audio:
+              angry: 0.047
+              happy: 0.185
+              neutral: 0.638
+            text:
+              admiration: 0.015
+              joy: 0.018
+              neutral: 0.75
+            video:
+              angry: 0.059
+              happy: 0.175
+              neutral: 0.408
+              sad: 0.049
+        faces:
+          anyOf:
+          - additionalProperties:
+              additionalProperties:
+                type: number
+              type: object
+            type: object
+          - type: 'null'
+          title: Faces
+          examples:
+          - John Smith:
+              happy: 0.175
+              neutral: 0.408
+              sad: 0.049
+            face_2:
+              angry: 0.087
+              happy: 0.184
+              neutral: 0.314
+        speakers:
+          additionalProperties:
+            $ref: '#/components/schemas/SpeakerEmotions'
+          type: object
+          title: Speakers
+          examples:
+          - Interviewer:
+              audio:
+                angry: 0.05
+                happy: 0.18
+                neutral: 0.65
+              text:
+                curiosity: 0.08
+                neutral: 0.85
+            John Smith:
+              audio:
+                angry: 0.045
+                happy: 0.19
+                neutral: 0.625
+              text:
+                admiration: 0.02
+                joy: 0.025
+                neutral: 0.72
+      type: object
+      required:
+      - overall
+      title: EmotionAnalysis
+      description: Hierarchical emotion analysis structure.
+    FaceNameItem:
+      properties:
+        face_id:
+          type: integer
+          title: Face Id
+          default: 0
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - name
+      title: FaceNameItem
+      description: 'Represents a mapping between a face ID and its assigned name.
+
+
+        Used for labeling or identifying detected faces.'
+    DeleteFacesResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - message
+      title: DeleteFacesResponse
+      description: "Response model after deleting one or more faces.\n\nAttributes:\n    id (str): Video or frame ID the faces belonged to.\n    message (str): Confirmation or error message."
+    SignedDownloadUrlResponse:
+      properties:
+        video_id:
+          type: string
+          title: Video Id
+        download_url:
+          type: string
+          title: Download Url
+        filename:
+          type: string
+          title: Filename
+        expires_in_minutes:
+          type: integer
+          title: Expires In Minutes
+        expires_at:
+          type: string
+          title: Expires At
+        note:
+          type: string
+          title: Note
+          default: Download URL will expire. Request a new URL if expired.
+      type: object
+      required:
+      - video_id
+      - download_url
+      - filename
+      - expires_in_minutes
+      - expires_at
+      title: SignedDownloadUrlResponse
+      description: "Response containing a signed URL for downloading annotated video.\n\nAttributes:\n    video_id (str): ID of the video.\n    download_url (str): Signed URL for downloading the video file.\n    filename (str): Suggested filename for the download.\n    expires_in_minutes (int): Number of minutes until the URL expires.\n    expires_at (str): ISO 8601 formatted expiration timestamp.\n    note (str): Additional information about the download."
     Faces:
       properties:
         image:
@@ -2885,51 +2705,6 @@ components:
       - message
       title: AutoSpeakerFaceMatchTriggerResponse
       description: "Response model for triggering the automatic speaker-face match worker.\n\nAttributes:\n    video_id (str): Unique identifier of the video.\n    audio_id (str): Unique identifier of the audio document.\n    status (str): Status of the trigger operation (e.g., \"processing\").\n    message (str): Informational message about the operation."
-    SpeakerFaceMatchResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - status
-      - message
-      title: SpeakerFaceMatchResponse
-      description: "Response model for the result of speaker-face matching operations.\n\nAttributes:\n    status (str): Status of the operation (e.g., \"completed\").\n    message (str): Informational message about the operation result."
-    PersonalityTriggerResponse:
-      properties:
-        video_id:
-          type: string
-          title: Video Id
-        face_id:
-          type: integer
-          title: Face Id
-        speaker_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Speaker Id
-        analysis_type:
-          type: string
-          title: Analysis Type
-        status:
-          type: string
-          title: Status
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - video_id
-      - face_id
-      - analysis_type
-      - status
-      - message
-      title: PersonalityTriggerResponse
-      description: "Response model returned after triggering personality processing\nfor a specific face (and optionally a speaker) within a video.\n\nAttributes:\n    video_id (str): Unique identifier of the video where personality processing was triggered.\n    face_id (int): Identifier of the face entity associated with the personality trigger.\n    speaker_id (Optional[int]): Identifier of the linked speaker entity, if applicable; otherwise None.\n    analysis_type (str): Type of personality analysis - 'overall', 'by_segment', or 'combined'.\n    status (str): Result status of the trigger operation\n    message (str): Status message describing the result of the trigger operation."
     ValenceArousalIntensity:
       properties:
         valence:
@@ -2948,6 +2723,231 @@ components:
       - intensity
       title: ValenceArousalIntensity
       description: "Model representing emotional intensity values.\n\nAttributes:\n    valence (float): Positive or negative emotion scale.\n    arousal (float): Energy or excitement level.\n    intensity (float): Overall emotion strength."
+    SpeakerEmotions:
+      properties:
+        audio:
+          additionalProperties:
+            type: number
+          type: object
+          title: Audio
+          examples:
+          - angry: 0.045
+            happy: 0.19
+            neutral: 0.625
+        text:
+          additionalProperties:
+            type: number
+          type: object
+          title: Text
+          examples:
+          - admiration: 0.02
+            joy: 0.025
+            neutral: 0.72
+      type: object
+      title: SpeakerEmotions
+      description: Speaker-specific emotions across audio and text modalities.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Body_update_multiple_faces_v1_videos__video_id__frames_faces_put:
+      properties:
+        frame_ids:
+          type: string
+          title: Frame Ids
+          description: The comma separated list of frame IDs to be updated.
+        current_face_id:
+          type: integer
+          title: Current Face Id
+          description: The face ID to be replaced.
+        new_face_id:
+          type: integer
+          title: New Face Id
+          description: The new face ID to replace with.
+      type: object
+      required:
+      - frame_ids
+      - current_face_id
+      - new_face_id
+      title: Body_update_multiple_faces_v1_videos__video_id__frames_faces_put
+    PersonalitySegmentMetrics:
+      properties:
+        segment_interval_millis:
+          type: integer
+          exclusiveMinimum: 0
+          title: Segment Interval Millis
+        segments:
+          items:
+            $ref: '#/components/schemas/PersonalitySegmentItem'
+          type: array
+          title: Segments
+      type: object
+      required:
+      - segment_interval_millis
+      - segments
+      title: PersonalitySegmentMetrics
+      description: "Segment-level personality analysis with segment interval and list of segments.\n\nAttributes:\n    segment_interval_millis (int): Interval duration in milliseconds\n    segments (List[PersonalitySegmentItem]): List of segment data with OCEAN metrics"
+    NameUpdateResponse:
+      properties:
+        face_id:
+          type: integer
+          title: Face Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - face_id
+      - name
+      title: NameUpdateResponse
+      description: "Model for updating the name associated with a face.\n\nAttributes:\n    face_id (int): Identifier of the face being updated.\n    name (str): New name to assign to the face."
+    PaginatedResponse:
+      properties:
+        documents:
+          title: Documents
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - documents
+      - count
+      title: PaginatedResponse
+      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]): List of audio responses.\n    count (int): Total count of documents."
+    ListOfFaces:
+      properties:
+        faces:
+          items:
+            $ref: '#/components/schemas/Faces'
+          type: array
+          title: Faces
+      type: object
+      required:
+      - faces
+      title: ListOfFaces
+      description: "Model representing a collection of faces.\n\nAttributes:\n    faces (List[Faces]): List of detected or named faces."
+    HighlightResponse:
+      properties:
+        highlight_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Highlight Status
+        highlight_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Highlight Url
+      type: object
+      title: HighlightResponse
+      description: "Model for highlight video response.\n\nAttributes:\n    message (str): Status or success message.\n    highlight_url (str): URL to the generated highlight video."
+    Body_process_highlight_v1_videos_highlights_post:
+      properties:
+        video_id:
+          type: string
+          title: Video Id
+          description: The unique video ID of the video for which the highlight to be generated.
+      type: object
+      required:
+      - video_id
+      title: Body_process_highlight_v1_videos_highlights_post
+    PersonalityOverallMetrics:
+      properties:
+        ocean_metrics:
+          $ref: '#/components/schemas/PersonalityOceanMetrics'
+      type: object
+      required:
+      - ocean_metrics
+      title: PersonalityOverallMetrics
+      description: "Overall personality analysis metrics.\n\nAttributes:\n    ocean_metrics (PersonalityOceanMetrics): OCEAN personality trait scores"
+    Body_reprocess_video_v1_videos__video_id__put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The callback url to notify video reprocessing is completed. Give a valid URL.
+        reprocess:
+          type: boolean
+          title: Reprocess
+          description: Set to 'True' to reprocess an already completed video; defaults to 'False'.
+          default: false
+      type: object
+      title: Body_reprocess_video_v1_videos__video_id__put
+    MultiFaceResponse:
+      properties:
+        message:
+          type: string
+          title: Message
+        updated_frames:
+          items: {}
+          type: array
+          title: Updated Frames
+      type: object
+      required:
+      - message
+      - updated_frames
+      title: MultiFaceResponse
+      description: "Response model after updating multiple faces.\n\nAttributes:\n    message (str): Operation status or result.\n    updated_frames (List): List of frames with updated faces."
+    Body_upload_video_v2_videos_post:
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: Title
+          description: A descriptive title for your video (e.g., 'Team Meeting' or 'Customer Interview').
+        description:
+          type: string
+          title: Description
+          description: Optional notes about the video content or context.
+        video_url:
+          type: string
+          title: Video Url
+          description: 'URL to your video. Supported sources: YouTube, Dropbox, Instagram, Facebook, Twitter (X), or any direct video link. Leave empty if uploading a file instead. '
+          default: ''
+        start_millis:
+          type: number
+          title: Start Millis
+          description: Start point in milliseconds to begin analysis. Use 0 to start from the beginning. If provided (>0), end_millis is required with minimum 1-second (1000ms) gap.
+          default: 0
+        end_millis:
+          type: number
+          title: End Millis
+          description: End point in milliseconds to stop analysis. Use 0 only when analyzing the full video (start_millis must also be 0). If start_millis is provided, end_millis is required and must be at least 1000ms greater than start_millis.
+          default: 0
+        callback_url:
+          type: string
+          title: Callback Url
+          description: Your webhook URL to receive a notification when analysis completes.
+          default: ''
+        video_file:
+          title: Video File
+          description: Upload a video file directly (mp4, avi, mov, webm, mpeg). File upload takes priority over video_url.
+        project_id:
+          type: string
+          title: Project Id
+          description: Optional project ID to associate the video with an existing project.
+          default: ''
+      type: object
+      required:
+      - title
+      title: Body_upload_video_v2_videos_post
   securitySchemes:
     APIKeyHeader:
       type: apiKey

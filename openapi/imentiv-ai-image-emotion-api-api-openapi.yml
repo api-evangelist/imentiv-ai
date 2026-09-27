@@ -372,6 +372,60 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ImageReprocessResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - status
+      - message
+      title: ImageReprocessResponse
+      description: Response model returned after reprocessing an image emotion analysis.
+    Body_reprocess_image_v1_images__image_id__put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The callback url to notify image reprocessing is completed. Give a valid URL.
+        reprocess:
+          anyOf:
+          - type: boolean
+          - type: string
+          title: Reprocess
+          description: Set to 'True' to reprocess an already completed image; defaults to 'False'.
+          default: false
+      type: object
+      title: Body_reprocess_image_v1_images__image_id__put
     HTTPValidationError:
       properties:
         detail:
@@ -381,45 +435,19 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ImageEmotionResponseV2:
+    PaginatedResponse:
       properties:
-        id:
-          type: string
-          title: Id
-        title:
-          type: string
-          title: Title
-        status:
-          type: string
-          title: Status
-        media_source:
-          type: string
-          title: Media Source
-        media_source_url:
-          type: string
-          title: Media Source Url
-        media_source_type:
-          type: string
-          title: Media Source Type
-        user_id:
-          type: string
-          title: User Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
+        documents:
+          title: Documents
+        count:
+          type: integer
+          title: Count
       type: object
       required:
-      - id
-      - title
-      - status
-      - media_source
-      - media_source_url
-      - media_source_type
-      - user_id
-      title: ImageEmotionResponseV2
-      description: "V2 response model for image emotion detection with URL source tracking.\n\nSupports:\n- File uploads (JPG, JPEG, PNG, WEBP)\n- Cloud storage URLs (Dropbox, direct URLs)\n- URL source tracking\n\nAttributes:\n    id (str): Unique ID of the image.\n    title (str): Title of the image.\n    status (str): Processing status (\"queue\").\n    media_source (str): Source type (\"dropbox\", \"public_url\", \"file_upload\").\n    media_source_url (str): Full URL as provided by user or uploaded file URL.\n    media_source_type (str): Type of source media (always \"image\" for this endpoint).\n    user_id (str): ID of the user who uploaded the image.\n    created_at (Optional[str]): Timestamp when image was created."
+      - documents
+      - count
+      title: PaginatedResponse
+      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]): List of audio responses.\n    count (int): Total count of documents."
     ImageDBResponse:
       properties:
         id:
@@ -468,57 +496,45 @@ components:
       - annotated_image
       title: ImageDBResponse
       description: "Detailed response model for image emotion stored in DB.\n\nAttributes:\n    title (str): Title of the image.\n    description (str): Description provided by the user.\n    created_at (Any): Timestamp when image was added.\n    original_frame_image (Any): Original image file.\n    height (float): Height of the image.\n    width (float): Width of the image.\n    found_faces (int): Number of faces detected.\n    faces (Any): Detailed face data.\n    annotated_image (Any): Image with annotations (e.g., bounding boxes)."
-    Body_reprocess_image_v1_images__image_id__put:
+    ImageEmotionResponseV2:
       properties:
-        callback_url:
+        id:
           type: string
-          title: Callback Url
-          description: The callback url to notify image reprocessing is completed. Give a valid URL.
-        reprocess:
-          anyOf:
-          - type: boolean
-          - type: string
-          title: Reprocess
-          description: Set to 'True' to reprocess an already completed image; defaults to 'False'.
-          default: false
-      type: object
-      title: Body_reprocess_image_v1_images__image_id__put
-    ImageEditResponse:
-      properties:
+          title: Id
         title:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Title
-        description:
+        status:
+          type: string
+          title: Status
+        media_source:
+          type: string
+          title: Media Source
+        media_source_url:
+          type: string
+          title: Media Source Url
+        media_source_type:
+          type: string
+          title: Media Source Type
+        user_id:
+          type: string
+          title: User Id
+        created_at:
           anyOf:
           - type: string
           - type: 'null'
-          title: Description
-      type: object
-      title: ImageEditResponse
-      description: "Model for editing image metadata.\n\nAttributes:\n    title (str): Updated title.\n    description (str): Updated description."
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+          title: Created At
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - id
+      - title
+      - status
+      - media_source
+      - media_source_url
+      - media_source_type
+      - user_id
+      title: ImageEmotionResponseV2
+      description: "V2 response model for image emotion detection with URL source tracking.\n\nSupports:\n- File uploads (JPG, JPEG, PNG, WEBP)\n- Cloud storage URLs (Dropbox, direct URLs)\n- URL source tracking\n\nAttributes:\n    id (str): Unique ID of the image.\n    title (str): Title of the image.\n    status (str): Processing status (\"queue\").\n    media_source (str): Source type (\"dropbox\", \"public_url\", \"file_upload\").\n    media_source_url (str): Full URL as provided by user or uploaded file URL.\n    media_source_type (str): Type of source media (always \"image\" for this endpoint).\n    user_id (str): ID of the user who uploaded the image.\n    created_at (Optional[str]): Timestamp when image was created."
     ImageNoteResponse:
       properties:
         id:
@@ -533,19 +549,6 @@ components:
       - status
       title: ImageNoteResponse
       description: Response after updating or retrieving notes for an image.
-    PaginatedResponse:
-      properties:
-        documents:
-          title: Documents
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - documents
-      - count
-      title: PaginatedResponse
-      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]): List of audio responses.\n    count (int): Total count of documents."
     Body_upload_image_v2_images_post:
       properties:
         title:
@@ -576,45 +579,6 @@ components:
       required:
       - title
       title: Body_upload_image_v2_images_post
-    Body_edit_image_metadata_v1_images__image_id__metadata_put:
-      properties:
-        title:
-          type: string
-          title: Title
-          default: ''
-        description:
-          type: string
-          title: Description
-          default: ''
-        callback_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Callback Url
-        image_url:
-          type: string
-          title: Image Url
-          default: ''
-      type: object
-      title: Body_edit_image_metadata_v1_images__image_id__metadata_put
-    ImageReprocessResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - id
-      - status
-      - message
-      title: ImageReprocessResponse
-      description: Response model returned after reprocessing an image emotion analysis.
     Body_add_note_to_specific_face_v1_images__image_id__faces__face_id__note_put:
       properties:
         note:
@@ -638,6 +602,42 @@ components:
       - status
       title: ImageDeleteResponse
       description: Response returned after deleting an image analysis result.
+    ImageEditResponse:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      title: ImageEditResponse
+      description: "Model for editing image metadata.\n\nAttributes:\n    title (str): Updated title.\n    description (str): Updated description."
+    Body_edit_image_metadata_v1_images__image_id__metadata_put:
+      properties:
+        title:
+          type: string
+          title: Title
+          default: ''
+        description:
+          type: string
+          title: Description
+          default: ''
+        callback_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Callback Url
+        image_url:
+          type: string
+          title: Image Url
+          default: ''
+      type: object
+      title: Body_edit_image_metadata_v1_images__image_id__metadata_put
   securitySchemes:
     APIKeyHeader:
       type: apiKey
