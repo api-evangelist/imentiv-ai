@@ -545,165 +545,70 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AudioReprocessResponse:
+    EmotionAnalysis:
       properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - id
-      - status
-      - message
-      title: AudioReprocessResponse
-      description: "Response model for audio reprocessing.\n\nInherits:\n    TextReprocessResponse: Reuse response format for audio reprocessing."
-    SpeakerUpdate:
-      properties:
-        speaker_id:
-          type: integer
-          title: Speaker Id
-        name:
-          type: string
-          title: Name
-      type: object
-      required:
-      - speaker_id
-      - name
-      title: SpeakerUpdate
-      description: "Model for updating a speaker's name.\n\nAttributes:\n    speaker_id (int): Identifier of the speaker.\n    name (str): New name for the speaker."
-    Body_upload_audio_v2_audios_post:
-      properties:
-        title:
-          type: string
-          minLength: 1
-          title: Title
-          description: A descriptive title for your audio (e.g., 'Customer Call' or 'Team Meeting').
-        description:
-          type: string
-          title: Description
-          description: Optional notes about the audio content or context.
-        media_url:
-          type: string
-          title: Media Url
-          description: URL to your audio/video source (YouTube, Instagram, Twitter, Facebook, Dropbox, or any direct media link). Audio will be extracted if source is video. Leave empty if uploading a file instead.
-          default: ''
-        start_millis:
-          type: number
-          title: Start Millis
-          description: Start point in milliseconds to begin analysis. Use 0 to start from the beginning. If provided (>0), end_millis is required with minimum 1-second (1000ms) gap.
-          default: 0
-        end_millis:
-          type: number
-          title: End Millis
-          description: End point in milliseconds to stop analysis. Use 0 only when analyzing the full audio (start_millis must also be 0). If start_millis is provided, end_millis is required and must be at least 1000ms greater than start_millis.
-          default: 0
-        callback_url:
-          type: string
-          title: Callback Url
-          description: Your webhook URL to receive a notification when analysis completes.
-          default: ''
-        audio_file:
-          title: Audio File
-          description: Upload an audio file directly (mp3, wav, aac, m4a). File upload takes priority over media_url.
-        speaker_diarization:
-          type: boolean
-          title: Speaker Diarization
-          description: Speaker diarization. Enabled by default.
-          default: true
-        text_emotion_analysis:
-          type: boolean
-          title: Text Emotion Analysis
-          description: Text emotion analysis. Enabled by default.
-          default: true
-        language:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Language
-          description: Language code for analysis. Auto-detected if not provided.
-      type: object
-      required:
-      - title
-      title: Body_upload_audio_v2_audios_post
-    ReplaceTranscriptRequest:
-      properties:
-        transcript:
-          type: string
-          minLength: 1
-          title: Transcript
-        format:
-          type: string
-          const: text
-          title: Format
-          default: text
-      type: object
-      required:
-      - transcript
-      title: ReplaceTranscriptRequest
-    OverallEmotions:
-      properties:
-        video:
+        overall:
+          $ref: '#/components/schemas/OverallEmotions'
+          examples:
+          - audio:
+              angry: 0.047
+              happy: 0.185
+              neutral: 0.638
+            text:
+              admiration: 0.015
+              joy: 0.018
+              neutral: 0.75
+            video:
+              angry: 0.059
+              happy: 0.175
+              neutral: 0.408
+              sad: 0.049
+        faces:
           anyOf:
           - additionalProperties:
-              type: number
+              additionalProperties:
+                type: number
+              type: object
             type: object
           - type: 'null'
-          title: Video
+          title: Faces
           examples:
-          - angry: 0.059
-            happy: 0.175
-            neutral: 0.408
-            sad: 0.049
-        audio:
-          additionalProperties:
-            type: number
-          type: object
-          title: Audio
-          examples:
-          - angry: 0.047
-            happy: 0.185
-            neutral: 0.638
-        text:
-          additionalProperties:
-            type: number
-          type: object
-          title: Text
-          examples:
-          - admiration: 0.015
-            joy: 0.018
-            neutral: 0.75
-      type: object
-      title: OverallEmotions
-      description: Overall emotions across modalities.
-    ReplaceTranscriptResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        segments_count:
-          type: integer
-          title: Segments Count
+          - John Smith:
+              happy: 0.175
+              neutral: 0.408
+              sad: 0.049
+            face_2:
+              angry: 0.087
+              happy: 0.184
+              neutral: 0.314
         speakers:
-          items:
-            $ref: '#/components/schemas/SpeakerUpdate'
-          type: array
+          additionalProperties:
+            $ref: '#/components/schemas/SpeakerEmotions'
+          type: object
           title: Speakers
+          examples:
+          - Interviewer:
+              audio:
+                angry: 0.05
+                happy: 0.18
+                neutral: 0.65
+              text:
+                curiosity: 0.08
+                neutral: 0.85
+            John Smith:
+              audio:
+                angry: 0.045
+                happy: 0.19
+                neutral: 0.625
+              text:
+                admiration: 0.02
+                joy: 0.025
+                neutral: 0.72
       type: object
       required:
-      - id
-      - status
-      - segments_count
-      - speakers
-      title: ReplaceTranscriptResponse
+      - overall
+      title: EmotionAnalysis
+      description: Hierarchical emotion analysis structure.
     FullAudioAnalyticsResponse:
       properties:
         title:
@@ -819,6 +724,53 @@ components:
       - emotion_analysis
       title: FullAudioAnalyticsResponse
       description: Complete multimodal analytics response for audio content.
+    SpeakerUpdateResponse:
+      properties:
+        speakers:
+          items:
+            $ref: '#/components/schemas/SpeakerUpdate'
+          type: array
+          title: Speakers
+      type: object
+      required:
+      - speakers
+      title: SpeakerUpdateResponse
+      description: "Response model after updating speakers.\n\nAttributes:\n    speakers (List[SpeakerUpdate]): List of updated speakers."
+    OverallEmotions:
+      properties:
+        video:
+          anyOf:
+          - additionalProperties:
+              type: number
+            type: object
+          - type: 'null'
+          title: Video
+          examples:
+          - angry: 0.059
+            happy: 0.175
+            neutral: 0.408
+            sad: 0.049
+        audio:
+          additionalProperties:
+            type: number
+          type: object
+          title: Audio
+          examples:
+          - angry: 0.047
+            happy: 0.185
+            neutral: 0.638
+        text:
+          additionalProperties:
+            type: number
+          type: object
+          title: Text
+          examples:
+          - admiration: 0.015
+            joy: 0.018
+            neutral: 0.75
+      type: object
+      title: OverallEmotions
+      description: Overall emotions across modalities.
     TranscriptSegment:
       properties:
         start_millis:
@@ -845,15 +797,98 @@ components:
       - speaker_id
       title: TranscriptSegment
       description: "Represents a single segment of transcribed audio with timing and speaker ID.\n\nAttributes:\n    start_millis (float): Start time of the segment in milliseconds (must be >= 0).\n    end_millis (float): End time of the segment in milliseconds (must be >= 0).\n    segment (str): Transcribed text for the segment.\n    speaker_id (int): Identifier of the speaker in this segment."
-    HTTPValidationError:
+    Body_upload_audio_v2_audios_post:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        title:
+          type: string
+          minLength: 1
+          title: Title
+          description: A descriptive title for your audio (e.g., 'Customer Call' or 'Team Meeting').
+        description:
+          type: string
+          title: Description
+          description: Optional notes about the audio content or context.
+        media_url:
+          type: string
+          title: Media Url
+          description: URL to your audio/video source (YouTube, Instagram, Twitter, Facebook, Dropbox, or any direct media link). Audio will be extracted if source is video. Leave empty if uploading a file instead.
+          default: ''
+        start_millis:
+          type: number
+          title: Start Millis
+          description: Start point in milliseconds to begin analysis. Use 0 to start from the beginning. If provided (>0), end_millis is required with minimum 1-second (1000ms) gap.
+          default: 0
+        end_millis:
+          type: number
+          title: End Millis
+          description: End point in milliseconds to stop analysis. Use 0 only when analyzing the full audio (start_millis must also be 0). If start_millis is provided, end_millis is required and must be at least 1000ms greater than start_millis.
+          default: 0
+        callback_url:
+          type: string
+          title: Callback Url
+          description: Your webhook URL to receive a notification when analysis completes.
+          default: ''
+        audio_file:
+          title: Audio File
+          description: Upload an audio file directly (mp3, wav, aac, m4a). File upload takes priority over media_url.
+        speaker_diarization:
+          type: boolean
+          title: Speaker Diarization
+          description: Speaker diarization. Enabled by default.
+          default: true
+        text_emotion_analysis:
+          type: boolean
+          title: Text Emotion Analysis
+          description: Text emotion analysis. Enabled by default.
+          default: true
+        language:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Language
+          description: Language code for analysis. Auto-detected if not provided.
       type: object
-      title: HTTPValidationError
+      required:
+      - title
+      title: Body_upload_audio_v2_audios_post
+    ReplaceTranscriptRequest:
+      properties:
+        transcript:
+          type: string
+          minLength: 1
+          title: Transcript
+        format:
+          type: string
+          const: text
+          title: Format
+          default: text
+      type: object
+      required:
+      - transcript
+      title: ReplaceTranscriptRequest
+    ReplaceTranscriptResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        segments_count:
+          type: integer
+          title: Segments Count
+        speakers:
+          items:
+            $ref: '#/components/schemas/SpeakerUpdate'
+          type: array
+          title: Speakers
+      type: object
+      required:
+      - id
+      - status
+      - segments_count
+      - speakers
+      title: ReplaceTranscriptResponse
     AudioEditResponse:
       properties:
         title:
@@ -869,127 +904,76 @@ components:
       type: object
       title: AudioEditResponse
       description: "Response model for editing audio data.\n\nInherits:\n    ImageEditResponse: Contains status and metadata after editing."
-    AudioSegmentDeleteResponse:
+    AudioEmotionResponseV2:
       properties:
         id:
           type: string
           title: Id
-        segment_id:
-          type: integer
-          title: Segment Id
-        message:
+        title:
           type: string
-          title: Message
-      type: object
-      required:
-      - id
-      - segment_id
-      - message
-      title: AudioSegmentDeleteResponse
-      description: "Response for deleting an audio segment.\n\nAttributes:\n    id (str): Audio ID the segment belongs to.\n    segment_id (int): Segment number that was deleted.\n    message (str): Status message of the deletion operation."
-    AudioDeleteResponse:
-      properties:
-        id:
-          type: string
-          title: Id
+          title: Title
         status:
           type: string
           title: Status
+        duration:
+          type: integer
+          title: Duration
+        media_source:
+          type: string
+          title: Media Source
+        media_source_url:
+          type: string
+          title: Media Source Url
+        media_source_type:
+          type: string
+          title: Media Source Type
+        user_id:
+          type: string
+          title: User Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
       type: object
       required:
       - id
+      - title
       - status
-      title: AudioDeleteResponse
-      description: "Response model after deleting audio.\n\nInherits:\n    ResponseStatus: Generic success/error status model."
-    EmotionAnalysis:
+      - duration
+      - media_source
+      - media_source_url
+      - media_source_type
+      - user_id
+      title: AudioEmotionResponseV2
+      description: "V2 response model for audio emotion detection with URL source tracking.\n\nSupports:\n- YouTube URLs (audio extracted from video)\n- Cloud storage URLs (Dropbox, direct URLs, etc.)\n- Time parameters for all URL types\n- URL source tracking with media type detection\n\nAttributes:\n    id (str): Unique ID of the audio.\n    title (str): Title of the audio.\n    status (str): Processing status (queue, processing, done, etc.).\n    duration (int): Duration in seconds (trimmed duration if time params provided).\n    media_source (str): Source type (\"youtube\", \"dropbox\", \"public_url\", \"file_upload\").\n    media_source_url (str): Full URL as provided by user.\n    media_source_type (str): Type of source media (\"video\" or \"audio\").\n    user_id (str): ID of the user who uploaded the audio.\n    created_at (Optional[str]): Timestamp when audio was created."
+    PaginatedResponse:
       properties:
-        overall:
-          $ref: '#/components/schemas/OverallEmotions'
-          examples:
-          - audio:
-              angry: 0.047
-              happy: 0.185
-              neutral: 0.638
-            text:
-              admiration: 0.015
-              joy: 0.018
-              neutral: 0.75
-            video:
-              angry: 0.059
-              happy: 0.175
-              neutral: 0.408
-              sad: 0.049
-        faces:
-          anyOf:
-          - additionalProperties:
-              additionalProperties:
-                type: number
-              type: object
-            type: object
-          - type: 'null'
-          title: Faces
-          examples:
-          - John Smith:
-              happy: 0.175
-              neutral: 0.408
-              sad: 0.049
-            face_2:
-              angry: 0.087
-              happy: 0.184
-              neutral: 0.314
-        speakers:
-          additionalProperties:
-            $ref: '#/components/schemas/SpeakerEmotions'
-          type: object
-          title: Speakers
-          examples:
-          - Interviewer:
-              audio:
-                angry: 0.05
-                happy: 0.18
-                neutral: 0.65
-              text:
-                curiosity: 0.08
-                neutral: 0.85
-            John Smith:
-              audio:
-                angry: 0.045
-                happy: 0.19
-                neutral: 0.625
-              text:
-                admiration: 0.02
-                joy: 0.025
-                neutral: 0.72
+        documents:
+          title: Documents
+        count:
+          type: integer
+          title: Count
       type: object
       required:
-      - overall
-      title: EmotionAnalysis
-      description: Hierarchical emotion analysis structure.
-    Body_reprocess_audio_v1_audios__audio_id__put:
+      - documents
+      - count
+      title: PaginatedResponse
+      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]): List of audio responses.\n    count (int): Total count of documents."
+    SpeakerUpdate:
       properties:
-        callback_url:
+        speaker_id:
+          type: integer
+          title: Speaker Id
+        name:
           type: string
-          title: Callback Url
-          description: The callback url to notify audio reprocessing is completed. Give a valid URL.
-        reprocess:
-          type: boolean
-          title: Reprocess
-          description: Set to 'True' to reprocess an already completed audio; defaults to 'False'.
-          default: false
-      type: object
-      title: Body_reprocess_audio_v1_audios__audio_id__put
-    SpeakerUpdateResponse:
-      properties:
-        speakers:
-          items:
-            $ref: '#/components/schemas/SpeakerUpdate'
-          type: array
-          title: Speakers
+          title: Name
       type: object
       required:
-      - speakers
-      title: SpeakerUpdateResponse
-      description: "Response model after updating speakers.\n\nAttributes:\n    speakers (List[SpeakerUpdate]): List of updated speakers."
+      - speaker_id
+      - name
+      title: SpeakerUpdate
+      description: "Model for updating a speaker's name.\n\nAttributes:\n    speaker_id (int): Identifier of the speaker.\n    name (str): New name for the speaker."
     Audio:
       properties:
         created_at:
@@ -1072,49 +1056,24 @@ components:
       - user_id
       title: Audio
       description: "Model representing audio metadata and analysis results.\n\nAttributes:\n    created_at (Optional[Any]): Timestamp when the audio was created.\n    status (str): Current processing status of the audio.\n    id (str): Unique identifier for the audio.\n    model_id (str): Models used to process audio.\n    url (str): Storage URL of the audio file.\n    audio_duration (float): Duration of the audio in seconds.\n    task_completion_status (Optional[int]): Status code indicating task completion.\n    user_id (str): ID of the user who uploaded the audio.\n    title (Optional[str]): Optional title for the audio.\n    average_audio_emotions (Optional[dict]): Average emotion scores for the audio.\n    segment_audio_emotions (Optional[list[dict]]): Emotions per audio segment.\n    segment_text_emotions (Optional[list[dict]]): Text-based emotions per segment.\n    summary (Optional[Union[str, Dict[str, Any]]]): Text summary of the audio (string or dict with title, status, summary_body).\n    speakers (Optional[list[dict]]): Detected speaker information."
-    AudioEmotionResponseV2:
+    AudioReprocessResponse:
       properties:
         id:
           type: string
           title: Id
-        title:
-          type: string
-          title: Title
         status:
           type: string
           title: Status
-        duration:
-          type: integer
-          title: Duration
-        media_source:
+        message:
           type: string
-          title: Media Source
-        media_source_url:
-          type: string
-          title: Media Source Url
-        media_source_type:
-          type: string
-          title: Media Source Type
-        user_id:
-          type: string
-          title: User Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
+          title: Message
       type: object
       required:
       - id
-      - title
       - status
-      - duration
-      - media_source
-      - media_source_url
-      - media_source_type
-      - user_id
-      title: AudioEmotionResponseV2
-      description: "V2 response model for audio emotion detection with URL source tracking.\n\nSupports:\n- YouTube URLs (audio extracted from video)\n- Cloud storage URLs (Dropbox, direct URLs, etc.)\n- Time parameters for all URL types\n- URL source tracking with media type detection\n\nAttributes:\n    id (str): Unique ID of the audio.\n    title (str): Title of the audio.\n    status (str): Processing status (queue, processing, done, etc.).\n    duration (int): Duration in seconds (trimmed duration if time params provided).\n    media_source (str): Source type (\"youtube\", \"dropbox\", \"public_url\", \"file_upload\").\n    media_source_url (str): Full URL as provided by user.\n    media_source_type (str): Type of source media (\"video\" or \"audio\").\n    user_id (str): ID of the user who uploaded the audio.\n    created_at (Optional[str]): Timestamp when audio was created."
+      - message
+      title: AudioReprocessResponse
+      description: "Response model for audio reprocessing.\n\nInherits:\n    TextReprocessResponse: Reuse response format for audio reprocessing."
     ValidationError:
       properties:
         loc:
@@ -1136,6 +1095,32 @@ components:
       - msg
       - type
       title: ValidationError
+    AudioDeleteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: AudioDeleteResponse
+      description: "Response model after deleting audio.\n\nInherits:\n    ResponseStatus: Generic success/error status model."
+    Body_edit_title_or_description_v1_audios__audio_id__metadata_put:
+      properties:
+        title:
+          type: string
+          title: Title
+          description: New title for the audio file (optional)
+        description:
+          type: string
+          title: Description
+          description: Description to add or update (optional)
+      type: object
+      title: Body_edit_title_or_description_v1_audios__audio_id__metadata_put
     SpeakerEmotions:
       properties:
         audio:
@@ -1159,31 +1144,46 @@ components:
       type: object
       title: SpeakerEmotions
       description: Speaker-specific emotions across audio and text modalities.
-    PaginatedResponse:
+    Body_reprocess_audio_v1_audios__audio_id__put:
       properties:
-        documents:
-          title: Documents
-        count:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The callback url to notify audio reprocessing is completed. Give a valid URL.
+        reprocess:
+          type: boolean
+          title: Reprocess
+          description: Set to 'True' to reprocess an already completed audio; defaults to 'False'.
+          default: false
+      type: object
+      title: Body_reprocess_audio_v1_audios__audio_id__put
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AudioSegmentDeleteResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        segment_id:
           type: integer
-          title: Count
+          title: Segment Id
+        message:
+          type: string
+          title: Message
       type: object
       required:
-      - documents
-      - count
-      title: PaginatedResponse
-      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]): List of audio responses.\n    count (int): Total count of documents."
-    Body_edit_title_or_description_v1_audios__audio_id__metadata_put:
-      properties:
-        title:
-          type: string
-          title: Title
-          description: New title for the audio file (optional)
-        description:
-          type: string
-          title: Description
-          description: Description to add or update (optional)
-      type: object
-      title: Body_edit_title_or_description_v1_audios__audio_id__metadata_put
+      - id
+      - segment_id
+      - message
+      title: AudioSegmentDeleteResponse
+      description: "Response for deleting an audio segment.\n\nAttributes:\n    id (str): Audio ID the segment belongs to.\n    segment_id (int): Segment number that was deleted.\n    message (str): Status message of the deletion operation."
   securitySchemes:
     APIKeyHeader:
       type: apiKey

@@ -280,24 +280,6 @@ components:
       - message
       title: AIInsightsChatRequest
       description: "Request model for sending a message to AI Insights (REST API).\n\nThe system automatically manages conversation continuity - one conversation per user per media item.\n\nAttributes:\n    message (str): The user's question or message about the media content."
-    AIInsightsHistoryResponse:
-      properties:
-        conversation_id:
-          type: string
-          title: Conversation Id
-          description: Conversation session ID
-        messages:
-          items:
-            $ref: '#/components/schemas/AIInsightsChatMessage'
-          type: array
-          title: Messages
-          description: Conversation message history
-      type: object
-      required:
-      - conversation_id
-      - messages
-      title: AIInsightsHistoryResponse
-      description: "Response model for retrieving AI Insights conversation history.\n\nAttributes:\n    conversation_id (str): The conversation session ID.\n    messages (List[AIInsightsChatMessage]): List of messages in chronological order\n                                             (user messages and AI responses)."
     AIInsightsChatResponse:
       properties:
         conversation_id:
@@ -332,6 +314,24 @@ components:
       - response
       title: AIInsightsChatResponse
       description: "Response model for AI Insights chat (non-streaming mode with ?stream=false).\n\nAttributes:\n    conversation_id (str): Unique identifier for this conversation session.\n    message_id (int): Sequential message ID within the conversation.\n    response (str): The complete AI assistant's response text.\n    token_usage (Optional[Dict[str, int]]): LLM token usage statistics\n                                             (input_tokens, output_tokens).\n    is_quota_exceeded (bool): Whether the user's LLM quota has been exceeded."
+    AIInsightsHistoryResponse:
+      properties:
+        conversation_id:
+          type: string
+          title: Conversation Id
+          description: Conversation session ID
+        messages:
+          items:
+            $ref: '#/components/schemas/AIInsightsChatMessage'
+          type: array
+          title: Messages
+          description: Conversation message history
+      type: object
+      required:
+      - conversation_id
+      - messages
+      title: AIInsightsHistoryResponse
+      description: "Response model for retrieving AI Insights conversation history.\n\nAttributes:\n    conversation_id (str): The conversation session ID.\n    messages (List[AIInsightsChatMessage]): List of messages in chronological order\n                                             (user messages and AI responses)."
     AIInsightsChatMessage:
       properties:
         role:
