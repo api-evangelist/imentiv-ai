@@ -281,139 +281,27 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    TextReprocessResponse:
+    ValidationError:
       properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        message:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
           title: Message
+        type:
+          type: string
+          title: Error Type
       type: object
       required:
-      - id
-      - status
-      - message
-      title: TextReprocessResponse
-      description: "Response model for reprocessing a text analysis request.\n\nAttributes:\n    message (str): Additional information about the reprocessing result."
-    PaginatedResponse:
-      properties:
-        documents:
-          title: Documents
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - documents
-      - count
-      title: PaginatedResponse
-      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]): List of audio responses.\n    count (int): Total count of documents."
-    DeleteTextResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-      type: object
-      required:
-      - id
-      - status
-      title: DeleteTextResponse
-      description: Response returned after deleting a text emotion analysis result.
-    Body_upload_text_v2_texts_post:
-      properties:
-        title:
-          type: string
-          minLength: 1
-          title: Title
-          description: A descriptive title for your text (e.g., 'Customer Feedback' or 'Meeting Notes').
-        text:
-          type: string
-          title: Text
-          description: The raw text content to be analyzed for emotions. Can be any text such as customer reviews, transcripts, or general content.
-        callback_url:
-          type: string
-          title: Callback Url
-          description: Your webhook URL to receive a notification when analysis completes.
-          default: ''
-      type: object
-      required:
-      - title
-      - text
-      title: Body_upload_text_v2_texts_post
-    TextEmotionResponseV2:
-      properties:
-        id:
-          type: string
-          title: Id
-        title:
-          type: string
-          title: Title
-        status:
-          type: string
-          title: Status
-        word_count:
-          type: integer
-          title: Word Count
-        user_id:
-          type: string
-          title: User Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      type: object
-      required:
-      - id
-      - title
-      - status
-      - word_count
-      - user_id
-      title: TextEmotionResponseV2
-      description: "V2 response model for text emotion detection.\n\nSimplified text-only processing without YouTube support.\nDirect text submission with mandatory title field.\n\nAttributes:\n    id (str): Unique ID of the text.\n    title (str): Title of the text.\n    status (str): Processing status (queue, processing, done, etc.).\n    word_count (int): Number of words in the text.\n    user_id (str): ID of the user who submitted the text.\n    created_at (Optional[str]): Timestamp when text was created."
-    Body_reprocess_text_v1_texts__text_id__put:
-      properties:
-        callback_url:
-          type: string
-          title: Callback Url
-          description: The url to notify when text processing is completed
-        reprocess:
-          type: boolean
-          title: Reprocess
-          description: Set to 'True' to reprocess an already processed text; defaults to 'False'.
-          default: false
-      type: object
-      title: Body_reprocess_text_v1_texts__text_id__put
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    Body_edit_text_v1_texts__text_id__emotions_put:
-      properties:
-        callback_url:
-          type: string
-          title: Callback Url
-          description: 'Optional URL to receive a webhook notification when analysis is complete. Example: ''https://example.com/callback'''
-        text:
-          type: string
-          title: Text
-          description: The updated text to be analyzed for emotions.
-      type: object
-      required:
-      - text
-      title: Body_edit_text_v1_texts__text_id__emotions_put
+      - loc
+      - msg
+      - type
+      title: ValidationError
     FetchTextResponse:
       properties:
         id:
@@ -483,18 +371,6 @@ components:
       - status
       title: FetchTextResponse
       description: "Detailed response for a text emotion analysis request.\n\nAttributes:\n    title (Optional[str]): Title of the text (available for v2 texts).\n    model_id (str): Model used to process the text.\n    created_at (Any): Timestamp of creation.\n    text (Optional[str]): The input text.\n    user_id (Optional[str]): ID of the user who submitted the text.\n    word_count (Optional[int]): Number of words in the input.\n    segments (Optional[List[Emotions]]): List of emotions per sentence.\n    emotions (Optional[dict]): Overall emotions detected in the text.\n    parent_id (Optional[str]): ID associated with parent audio id if any."
-    Emotions:
-      properties:
-        emotions:
-          additionalProperties: true
-          type: object
-          title: Emotions
-        sentence:
-          type: string
-          title: Sentence
-      type: object
-      title: Emotions
-      description: "Model representing detected emotions in a sentence.\n\nAttributes:\n    emotions (Optional[dict]): Dictionary of emotion scores.\n    sentence (Optional[str]): The sentence where emotions were detected."
     TranscriptEmotions:
       properties:
         emotions:
@@ -541,27 +417,151 @@ components:
       - max_emotion
       title: TranscriptEmotions
       description: "Represents emotional data for a transcript segment.\n\nAttributes:\n    emotions (Optional[Dict[str, str]]): Dictionary of detected emotions and their scores or labels.\n    start_time (Optional[int]): Start time of the segment in milliseconds.\n    end_time (Optional[int]): End time of the segment in milliseconds.\n    speaker_id (Optional[int]): ID of the speaker for this segment.\n    name (Optional[str]): Name of the speaker, if available.\n    max_emotion (Dict[str, Union[str, float]]): Emotion with the highest confidence.\n    segment (Optional[str]): The actual text of the transcript segment."
-    ValidationError:
+    PaginatedResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
+        documents:
+          title: Documents
+        count:
+          type: integer
+          title: Count
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - documents
+      - count
+      title: PaginatedResponse
+      description: "Model for paginated audio emotion responses.\n\nAttributes:\n    documents (List[AudioEmotionResponse]): List of audio responses.\n    count (int): Total count of documents."
+    TextReprocessResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - id
+      - status
+      - message
+      title: TextReprocessResponse
+      description: "Response model for reprocessing a text analysis request.\n\nAttributes:\n    message (str): Additional information about the reprocessing result."
+    Body_reprocess_text_v1_texts__text_id__put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: The url to notify when text processing is completed
+        reprocess:
+          type: boolean
+          title: Reprocess
+          description: Set to 'True' to reprocess an already processed text; defaults to 'False'.
+          default: false
+      type: object
+      title: Body_reprocess_text_v1_texts__text_id__put
+    TextEmotionResponseV2:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        word_count:
+          type: integer
+          title: Word Count
+        user_id:
+          type: string
+          title: User Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - status
+      - word_count
+      - user_id
+      title: TextEmotionResponseV2
+      description: "V2 response model for text emotion detection.\n\nSimplified text-only processing without YouTube support.\nDirect text submission with mandatory title field.\n\nAttributes:\n    id (str): Unique ID of the text.\n    title (str): Title of the text.\n    status (str): Processing status (queue, processing, done, etc.).\n    word_count (int): Number of words in the text.\n    user_id (str): ID of the user who submitted the text.\n    created_at (Optional[str]): Timestamp when text was created."
+    Body_upload_text_v2_texts_post:
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: Title
+          description: A descriptive title for your text (e.g., 'Customer Feedback' or 'Meeting Notes').
+        text:
+          type: string
+          title: Text
+          description: The raw text content to be analyzed for emotions. Can be any text such as customer reviews, transcripts, or general content.
+        callback_url:
+          type: string
+          title: Callback Url
+          description: Your webhook URL to receive a notification when analysis completes.
+          default: ''
+      type: object
+      required:
+      - title
+      - text
+      title: Body_upload_text_v2_texts_post
+    Emotions:
+      properties:
+        emotions:
+          additionalProperties: true
+          type: object
+          title: Emotions
+        sentence:
+          type: string
+          title: Sentence
+      type: object
+      title: Emotions
+      description: "Model representing detected emotions in a sentence.\n\nAttributes:\n    emotions (Optional[dict]): Dictionary of emotion scores.\n    sentence (Optional[str]): The sentence where emotions were detected."
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DeleteTextResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - status
+      title: DeleteTextResponse
+      description: Response returned after deleting a text emotion analysis result.
+    Body_edit_text_v1_texts__text_id__emotions_put:
+      properties:
+        callback_url:
+          type: string
+          title: Callback Url
+          description: 'Optional URL to receive a webhook notification when analysis is complete. Example: ''https://example.com/callback'''
+        text:
+          type: string
+          title: Text
+          description: The updated text to be analyzed for emotions.
+      type: object
+      required:
+      - text
+      title: Body_edit_text_v1_texts__text_id__emotions_put
   securitySchemes:
     APIKeyHeader:
       type: apiKey
