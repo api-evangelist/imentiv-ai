@@ -42,7 +42,7 @@ tags_raw:
 - Video Analysis
 - Machine-Learning
 created: '2025-02-09'
-modified: '2026-09-16'
+modified: '2026-10-06'
 url: https://raw.githubusercontent.com/api-evangelist/imentiv-ai/refs/heads/main/apis.yml
 specificationVersion: '0.23'
 apis:
@@ -205,6 +205,10 @@ apis:
   - type: Documentation
     url: https://imentiv.ai/
 common:
+- url: https://imentiv.ai/blog/
+  type: Blog
+- url: https://imentiv.ai/blog/feed.xml
+  type: BlogRSS
 - type: AgenticAccess
   url: agentic-access/imentiv-ai-agentic-access.yml
 - type: DomainSecurity
