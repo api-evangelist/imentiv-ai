@@ -205,6 +205,10 @@ apis:
   - type: Documentation
     url: https://imentiv.ai/
 common:
+- type: Pricing
+  url: https://imentiv.ai/pricing/
+- type: Plans
+  url: plans/imentiv-ai-plans-pricing.yml
 - url: https://imentiv.ai/blog/
   type: Blog
 - url: https://imentiv.ai/blog/feed.xml
