@@ -205,6 +205,10 @@ apis:
   - type: Documentation
     url: https://imentiv.ai/
 common:
+- type: RateLimits
+  url: rate-limits/imentiv-ai-rate-limits.yml
+- type: FinOps
+  url: finops/imentiv-ai-finops.yml
 - type: Pricing
   url: https://imentiv.ai/pricing/
 - type: Plans
