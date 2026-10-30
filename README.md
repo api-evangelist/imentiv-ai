@@ -1,4 +1,4 @@
-# Imentiv AI (imentiv-ai)
+# Imentiv AI
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,55 +66,125 @@
 
 Imentiv AI is an AI-powered platform for analyzing the emotional makeup of videos. The platform uses advanced artificial intelligence to make videos emotionally smart by detecting and analyzing emotions in video content.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/imentiv-ai/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/imentiv-ai/refs/heads/main/apis.yml)
+**Areas:** Artificial Intelligence · Emotion Detection · Machine Learning · Video Analysis
 
-## Scope
+## Imentiv AI on APIs.io
 
-- **Type:** Index
+Everything profiled for Imentiv AI is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/imentiv-ai/](https://apis.io/providers/imentiv-ai/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (6)
 
-- Artificial Intelligence
-- Emotion Detection
-- Machine Learning
-- Video Analysis
+- [Imentiv AI AI Insights API](https://apis.io/apis/imentiv-ai/imentiv-ai-ai-insights-api-api/) — The AI Insights API provides conversational AI-powered analysis of emotional data from your media content. **Features:** - Ask natural language questions…
+- [Imentiv AI Audio Emotion API](https://apis.io/apis/imentiv-ai/imentiv-ai-audio-emotion-api-api/) — The Audio Emotion Analysis API processes audio files or YouTube URLs to analyze emotions and transcripts. The API provides: **Speaker Diarization:**…
+- [Imentiv AI Image Emotion API](https://apis.io/apis/imentiv-ai/imentiv-ai-image-emotion-api-api/) — The Image Emotion Recognition API by Imentiv analyzes human facial expressions in an image and returns the detected emotions. It can detect multiple faces…
+- [Imentiv AI Report API](https://apis.io/apis/imentiv-ai/imentiv-ai-report-api-api/) — The Report API provides comprehensive emotion analysis reports in PDF format for analyzed media content. **Features:** - Generate detailed PDF reports for…
+- [Imentiv AI Text Emotion API](https://apis.io/apis/imentiv-ai/imentiv-ai-text-emotion-api-api/) — The Text Emotion Analysis API by Imentiv analyzes a given piece of text and returns the detected emotional tone(s). **Features:** - The API processes the…
+- [Imentiv AI Video Emotion API](https://apis.io/apis/imentiv-ai/imentiv-ai-video-emotion-api-api/) — The Video Emotion Analysis API by Imentiv analyzes the emotional states of individuals in a video. It performs multi-modal emotion detection using facial…
 
-## Timestamps
+### Published properties
 
-- **Created:** 2025-02-09
-- **Modified:** 2026-05-19
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### Agentic access (1)
 
-### Imentiv AI API
+Which operations an agent can call, which act, and which need a human in the loop.
 
-The Imentiv AI API enables developers to discover the emotional makeup of videos, audio, images, and text using advanced Emotion AI. The platform detects emotions through facial expressions, vocal tones, and linguistic cues, supporting use cases such as content creation, marketing optimization, education, and mental health assessments.
+- [Imentiv Ai Agentic Access](https://apis.io/agentic-access/imentiv-ai/imentiv-ai-agentic-access/)
 
-- **Human URL:** [https://imentiv.ai/](https://imentiv.ai/)
-- **Base URL:** `https://api.imentiv.ai`
+#### Collections (7)
 
-#### Tags
+Postman and Open Collection request collections.
 
-- AI
-- Emotion Detection
-- Video Analysis
-- Audio Analysis
-- Image Analysis
-- Text Analysis
+- [Welcome to Imentiv AI](https://apis.io/collections/imentiv-ai/open-imentiv-ai/)
+- [Welcome to Imentiv AI AI Insights API API](https://apis.io/collections/imentiv-ai/open-imentiv-ai-ai-insights-api-api/)
+- [Welcome to Imentiv AI AI Insights API Audio Emotion API API](https://apis.io/collections/imentiv-ai/open-imentiv-ai-audio-emotion-api-api/)
+- [Welcome to Imentiv AI AI Insights API Image Emotion API API](https://apis.io/collections/imentiv-ai/open-imentiv-ai-image-emotion-api-api/)
+- [Welcome to Imentiv AI AI Insights API Report API API](https://apis.io/collections/imentiv-ai/open-imentiv-ai-report-api-api/)
+- [Welcome to Imentiv AI AI Insights API Text Emotion API API](https://apis.io/collections/imentiv-ai/open-imentiv-ai-text-emotion-api-api/)
+- [Welcome to Imentiv AI AI Insights API Video Emotion API API](https://apis.io/collections/imentiv-ai/open-imentiv-ai-video-emotion-api-api/)
 
-#### Properties
+#### Security (2)
 
-- [Documentation](https://imentiv.ai/)
-- [OpenAPI](https://raw.githubusercontent.com/api-evangelist/imentiv-ai/main/openapi/imentiv-ai-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/imentiv-ai.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/imentiv-ai.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Authentication, trust centre, and vulnerability disclosure.
 
-## Common Properties
+- [Imentiv Ai Authentication](https://apis.io/security/imentiv-ai/imentiv-ai-authentication/)
+- [Imentiv Ai Domain Security](https://apis.io/security/imentiv-ai/imentiv-ai-domain-security/)
 
-- [LinkedIn](https://www.linkedin.com/company/imentivai)
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Imentiv Ai Plans Pricing](https://apis.io/plans/imentiv-ai/imentiv-ai-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Imentiv Ai Rate Limits](https://apis.io/rate-limits/imentiv-ai/imentiv-ai-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Imentiv Ai Finops](https://apis.io/finops/imentiv-ai/imentiv-ai-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://imentiv.ai/)
+- [Pricing](https://imentiv.ai/pricing/)
+- [Blog](https://imentiv.ai/blog/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 31.1** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 57.1 |
+| Contract quality | 45.7 |
+| Contract governance | 0.0 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 23.8 |
+| Access clarity | 42.1 |
+
+**Agent readiness 26.2** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 10.9** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/imentiv-ai/](https://apis.io/providers/imentiv-ai/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Imentiv AI: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/imentiv-ai/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
